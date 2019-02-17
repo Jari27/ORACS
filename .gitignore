@@ -80,5 +80,6 @@ local.properties
 .scala_dependencies
 .worksheet
 
-# specific changes
+# custom changes
 .classpath
+.project
