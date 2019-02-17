@@ -3,6 +3,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import data.Problem;
+import data.Request;
+import data.TransferNode;
+
 public class Main {
 	
 	static String fileName = "example_instances.csv";
@@ -30,6 +34,7 @@ public class Main {
 		return problems;
 	}
 	
+	// TODO locations of nodes, depots
 	static Problem parseInstance(int[] data) {
 		Problem p = new Problem();
 		p.index = data[0];
@@ -42,30 +47,30 @@ public class Main {
 		// create transfer node date
 		int transferServiceTimeOffset = 6 + 11 * p.numRequests + 2 * p.numDepots + 3 * p.numTransferCandidates;
 		for (int i = 0; i < p.numTransferCandidates; i++) {
-			Transfer t = new Transfer();
-			t.cost = data[6 + i];
-			t.serviceTime = data[i + transferServiceTimeOffset];
+			TransferNode t = new TransferNode();
+			t.f = data[6 + i];
+			t.s = data[i + transferServiceTimeOffset];
 			p.transfers.add(t);
-			System.out.printf("Transfer %d: cost = %d, s = %d\n", i+1, t.cost, t.serviceTime);
+			System.out.printf("Transfer %d: cost = %d, s = %d\n", i+1, t.f, t.s);
 		}
 		// create request data
 		int requestWindowOffset = 6 + 3 * p.numTransferCandidates + 4 * p.numRequests + 2 * p.numDepots;
 		int requestServiceTimeOffset = 6 + 3 * p.numTransferCandidates + 2* p.numDepots + 9 * p.numRequests;
 		int requestMaxRideTimeOffset = requestWindowOffset + 4 * p.numRequests;
 		for (int i = 0; i < p.numRequests; i++) {
-			Request r = new Request();
-			r.pickupWindowStart = data[2*i + requestWindowOffset];
-			r.pickupWindowEnd = data[2*i + 1 + requestWindowOffset];
-			r.dropoffWindowStart = data[2*i + requestWindowOffset + 2 * p.numRequests];
-			r.dropoffWindowEnd = data[2*i + 1 + requestWindowOffset + 2 * p.numRequests];
-			r.maxRideTime = data[i + requestMaxRideTimeOffset];
-			r.pickupServiceTime = data[i + requestServiceTimeOffset];
-			r.dropoffServiceTime = data[i + requestServiceTimeOffset + p.numRequests];
-			if (r.pickupWindowEnd < r.pickupWindowStart || r.dropoffWindowEnd < r.dropoffWindowStart || r.dropoffWindowEnd < r.pickupWindowStart) {
+			Request r = new Request(i);
+			r.pickupNode.e = data[2*i + requestWindowOffset];
+			r.pickupNode.l = data[2*i + 1 + requestWindowOffset];
+			r.dropoffNode.e = data[2*i + requestWindowOffset + 2 * p.numRequests];
+			r.dropoffNode.l = data[2*i + 1 + requestWindowOffset + 2 * p.numRequests];
+			r.L = data[i + requestMaxRideTimeOffset];
+			r.pickupNode.s = data[i + requestServiceTimeOffset];
+			r.dropoffNode.s = data[i + requestServiceTimeOffset + p.numRequests];
+			if (r.pickupNode.l < r.pickupNode.e || r.dropoffNode.l < r.dropoffNode.e || r.dropoffNode.l < r.pickupNode.e || r.pickupNode.s < 0 || r.dropoffNode.s < 0) {
 				System.out.println("Impossible pickup/dropoff windows. We can never make this/something is wrong with the parser/something is wrong with the problem.");
 			}
 			p.requests.add(r);
-			System.out.printf("Request %d: e_p = %d, l_p = %d, e_d = %d, l_d = %d, s_p = %d, s_d = %d, L = %d\n", i+1, r.pickupWindowStart, r.pickupWindowEnd, r.dropoffWindowStart, r.dropoffWindowEnd, r.pickupServiceTime, r.dropoffServiceTime, r.maxRideTime);
+			System.out.printf("Request %d: e_p = %d, l_p = %d, e_d = %d, l_d = %d, s_p = %d, s_d = %d, L = %d\n", i+1, r.pickupNode.e, r.pickupNode.l, r.dropoffNode.e, r.dropoffNode.l, r.pickupNode.s, r.dropoffNode.s, r.L);
 		}
 		// calculate distance matrix
 		p.preCalcDistances();
