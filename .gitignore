@@ -79,3 +79,6 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
+
+# specific changes
+.classpath
