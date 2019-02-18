@@ -4,10 +4,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import data.DepotNode;
-import data.Problem;
-import data.Request;
-import data.TransferNode;
+import problem.DepotNode;
+import problem.Problem;
+import problem.Request;
+import problem.TransferNode;
 
 public class Main {
 	
