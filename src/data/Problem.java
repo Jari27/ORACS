@@ -18,8 +18,10 @@ public class Problem {
 	public ArrayList<TransferNode> transfers = new ArrayList<>();
 	public ArrayList<DepotNode> depots = new ArrayList<>();
 		
+	
+	/* Calculates an array with distances between nodes, so we don't have to do on the fly calculations */
 	public void preCalcDistances() {
-		// create a list that holds all, then sort them
+		// create a list that holds all nodes, then sorts them
 		ArrayList<Node> all = new ArrayList<>();
 		for (Request r : requests) {
 			all.addAll(Arrays.asList(r.getNodes()));
@@ -30,6 +32,8 @@ public class Problem {
 		
 		distanceMatrix = new double[all.size()][all.size()];
 		costMatrix = new double[all.size()][all.size()];
+		
+		// iterate over all node to calculate distances/costs
 		for (Node a : all) {
 			for (Node b : all) {
 				if (a == b) {
@@ -40,7 +44,20 @@ public class Problem {
 				costMatrix[a.id-1][b.id-1] = travelCost * distanceMatrix[a.id-1][b.id-1];
 			}
 		}
+		
+		printDistanceMatrix();
+		
+	}
+	
+	/* Prints the distance matrix with node ids */
+	private void printDistanceMatrix() {
+		System.out.printf("     ");
 		for (int i = 0; i < distanceMatrix.length; i++) {
+			System.out.printf("   %03d", i + 1);
+		}
+		System.out.printf("\n");
+		for (int i = 0; i < distanceMatrix.length; i++) {
+			System.out.printf("%03d   ", i + 1);
 			for (int j = 0; j < distanceMatrix[i].length; j++) {
 				System.out.printf("%5.2f ", distanceMatrix[i][j]);
 			}
@@ -48,6 +65,7 @@ public class Problem {
 		}
 	}
 	
+	/* should probably be a check on this stuff to prevent NPEs, but that will cost computer time */
 	public double distanceBetween(Node a, Node b) {
 		return distanceBetween(a.id, b.id);
 	}
