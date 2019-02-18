@@ -13,4 +13,9 @@ public class Request {
 		this.dropoffNode = new DropoffNode(dropoffNodeId, id);
 	}
 	
+	public Node[] getNodes(){
+		Node[] res = {pickupNode, dropoffNode};
+		return(res);
+	}
+	
 }
