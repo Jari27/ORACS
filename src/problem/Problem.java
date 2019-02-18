@@ -1,6 +1,7 @@
 package problem;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Problem {
 
@@ -14,9 +15,9 @@ public class Problem {
 	public double[][] distanceMatrix;
 	public double[][] costMatrix;
 	
-	public ArrayList<Request> requests = new ArrayList<>();
-	public ArrayList<TransferNode> transfers = new ArrayList<>();
-	public ArrayList<DepotNode> depots = new ArrayList<>();
+	public List<Request> requests = new ArrayList<>();
+	public List<TransferNode> transfers = new ArrayList<>();
+	public List<DepotNode> depots = new ArrayList<>();
 		
 	
 	/* Calculates an array with distances between nodes, so we don't have to do on the fly calculations */
