@@ -36,7 +36,6 @@ public class Main {
 		return problems;
 	}
 	
-	// TODO locations of nodes, depots
 	static Problem parseInstance(int[] data) {
 		Problem p = new Problem();
 		p.index = data[0];
