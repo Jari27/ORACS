@@ -48,25 +48,15 @@ public class Main {
 		p.numDepots = data[3];
 		p.capacity = data[4];
 		p.travelCost = data[5];
-		// create transfer node date
-		int transferServiceTimeOffset = 6 + 11 * p.numRequests + 2 * p.numDepots + 3 * p.numTransferCandidates;
-		int transferLocationOffset = 6 + p.numTransferCandidates + 4 * p.numRequests;
-		for (int i = 0; i < p.numTransferCandidates; i++) {
-			TransferNode t = new TransferNode();
-			t.f = data[6 + i];
-			t.s = data[i + transferServiceTimeOffset];
-			t.x = data[2*i + transferLocationOffset];
-			t.y = data[2*i + 1 + transferLocationOffset];
-			p.transfers.add(t);
-			System.out.printf("Transfer %d: cost = %d, s = %d. Location: (%d, %d)\n", i+1, t.f, t.s, t.x, t.y);
-		}
 		// create request data
 		int requestWindowOffset = 6 + 3 * p.numTransferCandidates + 4 * p.numRequests + 2 * p.numDepots;
 		int requestServiceTimeOffset = 6 + 3 * p.numTransferCandidates + 2* p.numDepots + 9 * p.numRequests;
 		int requestMaxRideTimeOffset = requestWindowOffset + 4 * p.numRequests;
 		int requestLocationOffset = 6 + p.numTransferCandidates;
 		for (int i = 0; i < p.numRequests; i++) {
-			Request r = new Request(i);
+			int pickupNodeId = i + 1;
+			int dropoffNodeId = i + 1 + p.numRequests;
+			Request r = new Request(pickupNodeId, dropoffNodeId);
 			r.pickupNode.e = data[2*i + requestWindowOffset];
 			r.pickupNode.l = data[2*i + 1 + requestWindowOffset];
 			r.dropoffNode.e = data[2*i + requestWindowOffset + 2 * p.numRequests];
@@ -82,17 +72,30 @@ public class Main {
 				System.out.println("Impossible pickup/dropoff windows. We can never make this/something is wrong with the parser/something is wrong with the problem.");
 			}
 			p.requests.add(r);
-			System.out.printf("Request %d: e_p = %d, l_p = %d, e_d = %d, l_d = %d, s_p = %d, s_d = %d, L = %d\n", i+1, r.pickupNode.e, r.pickupNode.l, r.dropoffNode.e, r.dropoffNode.l, r.pickupNode.s, r.dropoffNode.s, r.L);
-			System.out.printf("Pickup: (%d, %d).  Dropoff: (%d, %d) \n", r.pickupNode.x, r.pickupNode.y, r.dropoffNode.x, r.dropoffNode.y);
+			//System.out.printf("Request  %03d: L = %d\n", r.id, r.L);
+			System.out.printf("Pickup   %03d: (%d, %d), s = %d, time = [%d, %d]     L = %d\n", r.pickupNode.id, r.pickupNode.x, r.pickupNode.y, r.pickupNode.s, r.pickupNode.e, r.pickupNode.l, r.L);
+			System.out.printf("Dropoff  %03d: (%d, %d), s = %d, time = [%d, %d]\n", r.dropoffNode.id, r.dropoffNode.x, r.dropoffNode.y, r.dropoffNode.s, r.dropoffNode.e, r.dropoffNode.l);
+		}
+		// create transfer node date
+		int transferServiceTimeOffset = 6 + 11 * p.numRequests + 2 * p.numDepots + 3 * p.numTransferCandidates;
+		int transferLocationOffset = 6 + p.numTransferCandidates + 4 * p.numRequests;
+		for (int i = 0; i < p.numTransferCandidates; i++) {
+			TransferNode t = new TransferNode(1 + p.numRequests * 2 + i);
+			t.f = data[6 + i];
+			t.s = data[i + transferServiceTimeOffset];
+			t.x = data[2*i + transferLocationOffset];
+			t.y = data[2*i + 1 + transferLocationOffset];
+			p.transfers.add(t);
+			System.out.printf("Transfer %03d: (%d, %d), s = %d, f = %d\n", t.id, t.x, t.y, t.s, t.f);
 		}
 		// create depot data
 		int depotLocationOffset = 6 + p.numTransferCandidates + 4 * p.numRequests + 2 * p.numTransferCandidates;
 		for (int i = 0; i < p.numDepots; i++) {
-			DepotNode d = new DepotNode();
+			DepotNode d = new DepotNode(i+1 + p.numRequests * 2 + p.numTransferCandidates);
 			d.x = data[2*i + depotLocationOffset];
 			d.y = data[2*i + 1 + depotLocationOffset];
 			p.depots.add(d);
-			System.out.printf("Depot %d at (%d, %d)\n", i+1, d.x, d.y);
+			System.out.printf("Depot    %03d: (%d, %d)\n", d.id, d.x, d.y);
 		}
 		// calculate distance matrix
 		p.preCalcDistances();

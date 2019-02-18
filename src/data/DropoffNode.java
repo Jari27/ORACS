@@ -7,7 +7,8 @@ public class DropoffNode extends Node {
 	public int e, l;
 	public int s;
 	
-	public DropoffNode(int requestId) {
+	public DropoffNode(int nodeId, int requestId) {
+		super(nodeId);
 		this.requestId = requestId;
 	}
 	

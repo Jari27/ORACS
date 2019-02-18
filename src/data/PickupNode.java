@@ -7,7 +7,8 @@ public class PickupNode extends Node {
 	public int e, l;
 	public int s;
 	
-	public PickupNode(int requestId) {
+	public PickupNode(int nodeId, int requestId) {
+		super(nodeId);
 		this.requestId = requestId;
 	}
 	
