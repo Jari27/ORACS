@@ -65,6 +65,7 @@ public class Solution {
 			// TODO Impossible pickup and dropoffs, what to do?
 			// TODO make this automagically calculate the next one; what happens when we have multiple in a row. Just try and it check feasibility afterwards? 
 			// TODO how to move longer routes to ensure they are still feasible when moving them (two by two? keep track of slack in successor nodes)
+			// TODO PREVENT STARTING BEFORE TIME 0?
 			// TODO find a way to ensure we make dropoffs n shit correctly
 			if (dropoff.startOfS - (pickup.startOfS + pickup.associatedNode.s) > r.L) {
 				double newStart = pickup.startOfS + dropoff.waiting > pickup.slack ? pickup.startOfS + pickup.slack : pickup.startOfS + dropoff.waiting;
