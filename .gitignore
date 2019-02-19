@@ -85,4 +85,4 @@ local.properties
 .project
 
 #solution files
-oracs_*.csv 
+*oracs*.csv 
