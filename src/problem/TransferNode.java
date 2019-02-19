@@ -6,6 +6,5 @@ public class TransferNode extends Node {
 		super(id);
 	}
 	public int f;
-	public int s;
 
 }

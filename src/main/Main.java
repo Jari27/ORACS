@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import problem.DepotNode;
+import problem.Node;
 import problem.Problem;
 import problem.Request;
 import problem.TransferNode;
@@ -97,7 +98,11 @@ public class Main {
 			System.out.printf("Depot    %03d: (%d, %d)\n", d.id, d.x, d.y);
 		}
 		// calculate distance matrix
-		p.preCalcDistances();
+		p.preProcess();
+		
+		for (Node n : p.getAllNodes(true)) {
+			System.out.printf("The nearest depot to Node %03d is Depot %03d\n", n.id, n.getNearestDepot().id);
+		}
 		return p;
 	}
 
