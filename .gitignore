@@ -84,4 +84,5 @@ local.properties
 .classpath
 .project
 
-oracs_*.csv
+#solution files
+oracs_*.csv 
