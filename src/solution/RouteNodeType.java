@@ -1,0 +1,5 @@
+package solution;
+
+public enum RouteNodeType {
+	PICKUP, DROPOFF, DEPOT_START, DEPOT_END, TRANSFER_PICKUP, TRANSFER_DROPOFF, DEFAULT
+}

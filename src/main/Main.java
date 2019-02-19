@@ -3,20 +3,29 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import problem.DepotNode;
 import problem.Node;
 import problem.Problem;
 import problem.Request;
 import problem.TransferNode;
+import solution.Solution;
 
 public class Main {
 	
 	static String fileName = "example_instances.csv";
-	static ArrayList<Problem> problems;
+	static List<Problem> problems;
+	static List<Solution> solutions;
 
 	public static void main(String[] args) throws IOException {
 		problems = createProblemInstances();
+		solutions = new ArrayList<>();
+		for (Problem p : problems) {
+			Solution s = new Solution(p);
+			solutions.add(s);
+		}
+//		Solution s = new Solution(problems.get(0));
 
 	}
 	

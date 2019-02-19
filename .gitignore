@@ -83,3 +83,5 @@ local.properties
 # custom changes
 .classpath
 .project
+
+oracs_*.csv
