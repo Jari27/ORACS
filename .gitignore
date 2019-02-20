@@ -85,5 +85,5 @@ local.properties
 .project
 
 #solution files
-*oracs*.csv 
-/log/
+*_oracs_*.csv 
+log/
