@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import problem.DepotNode;
-import problem.Node;
 import problem.Problem;
 import problem.Request;
 import problem.TransferNode;
@@ -83,8 +82,8 @@ public class Main {
 			}
 			p.requests.add(r);
 			//System.out.printf("Request  %03d: L = %d\n", r.id, r.L);
-			System.out.printf("Pickup   %03d: (%d, %d), s = %d, time = [%d, %d]     L = %d\n", r.pickupNode.id, r.pickupNode.x, r.pickupNode.y, r.pickupNode.s, r.pickupNode.e, r.pickupNode.l, r.L);
-			System.out.printf("Dropoff  %03d: (%d, %d), s = %d, time = [%d, %d]\n", r.dropoffNode.id, r.dropoffNode.x, r.dropoffNode.y, r.dropoffNode.s, r.dropoffNode.e, r.dropoffNode.l);
+			System.out.printf("Pickup   %03d: (%d, %d), s = %d, time = [%05.2f, %05.2f]     L = %d\n", r.pickupNode.id, r.pickupNode.x, r.pickupNode.y, r.pickupNode.s, r.pickupNode.e, r.pickupNode.l, r.L);
+			System.out.printf("Dropoff  %03d: (%d, %d), s = %d, time = [%05.2f, %05.2f]\n", r.dropoffNode.id, r.dropoffNode.x, r.dropoffNode.y, r.dropoffNode.s, r.dropoffNode.e, r.dropoffNode.l);
 		}
 		// create transfer node date
 		int transferServiceTimeOffset = 6 + 11 * p.numRequests + 2 * p.numDepots + 3 * p.numTransferCandidates;

@@ -48,7 +48,7 @@ public class Solution {
 			// TODO encode this with getters and setters to automatically update all values
 			
 			// arrive early and wait
-			pickup.arrival = pickup.associatedNode.getE();
+			pickup.arrival = pickup.associatedNode.getE(); // The timewindow is adjusted to ensure that the earliest time is just reachable when leaving from the nearest depot at time 0
 			pickup.setStartOfS(pickup.arrival, false);
 			pickup.numPas = 1;
 			//pickup.slack = pickup.associatedNode.getE() - pickup.startOfS;
@@ -62,18 +62,19 @@ public class Solution {
 			
 			// ensure max ride time is satisfied
 			
-			// TODO can waiting be negative? What happens?
-			// TODO Impossible pickup and dropoffs, what to do?
 			// TODO make this automagically calculate the next one; what happens when we have multiple in a row. Just try and it check feasibility afterwards? 
 			// TODO how to move longer routes to ensure they are still feasible when moving them (two by two? keep track of slack in successor nodes)
 			// TODO PREVENT STARTING BEFORE TIME 0?
 			// TODO find a way to ensure we make dropoffs n shit correctly
 			if (dropoff.startOfS - pickup.departure > r.L) {
 				double newStart = pickup.arrival + Math.min(dropoff.waiting, pickup.slack); // adjust 
+				pickup.setArrival(newStart);
 				pickup.setStartOfS(newStart, true);
 				dropoff.setArrival(pickup.departure + p.distanceBetween(dropoff.associatedNode, pickup.associatedNode));
 				dropoff.setStartOfS(Math.max(dropoff.arrival, dropoff.associatedNode.getE()), true);
 			}
+			
+			
 			
 			RouteNode depotStart = new RouteNode(r.pickupNode.getNearestDepot(), RouteNodeType.DEPOT_START);
 			depotStart.departure = pickup.arrival - p.distanceBetween(depotStart.associatedNode, pickup.associatedNode);

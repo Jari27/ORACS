@@ -36,11 +36,11 @@ public class Node {
 		return false;
 	}
 	
-	public int getE() {
+	public double getE() {
 		return -1;
 	}
 	
-	public int getL() {
+	public double getL() {
 		return -1;
 	}
 	

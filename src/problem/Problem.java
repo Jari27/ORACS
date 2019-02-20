@@ -31,8 +31,20 @@ public class Problem {
 		
 		this.preCalcDistances(allNodes);
 		this.calculateNearestDepots(allNodes);
+		this.adjustTimeWindows();
 	}
 	
+	// adjust time windows so the earliest time (e) is just reachable when leaving from the nearest depot at time 0
+	private void adjustTimeWindows() {
+		for (Request r : requests) {
+			DepotNode near = r.dropoffNode.getNearestDepot();
+			r.dropoffNode.e = Math.max(r.dropoffNode.e, this.distanceBetween(r.dropoffNode, near));
+			
+			near = r.pickupNode.getNearestDepot();
+			r.pickupNode.e = Math.max(r.pickupNode.e, this.distanceBetween(r.pickupNode, near));
+		}	
+	}
+
 	/* Returns a list containing all nodes */
 	public List<Node> getAllNodes(boolean sorted) {
 		ArrayList<Node> allNodes = new ArrayList<>();
@@ -77,7 +89,7 @@ public class Problem {
 				feasible = false;
 			}
 			if (r.dropoffNode.e - r.pickupNode.l > r.L) {
-				System.err.printf("Instance %03d: request %03d is infeasible, the minimum time between pickup and dropoff (because of the time windows) is %d - %d = %d > %d = L\n", this.index, r.id, r.dropoffNode.e, r.pickupNode.l, r.dropoffNode.e - r.pickupNode.l, r.L);
+				System.err.printf("Instance %03d: request %03d is infeasible, the minimum time between pickup and dropoff (because of the time windows) is %05.2f - %05.2f = %05.2f > %05.2f = L\n", this.index, r.id, r.dropoffNode.e, r.pickupNode.l, r.dropoffNode.e - r.pickupNode.l, (double) r.L);
 				feasible = false;
 			}
 		}

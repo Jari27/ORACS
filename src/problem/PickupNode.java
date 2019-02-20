@@ -4,7 +4,7 @@ public class PickupNode extends Node {
 	
 	public int requestId;
 	
-	public int e, l;
+	public double e, l;
 	
 	public PickupNode(int nodeId, int requestId) {
 		super(nodeId);
@@ -17,12 +17,12 @@ public class PickupNode extends Node {
 	}
 	
 	@Override
-	public int getE() {
+	public double getE() {
 		return e;
 	}
 	
 	@Override
-	public int getL() {
+	public double getL() {
 		return l;
 	}
 	
