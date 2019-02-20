@@ -86,3 +86,4 @@ local.properties
 
 #solution files
 *oracs*.csv 
+/log/

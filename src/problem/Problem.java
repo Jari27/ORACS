@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.pmw.tinylog.Logger;
+
 public class Problem {
 
 	public int index;
@@ -26,16 +28,19 @@ public class Problem {
 	
 	/* Runs all functions that are necessary for preprocessing the nodes */
 	public void preProcess() {
+		Logger.info("Preprocessing problem instance {000}", this.index);
 		// create a list that holds all nodes, then sorts them
 		List<Node> allNodes = getAllNodes(true);
 		
 		this.preCalcDistances(allNodes);
 		this.calculateNearestDepots(allNodes);
 		this.adjustTimeWindows();
+		this.isFeasible();
 	}
 	
 	// adjust time windows so the earliest time (e) is just reachable when leaving from the nearest depot at time 0
 	private void adjustTimeWindows() {
+		Logger.debug("Instance {000}: adjusting time windows", this.index);
 		for (Request r : requests) {
 			DepotNode near = r.dropoffNode.getNearestDepot();
 			r.dropoffNode.e = Math.max(r.dropoffNode.e, this.distanceBetween(r.dropoffNode, near));
@@ -61,6 +66,7 @@ public class Problem {
 	
 	/* Calculates the nearest depot, its distance and associated costs for each node */
 	private void calculateNearestDepots(List<Node> allNodes) {
+		Logger.debug("Instance {000}: calculating nearest depot", this.index);
 		for (Node a : allNodes) {
 			// we do not skip the depots
 			// calculate nearest depot for all other nodes
@@ -85,19 +91,23 @@ public class Problem {
 		boolean feasible = true;
 		for (Request r : requests) {
 			if (distanceBetween(r.pickupNode, r.dropoffNode) > r.L) {
-				System.err.printf("Instance %03d: request %03d is infeasible, the travel distance between pickup (%d, %d) and dropoff (%d, %d) is %05.2f > %05.2f = L\n", this.index, r.id, r.pickupNode.x, r.pickupNode.y, r.dropoffNode.x, r.dropoffNode.y, this.distanceBetween(r.pickupNode, r.dropoffNode), (double) r.L);
+				Logger.warn("Instance {000}: request {000} is infeasible, the travel distance between pickup ({}, {}) and dropoff ({}, {}) is {00.00} > {00.00} = L", this.index, r.id, r.pickupNode.x, r.pickupNode.y, r.dropoffNode.x, r.dropoffNode.y, this.distanceBetween(r.pickupNode, r.dropoffNode), (double) r.L);
 				feasible = false;
 			}
 			if (r.dropoffNode.e - r.pickupNode.l > r.L) {
-				System.err.printf("Instance %03d: request %03d is infeasible, the minimum time between pickup and dropoff (because of the time windows) is %05.2f - %05.2f = %05.2f > %05.2f = L\n", this.index, r.id, r.dropoffNode.e, r.pickupNode.l, r.dropoffNode.e - r.pickupNode.l, (double) r.L);
+				Logger.warn("Instance {000}: request {000} is infeasible, the minimum time between pickup and dropoff (because of the time windows) is {00.00} - {00.00} = {00.00} > {00.00} = L", this.index, r.id, r.dropoffNode.e, r.pickupNode.l, r.dropoffNode.e - r.pickupNode.l, (double) r.L);
 				feasible = false;
 			}
+		}
+		if (feasible) {
+			Logger.info("Instance {000}: all requests are feasible", this.index);
 		}
 		return feasible;
 	}
 	
 	/* Calculates an array with distances between nodes, so we don't have to do on the fly calculations */
 	private void preCalcDistances(List<Node> allNodes) {
+		Logger.debug("Instance {000}: calculating distance and cost matrices", this.index);
 		distanceMatrix = new double[allNodes.size()][allNodes.size()];
 		costMatrix = new double[allNodes.size()][allNodes.size()];
 		
@@ -135,9 +145,6 @@ public class Problem {
 	
 	// find the nearest depot for some node a
 	public Node getNearestDepot(Node a) {
-		if (a instanceof DepotNode) {
-			System.err.printf("%s is already a depot!\n");
-		}
 		// try to retrieve it before calculating it
 		Node nearest = nearestDepot.get(a);
 		if (nearest != null) {
@@ -145,7 +152,7 @@ public class Problem {
 		}
 		// we havent seen it yet, so calculate
 		// this should never happen
-		System.err.printf("Nearest depot to node %03d was not calculated. This should not happen. Did you forget to run calculateNearestDepots()?\n", a.id);
+		Logger.warn("Instance {000}: nearest depot to node {000} was not calculated. Did you forget to run Problem.preProcess()?", this.index, a.id);
 		double distance = -1;
 		for (DepotNode d : depots) {
 			double tmpDist = distanceBetween(a, d);

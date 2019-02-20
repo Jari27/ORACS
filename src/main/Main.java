@@ -11,6 +11,8 @@ import problem.Request;
 import problem.TransferNode;
 import solution.Solution;
 
+import org.pmw.tinylog.Logger;
+
 public class Main {
 	
 	static String fileName = "example_instances.csv";
@@ -18,10 +20,10 @@ public class Main {
 	static List<Solution> solutions;
 
 	public static void main(String[] args) throws IOException {
+		Logger.info("Starting main program.");
 		problems = createProblemInstances();
 		solutions = new ArrayList<>();
 		for (Problem p : problems) {
-			p.isFeasible();
 			Solution s = new Solution(p);
 			solutions.add(s);
 		}
@@ -49,9 +51,7 @@ public class Main {
 	static Problem parseInstance(int[] data) {
 		Problem p = new Problem();
 		p.index = data[0];
-		System.out.printf("--------------------------------\n");
-		System.out.printf("| Parsing problem instance %03d |\n", p.index);
-		System.out.printf("--------------------------------\n");
+		Logger.info("Parsing problem instance {000}", p.index);
 		p.numRequests = data[1];
 		p.numTransferCandidates = data[2];
 		p.numDepots = data[3];
@@ -78,12 +78,12 @@ public class Main {
 			r.pickupNode.s = data[i + requestServiceTimeOffset];
 			r.dropoffNode.s = data[i + requestServiceTimeOffset + p.numRequests];
 			if (r.pickupNode.l < r.pickupNode.e || r.dropoffNode.l < r.dropoffNode.e || r.dropoffNode.l < r.pickupNode.e || r.pickupNode.s < 0 || r.dropoffNode.s < 0) {
-				System.out.println("Impossible pickup/dropoff windows. We can never make this/something is wrong with the parser/something is wrong with the problem.");
+				Logger.warn("Impossible pickup/dropoff windows. We can never make this/something is wrong with the parser/something is wrong with the problem.");
 			}
 			p.requests.add(r);
 			//System.out.printf("Request  %03d: L = %d\n", r.id, r.L);
-			System.out.printf("Pickup   %03d: (%d, %d), s = %d, time = [%05.2f, %05.2f]     L = %d\n", r.pickupNode.id, r.pickupNode.x, r.pickupNode.y, r.pickupNode.s, r.pickupNode.e, r.pickupNode.l, r.L);
-			System.out.printf("Dropoff  %03d: (%d, %d), s = %d, time = [%05.2f, %05.2f]\n", r.dropoffNode.id, r.dropoffNode.x, r.dropoffNode.y, r.dropoffNode.s, r.dropoffNode.e, r.dropoffNode.l);
+			Logger.debug("Pickup \t{000}:\t({00}, {00})\ts = {00}\ttime = [{00.00}, {00.00}]\tL={  0}",r.pickupNode.id, r.pickupNode.x, r.pickupNode.y, r.pickupNode.s, r.pickupNode.e, r.pickupNode.l, r.L);
+			Logger.debug("Dropoff\t{000}:\t({00}, {00})\ts = {00}\ttime = [{00.00}, {00.00}]",r.dropoffNode.id, r.dropoffNode.x, r.dropoffNode.y, r.dropoffNode.s, r.dropoffNode.e, r.dropoffNode.l);
 		}
 		// create transfer node date
 		int transferServiceTimeOffset = 6 + 11 * p.numRequests + 2 * p.numDepots + 3 * p.numTransferCandidates;
@@ -95,7 +95,7 @@ public class Main {
 			t.x = data[2*i + transferLocationOffset];
 			t.y = data[2*i + 1 + transferLocationOffset];
 			p.transfers.add(t);
-			System.out.printf("Transfer %03d: (%d, %d), s = %d, f = %d\n", t.id, t.x, t.y, t.s, t.f);
+			Logger.debug("Transf.\t{000}:\t({00}, {00})\ts = {00}\tf = {00}", t.id, t.x, t.y, t.s, t.f);
 		}
 		// create depot data
 		int depotLocationOffset = 6 + p.numTransferCandidates + 4 * p.numRequests + 2 * p.numTransferCandidates;
@@ -104,7 +104,7 @@ public class Main {
 			d.x = data[2*i + depotLocationOffset];
 			d.y = data[2*i + 1 + depotLocationOffset];
 			p.depots.add(d);
-			System.out.printf("Depot    %03d: (%d, %d)\n", d.id, d.x, d.y);
+			Logger.debug("Depot  \t{000}:\t({00}, {00})", d.id, d.x, d.y);
 		}
 		// calculate distance matrix
 		p.preProcess();

@@ -1,5 +1,7 @@
 package solution;
 
+import org.pmw.tinylog.Logger;
+
 import problem.Node;
 
 public class RouteNode {
@@ -36,7 +38,7 @@ public class RouteNode {
 		public void setStartOfS(double startOfS, boolean report) {
 			// is this check necessary?
 			if (report && (startOfS < this.associatedNode.getE() || startOfS > this.associatedNode.getL())) {
-				System.out.printf("Invalid starting time for RouteNode %s (associated node %03d)\n", this.toString(), this.associatedNode.id);
+				Logger.warn("Invalid starting time for {} (associated node {000})", this.toString(), this.associatedNode.id);
 			}
 			this.startOfS = startOfS;
 			this.waiting = this.startOfS - this.arrival;
@@ -53,7 +55,7 @@ public class RouteNode {
 		@Override
 		public String toString() {
 			// TODO
-			return String.format("TODO");
+			return String.format("RouteNode associated with node %03d; type = %s, arrival = %0.2f, start of service = %0.2f", this.associatedNode.id, this.type, this.arrival, this.startOfS);
 		}
 	
 }

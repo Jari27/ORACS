@@ -1,5 +1,7 @@
 package problem;
 
+import org.pmw.tinylog.Logger;
+
 public class Node {
 	public int id;
 	public int x, y;
@@ -15,7 +17,7 @@ public class Node {
 	/* nearestDepot is private because it allows us to forcibly update the other associated variables when we update the depot*/
 	public void setNearestDepot(DepotNode near, double travelCost) {
 		if (near == null) {
-			System.err.printf("Trying to set nearest depot for node %03d, but the depot is null", id);
+			Logger.warn("Trying to set nearest depot for node {000}, but the depot is null", this.id);
 		} else {
 			this.nearestDepot = near;
 			this.nearestDepotDistance = Math.sqrt((this.x - near.x) * (this.x - near.x) + (this.y - near.y) * (this.y - near.y));

@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.pmw.tinylog.Logger;
+
 import problem.Problem;
 import problem.Request;
 
@@ -30,14 +32,14 @@ public class Solution {
 	}
 	
 	void createInitialSolution() {
-		System.out.printf("\nTrying to find a feasible solution for problem instance %03d\n\n", index);
+		Logger.info("Trying to find a feasible solution for problem instance {000}", this.index);
 		this.cost = 0;
 		for (Request r : p.requests) {
 			double dist = p.distanceBetween(r.pickupNode, r.dropoffNode);
 			if (dist > r.L) {
-				System.err.printf("No solution for request %03d, distance between pickup and dropoff too large\n", r.id);
-				System.err.printf("Instance %03d is infeasible!\n", index);
-				System.out.printf("We will try to find a close starting solution for testing purposes.\n");
+				Logger.warn("No solution for request {000}, distance between pickup and dropoff too large", r.id);
+				Logger.warn("Instance {000} is infeasible!", index);
+				Logger.warn("We will try to find a close starting solution for testing purposes.");
 				//return;
 			}
 			Route route = new Route();
@@ -94,36 +96,36 @@ public class Solution {
 			}
 			// TODO test
 		}
-		System.out.printf("Found an initial solution for problem %03d with cost %6.2f\n", index, cost);
-		printSolution();
+		Logger.info("Found an initial solution for problem {000} with cost {0.00}", index, cost);
+		logSolution();
 		try {
 			exportSolution();
 		} catch (FileNotFoundException e) {
-			System.err.printf("Cannot export file for instance %03d!\n", this.index);
-			e.printStackTrace();
+			Logger.error("Cannot export file for instance {000}", this.index);
+			Logger.error(e);
 		}
 	}
 	
-	public void printSolution() {
+	public void logSolution() {
 		int index = 1;
 		for (Route r : routes) {
-			System.out.printf("Vehicle %03d\n", index);
+			Logger.debug("Vehicle {000}", index);
 			for (RouteNode rn : r.route) {
 				switch(rn.type) {
 				case DEPOT_START:
-					System.out.printf("Leave depot %03d at %06.2f\n", rn.associatedNode.id, rn.departure);
+					Logger.debug("Leave depot {000} at {0.00}", rn.associatedNode.id, rn.departure);
 					break;
 				case PICKUP:
-					System.out.printf("Arrive at pickup  %03d at %06.2f, wait %06.2f, start service at %06.2f, leave at %06.2f\n", rn.associatedNode.id, rn.arrival, rn.waiting, rn.startOfS, rn.departure);
+					Logger.debug("Arrive at pickup  {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}", rn.associatedNode.id, rn.arrival, rn.waiting, rn.startOfS, rn.departure);
 					break;
 				case DROPOFF:
-					System.out.printf("Arrive at dropoff %03d at %06.2f, wait %06.2f, start service at %06.2f, leave at %06.2f\n", rn.associatedNode.id, rn.arrival, rn.waiting, rn.startOfS, rn.departure);
+					Logger.debug("Arrive at dropoff {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}", rn.associatedNode.id, rn.arrival, rn.waiting, rn.startOfS, rn.departure);
 					break;
 				case DEPOT_END:
-					System.out.printf("Arrive at depot %03d at %06.2f\n", rn.associatedNode.id, rn.arrival);
+					Logger.debug("Arrive at depot {000} at {0.00}", rn.associatedNode.id, rn.arrival);
 					break;
 				default:
-					System.out.printf("Invalid routenode!\n");
+					Logger.warn("Invalid routenode");
 					break;
 				}
 			}
