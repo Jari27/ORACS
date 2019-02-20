@@ -22,6 +22,7 @@ public class Main {
 		problems = createProblemInstances();
 		solutions = new ArrayList<>();
 		for (Problem p : problems) {
+			p.isFeasible();
 			Solution s = new Solution(p);
 			solutions.add(s);
 		}
@@ -109,9 +110,9 @@ public class Main {
 		// calculate distance matrix
 		p.preProcess();
 		
-		for (Node n : p.getAllNodes(true)) {
-			System.out.printf("The nearest depot to Node %03d is Depot %03d\n", n.id, n.getNearestDepot().id);
-		}
+//		for (Node n : p.getAllNodes(true)) {
+//			System.out.printf("The nearest depot to Node %03d is Depot %03d\n", n.id, n.getNearestDepot().id);
+//		}
 		return p;
 	}
 
