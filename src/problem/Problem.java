@@ -61,8 +61,27 @@ public class Problem {
 					distance = tmpDist;
 				}
 			}
+			nearestDepot.put(a, nearest);
 			a.setNearestDepot(nearest, travelCost);
 		}
+	}
+	
+	// verify that the problem has a feasible solution
+	public boolean isFeasible(){
+		// we need to verify that the travel distance between a pickup and dropoff node is less than L
+		// and that the difference between the latest pickup time and the earliest dropoff time is less than L
+		boolean feasible = true;
+		for (Request r : requests) {
+			if (distanceBetween(r.pickupNode, r.dropoffNode) > r.L) {
+				System.err.printf("Instance %03d: request %03d is infeasible, the travel distance between pickup (%d, %d) and dropoff (%d, %d) is %05.2f > %05.2f = L\n", this.index, r.id, r.pickupNode.x, r.pickupNode.y, r.dropoffNode.x, r.dropoffNode.y, this.distanceBetween(r.pickupNode, r.dropoffNode), (double) r.L);
+				feasible = false;
+			}
+			if (r.dropoffNode.e - r.pickupNode.l > r.L) {
+				System.err.printf("Instance %03d: request %03d is infeasible, the minimum time between pickup and dropoff (because of the time windows) is %d - %d = %d > %d = L\n", this.index, r.id, r.dropoffNode.e, r.pickupNode.l, r.dropoffNode.e - r.pickupNode.l, r.L);
+				feasible = false;
+			}
+		}
+		return feasible;
 	}
 	
 	/* Calculates an array with distances between nodes, so we don't have to do on the fly calculations */
@@ -82,10 +101,11 @@ public class Problem {
 			}
 		}
 		
-		printDistanceMatrix();
+		// printDistanceMatrix();
 	}
 	
 	/* Prints the distance matrix with node ids */
+	@SuppressWarnings("unused")
 	private void printDistanceMatrix() {
 		System.out.printf("     ");
 		for (int i = 0; i < distanceMatrix.length; i++) {
@@ -112,6 +132,8 @@ public class Problem {
 			return nearest;
 		}
 		// we havent seen it yet, so calculate
+		// this should never happen
+		System.err.printf("Nearest depot to node %03d was not calculated. This should not happen. Did you forget to run calculateNearestDepots()?\n", a.id);
 		double distance = -1;
 		for (DepotNode d : depots) {
 			double tmpDist = distanceBetween(a, d);
