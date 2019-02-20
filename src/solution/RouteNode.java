@@ -6,7 +6,7 @@ public class RouteNode {
 	
 		Node associatedNode;
 		
-		RouteNodeType type = RouteNodeType.DEFAULT; // TODO have multiple children of routenode that inherit shit?
+		RouteNodeType type = RouteNodeType.DEFAULT; 
 
 		double waiting = -1; // time you wait at a node before starting service 	= startOfS - arrival
 		double slack = -1;	// time you can start service later 				= l - startOfS
