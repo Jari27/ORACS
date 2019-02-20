@@ -83,7 +83,7 @@ local.properties
 # custom changes
 .classpath
 .project
-
-#solution files
 *_oracs_*.csv 
+
 log/
+!lib/*.jar
