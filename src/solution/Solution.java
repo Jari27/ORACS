@@ -19,8 +19,9 @@ public class Solution {
 	
 	double cost = 0;
 	
-	int numVehicles = 0;
 	List<Route> routes = new ArrayList<>();
+	
+	// TODO keep track of transfers, requests
 	
 	public Solution(Problem p) {
 		this.index = p.index;
@@ -53,8 +54,8 @@ public class Solution {
 			//pickup.slack = pickup.associatedNode.getE() - pickup.startOfS;
 			//pickup.waiting = pickup.startOfS - pickup.arrival;
 			
-			dropoff.arrival = pickup.startOfS + pickup.associatedNode.s + p.distanceBetween(pickup.associatedNode, dropoff.associatedNode);
-			dropoff.setStartOfS(dropoff.arrival < dropoff.associatedNode.getE() ? dropoff.associatedNode.getE() : dropoff.arrival, false);
+			dropoff.arrival = pickup.departure + p.distanceBetween(pickup.associatedNode, dropoff.associatedNode);
+			dropoff.setStartOfS(Math.max(dropoff.associatedNode.getE(), dropoff.arrival), false); // set start of s as early as possible
 			dropoff.numPas = 0;
 //			dropoff.waiting = dropoff.startOfS - dropoff.arrival;
 //			dropoff.slack = dropoff.associatedNode.getL() - dropoff.startOfS;
@@ -67,11 +68,11 @@ public class Solution {
 			// TODO how to move longer routes to ensure they are still feasible when moving them (two by two? keep track of slack in successor nodes)
 			// TODO PREVENT STARTING BEFORE TIME 0?
 			// TODO find a way to ensure we make dropoffs n shit correctly
-			if (dropoff.startOfS - (pickup.startOfS + pickup.associatedNode.s) > r.L) {
-				double newStart = pickup.startOfS + dropoff.waiting > pickup.slack ? pickup.startOfS + pickup.slack : pickup.startOfS + dropoff.waiting;
+			if (dropoff.startOfS - pickup.departure > r.L) {
+				double newStart = pickup.arrival + Math.min(dropoff.waiting, pickup.slack); // adjust 
 				pickup.setStartOfS(newStart, true);
 				dropoff.setArrival(pickup.departure + p.distanceBetween(dropoff.associatedNode, pickup.associatedNode));
-				dropoff.setStartOfS(dropoff.arrival > dropoff.associatedNode.getE() ? dropoff.arrival : dropoff.associatedNode.getE(), true);
+				dropoff.setStartOfS(Math.max(dropoff.arrival, dropoff.associatedNode.getE()), true);
 			}
 			
 			RouteNode depotStart = new RouteNode(r.pickupNode.getNearestDepot(), RouteNodeType.DEPOT_START);
