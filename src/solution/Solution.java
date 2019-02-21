@@ -47,33 +47,30 @@ public class Solution {
 			RouteNode pickup = new RouteNode(r.pickupNode, RouteNodeType.PICKUP);
 			RouteNode dropoff = new RouteNode(r.dropoffNode, RouteNodeType.DROPOFF);
 			
-			// TODO encode this with getters and setters to automatically update all values
+			// TODO keep track of requests and transfer to easily check feasibility (i.e., update when setting any routenode)
 			
 			// arrive early and wait
 			pickup.arrival = pickup.associatedNode.getE(); // The timewindow is adjusted to ensure that the earliest time is just reachable when leaving from the nearest depot at time 0
 			pickup.setStartOfS(pickup.arrival, false);
 			pickup.numPas = 1;
-			//pickup.slack = pickup.associatedNode.getE() - pickup.startOfS;
-			//pickup.waiting = pickup.startOfS - pickup.arrival;
 			
 			dropoff.arrival = pickup.departure + p.distanceBetween(pickup.associatedNode, dropoff.associatedNode);
 			dropoff.setStartOfS(Math.max(dropoff.associatedNode.getE(), dropoff.arrival), false); // set start of s as early as possible
 			dropoff.numPas = 0;
-//			dropoff.waiting = dropoff.startOfS - dropoff.arrival;
-//			dropoff.slack = dropoff.associatedNode.getL() - dropoff.startOfS;
+
 			
 			// ensure max ride time is satisfied
 			
 			// TODO make this automagically calculate the next one; what happens when we have multiple in a row. Just try and it check feasibility afterwards? 
-			// TODO how to move longer routes to ensure they are still feasible when moving them (two by two? keep track of slack in successor nodes)
-			// TODO PREVENT STARTING BEFORE TIME 0?
-			// TODO find a way to ensure we make dropoffs n shit correctly
 			if (dropoff.startOfS - pickup.departure > r.L) {
+				Logger.debug("Instance {000}: adjusting start of service of pickup time for request {000}. Current: {0.00}", index, r.id, pickup.startOfS);
 				double newStart = pickup.arrival + Math.min(dropoff.waiting, pickup.slack); // adjust 
 				pickup.setArrival(newStart);
 				pickup.setStartOfS(newStart, true);
 				dropoff.setArrival(pickup.departure + p.distanceBetween(dropoff.associatedNode, pickup.associatedNode));
 				dropoff.setStartOfS(Math.max(dropoff.arrival, dropoff.associatedNode.getE()), true);
+			} else {
+				Logger.debug("Instance {000}: initial solution already okay. Pickup.SoS: {0.00} <= {0.00} <= {0.00}, dropoff.arr = {0.00}, dropoff.SoS: {0.00} <= {0.00} <= {0.00}, length = {0.00}, r.L = {0.00}", index, pickup.associatedNode.getE(), pickup.startOfS, pickup.associatedNode.getL(), dropoff.arrival, dropoff.associatedNode.getE(), dropoff.startOfS, dropoff.associatedNode.getL(), dropoff.startOfS - pickup.departure, r.L);
 			}
 			
 			

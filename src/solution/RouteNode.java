@@ -37,8 +37,8 @@ public class RouteNode {
 		
 		public void setStartOfS(double startOfS, boolean report) {
 			// is this check necessary?
-			if (report && (startOfS < this.associatedNode.getE() || startOfS > this.associatedNode.getL())) {
-				Logger.warn("Invalid starting time for {} (associated node {000})", this.toString(), this.associatedNode.id);
+			if (report && this.associatedNode.hasTimeWindow() && (startOfS < this.associatedNode.getE() || startOfS > this.associatedNode.getL())) {
+				Logger.warn("Invalid starting time for {}", this.toString());
 			}
 			this.startOfS = startOfS;
 			this.waiting = this.startOfS - this.arrival;
