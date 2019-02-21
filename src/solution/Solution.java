@@ -134,7 +134,7 @@ public class Solution {
 	}
 	
 	public void exportSolution() throws FileNotFoundException {
-		try (PrintWriter writer = new PrintWriter(new File(String.format("initial_oracs_%d.csv", index)))) {
+		try (PrintWriter writer = new PrintWriter(new File(String.format("solutions/initial_oracs_%d.csv", index)))) {
 			writer.println(GROUP);
 			writer.println(index);
 			writer.println(String.format("%.2f", cost)); 
