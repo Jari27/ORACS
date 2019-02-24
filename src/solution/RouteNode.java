@@ -3,13 +3,27 @@ package solution;
 import org.pmw.tinylog.Logger;
 
 import problem.Node;
+import problem.Request;
 
+/**
+ * A RouteNode defines an 'action'. It is a pickup/dropoff/depot visit at a certain time with an associated request.
+ * Each transfer/depot can have multiple RouteNodes associated with it; but each pickup and dropoff (for a request) should
+ * only be visited once and thus only have 1 associated RouteNode. Each RouteNode 'knows' what the underlying Node 
+ * and Request (if applicable) are. 
+ * 
+ * TODO allow a routenode to keep track of a vehicle/route it is in?
+ * 
+ * @author jarim
+ *
+ */
 public class RouteNode {
 
 	private Node associatedNode;
-
+	private Request associatedRequest; // only valid if it's not a depot
 	private RouteNodeType type = RouteNodeType.DEFAULT;
-
+	
+	// The above three fields define a distinct routenode (e.g. type of transfer for request x)
+	
 	private double waiting = -1; // time you wait at a node before starting service = startOfS - arrival
 	private double slack = -1; // time you can start service later = l - startOfS
 
@@ -19,9 +33,23 @@ public class RouteNode {
 
 	private int numPas;
 
+	// only for depots
 	public RouteNode(Node associatedNode, RouteNodeType type) {
+		if (type != RouteNodeType.DEPOT_END && type != RouteNodeType.DEPOT_START) {
+			Logger.warn("Attempting to create non-depot {000} without associated request", associatedNode.id);
+		}
 		this.associatedNode = associatedNode;
 		this.type = type;
+	}
+	
+	// not for depots!
+	public RouteNode(Node associatedNode, RouteNodeType type, Request associatedRequest) {
+		if (type == RouteNodeType.DEPOT_END || type == RouteNodeType.DEPOT_START) {
+			Logger.warn("Attempting to create depot {000} with associated request {000}", associatedNode.id, associatedRequest.id);
+		}
+		this.associatedNode = associatedNode;
+		this.type = type;
+		this.associatedRequest = associatedRequest;
 	}
 
 	public void setWaiting(double waiting) {
@@ -40,7 +68,7 @@ public class RouteNode {
 		// is this check necessary?
 		if (warnOnError && this.associatedNode.hasTimeWindow()
 				&& (startOfS < this.associatedNode.getE() || startOfS > this.associatedNode.getL())) {
-			Logger.warn("Invalid starting time for {}", this.toString());
+			Logger.warn("Invalid starting time {00.00} <= {00.00} (= SoS) <= {00.00} for {}", this.associatedNode.getE(), startOfS, this.associatedNode.getL(), this.toString());
 		}
 		this.startOfS = startOfS;
 		this.waiting = this.startOfS - this.arrival;
@@ -68,6 +96,20 @@ public class RouteNode {
 
 	public Node getAssociatedNode() {
 		return associatedNode;
+	}
+
+	public Request getAssociatedRequest() {
+		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
+			Logger.warn("Attempting to get associated request for depot {000}", associatedRequest.id, this.associatedNode.id);
+		}
+		return associatedRequest;
+	}
+
+	public void setAssociatedRequest(Request associatedRequest) {
+		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
+			Logger.warn("Attempting to set associated request {000} for depot {000}", associatedRequest.id, this.associatedNode.id);
+		}
+		this.associatedRequest = associatedRequest;
 	}
 
 	public RouteNodeType getType() {
@@ -115,21 +157,9 @@ public class RouteNode {
 	
 	@Override
 	public String toString() {
-		// TODO
 		return String.format(
-				"RouteNode associated with node %03d; type = %s, arrival = %0.2f, start of service = %0.2f",
+				"RouteNode associated with node %03d; type = %s, arrival = %.2f, start of service = %.2f",
 				this.associatedNode.id, this.type, this.arrival, this.startOfS);
 	}
 	
-	public RouteNode copy() {
-		RouteNode rnNew = new RouteNode(this.associatedNode, this.type);
-		
-		// Set all fields -> TODO ensure we update this as we update RouteNode
-		rnNew.arrival = this.arrival;
-		rnNew.setStartOfS(this.startOfS, true); // also sets slack, waiting
-		rnNew.departure = this.departure; // set manually since some DepotNodes have no arrival/startOfS
-		rnNew.numPas = this.numPas;
-		
-		return rnNew;
-	}
 }

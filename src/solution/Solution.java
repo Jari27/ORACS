@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.pmw.tinylog.Logger;
 
 import problem.Problem;
@@ -22,8 +21,10 @@ public class Solution {
 	double cost = 0;
 
 	public List<Route> routes = new ArrayList<>();
+	
+	public List<SolutionRequest> requests = new ArrayList<>();
 
-	// TODO keep track of transfers, requests
+	// TODO keep track of transfers
 
 	/**
 	 * @param p Associated problem instance
@@ -47,15 +48,11 @@ public class Solution {
 				Logger.warn("No solution for request {000}, distance between pickup and dropoff too large", r.id);
 				Logger.warn("Instance {000} is infeasible!", index);
 				Logger.warn("We will try to find a close starting solution for testing purposes.");
-				// return;
-			}
+			}		
 			Route route = new Route();
 
-			RouteNode pickup = new RouteNode(r.pickupNode, RouteNodeType.PICKUP);
-			RouteNode dropoff = new RouteNode(r.dropoffNode, RouteNodeType.DROPOFF);
-
-			// TODO keep track of requests and transfer to easily check feasibility (i.e.,
-			// update when setting any routenode)
+			RouteNode pickup = new RouteNode(r.pickupNode, RouteNodeType.PICKUP, r);
+			RouteNode dropoff = new RouteNode(r.dropoffNode, RouteNodeType.DROPOFF, r);
 
 			// arrive early and wait\
 			// preprocessing ensures this earliest time window is just reachable
@@ -85,20 +82,28 @@ public class Solution {
 						dropoff.getArrival(), dropoff.getAssociatedNode().getE(), dropoff.getStartOfS(), dropoff.getAssociatedNode().getL(),
 						dropoff.getStartOfS() - pickup.getDeparture(), r.L);
 			}
-
+			
+			// find starting and ending depots
 			RouteNode depotStart = new RouteNode(r.pickupNode.getNearestDepot(), RouteNodeType.DEPOT_START);
 			depotStart.setDeparture(pickup.getArrival() - p.distanceBetween(depotStart.getAssociatedNode(), pickup.getAssociatedNode()));
 
 			RouteNode depotEnd = new RouteNode(r.dropoffNode.getNearestDepot(), RouteNodeType.DEPOT_END);
 			depotEnd.setArrival(dropoff.getDeparture() + p.distanceBetween(depotEnd.getAssociatedNode(), dropoff.getAssociatedNode()));
-
+			
+			// keep track of the route
 			route.add(depotStart);
 			route.add(pickup);
 			route.add(dropoff);
 			route.add(depotEnd);
+			this.routes.add(route);
+			
+			// keep track of the request
+			SolutionRequest solReq = new SolutionRequest(r);
+			solReq.pickup = pickup;
+			solReq.dropoff = dropoff;
+			this.requests.add(solReq);
 
-			routes.add(route);
-
+			// calculate the cost
 			for (int i = 0; i < route.size() - 1; i++) {
 				cost += p.costBetween(route.get(i).getAssociatedNode(), route.get(i + 1).getAssociatedNode());
 			}
@@ -144,6 +149,15 @@ public class Solution {
 				}
 			}
 			index++;
+		}
+		for (SolutionRequest sr : requests) {
+			Logger.debug("SolutionRequest {000}", sr.id);
+			Logger.debug("Request {000} is picked up at node {000} at {000.00}", sr.associatedRequest.id, sr.pickup.getAssociatedNode().id, sr.pickup.getStartOfS());
+			if (sr.hasTransfer()) {
+				Logger.debug("Request {000} is transferred to node {000} at {000.00}", sr.associatedRequest.id, sr.transferDropoff.getAssociatedNode().id, sr.transferDropoff.getStartOfS());
+				Logger.debug("Request {000} is transferred to node {000} at {000.00}", sr.associatedRequest.id, sr.transferPickup.getAssociatedNode().id, sr.transferPickup.getStartOfS());
+			} 
+			Logger.debug("Request {000} is dropped of at node {000} at {000.00}", sr.associatedRequest.id, sr.dropoff.getAssociatedNode().id, sr.dropoff.getStartOfS());
 		}
 	}
 
@@ -207,15 +221,75 @@ public class Solution {
 	
 	/**
 	 * Makes a deep copy of the current solution. Each object (except the problem instance) is copied in turn.
+	 * TODO: Update this as the objects changes. We expect to change the slack in the RouteNode and to add a way of keeping track of the transfers
 	 * 
 	 * @return a copy of this solution object
 	 */
 	public Solution copy() {
 		Solution next = new Solution(this.p);
 		next.cost = cost;
-		for (Route oldR : routes) {
-			Route newR = oldR.copy();
-			next.routes.add(newR);
+		
+		// Create solution requests
+		// we make this early so we can assign the correct RouteNodes to them as soon as we make those
+		// see below
+		for (Request r : p.requests) {
+			SolutionRequest solReq = new SolutionRequest(r);
+			next.requests.add(solReq);
+		}
+		
+		// copy routes
+		for (Route origRoute : routes) {
+			Route copyRoute = new Route();
+			
+			for (RouteNode origRN : origRoute) {
+				// create a new RouteNode and set its associated node, type and request (if not a depot)
+				// note; the associated node does not have to be copied since it is the same
+				RouteNode copyRN;
+				if (origRN.getType() == RouteNodeType.DEPOT_START || origRN.getType() == RouteNodeType.DEPOT_END) {
+					copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType());
+				} else {
+					copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.getAssociatedRequest());
+				}
+				
+				// Set all relevant fields
+				// TODO ensure we update this as we update RouteNode (i.e. slack etc)
+				if (origRN.getType() != RouteNodeType.DEPOT_START) { // start depots have no arrival
+					copyRN.setArrival(origRN.getArrival());
+				}
+				if (origRN.getType() != RouteNodeType.DEPOT_END && origRN.getType() != RouteNodeType.DEPOT_START) {
+					copyRN.setStartOfS(origRN.getStartOfS(), false); // depots have no service nor passengers
+					copyRN.setNumPas(origRN.getNumPas());
+				}
+				if (origRN.getType() == RouteNodeType.DEPOT_START) { // starting depots need a manual departure time (that's the only thing they have)
+					copyRN.setDeparture(origRN.getDeparture());
+				}
+				// save the RouteNode in our new route
+				copyRoute.add(copyRN);
+				
+				// Add RouteNode to the SolutionRequest
+				int tmpRequestId = -1;
+				if (origRN.getType() != RouteNodeType.DEPOT_END && origRN.getType() != RouteNodeType.DEPOT_START) {
+					tmpRequestId = origRN.getAssociatedRequest().id;
+				}
+				switch (origRN.getType()) {
+				case PICKUP:
+					next.requests.get(tmpRequestId - 1).pickup = copyRN; // our requests are 1-indexed instead of 0
+					break;
+				case DROPOFF:
+					next.requests.get(tmpRequestId - 1).dropoff = copyRN;
+					break;
+				case TRANSFER_PICKUP:
+					next.requests.get(tmpRequestId - 1).transferPickup = copyRN;
+					break;
+				case TRANSFER_DROPOFF:
+					next.requests.get(tmpRequestId - 1).transferDropoff = copyRN;
+					break;
+				default:
+					break;
+				}
+			}
+			// save the route in our new solution
+			next.routes.add(copyRoute);
 		}
 		return next;
 	}

@@ -9,7 +9,6 @@ import problem.DepotNode;
 import problem.Problem;
 import problem.Request;
 import problem.TransferNode;
-import solution.RouteNode;
 import solution.Solution;
 
 import org.pmw.tinylog.Logger;
@@ -33,6 +32,30 @@ public class Main {
 			s.createInitialSolution();
 			solutions.add(s);
 		}
+		
+		// Quick and dirty copying check
+		
+		Solution sol = solutions.get(0);
+		Solution copy = sol.copy();
+		
+		sol.logSolution();
+		Logger.debug("-----------");
+		copy.logSolution();
+		
+		Logger.debug("=============");
+		Logger.debug("=============");
+		
+		copy.routes.get(1).get(1).setStartOfS(copy.routes.get(1).get(1).getStartOfS() + 10); // might warn for infeasibility
+		
+		sol.logSolution();
+		Logger.debug("-----------");
+		copy.logSolution();
+		
+		Logger.debug("=============");
+		Logger.debug("=============");
+		
+		Solution copy2 = copy.copy();
+		copy2.logSolution();
 		
 //		Solution s = new Solution(problems.get(0));
 
