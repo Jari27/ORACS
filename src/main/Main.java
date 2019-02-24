@@ -33,15 +33,6 @@ public class Main {
 			s.createInitialSolution();
 			solutions.add(s);
 		}
-		// testing copying
-		Solution aSol = solutions.get(0);
-		Solution copySol = aSol.copy();
-		
-		aSol.logSolution();
-		copySol.logSolution();
-		
-		RouteNode rn = copySol.routes.get(1).get(1);
-		rn.setStartOfS(rn.getStartOfS() + 10, false);
 		
 //		Solution s = new Solution(problems.get(0));
 

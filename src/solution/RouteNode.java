@@ -100,7 +100,7 @@ public class RouteNode {
 	}
 
 	public double getDeparture() {
-		if (this.type == RouteNodeType.DEPOT_START) {
+		if (this.type == RouteNodeType.DEPOT_END) {
 			Logger.warn("Retrieving departure time of (ending) depot {000}.", this.associatedNode.id);
 		}
 		return departure;
