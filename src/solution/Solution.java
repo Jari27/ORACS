@@ -12,27 +12,34 @@ import problem.Problem;
 import problem.Request;
 
 public class Solution {
-	
-	final String GROUP = "Group #";
-	
+
+	static final String GROUP = "Group #";
+
 	int index;
-	
+
 	Problem p;
-	
+
 	double cost = 0;
-	
-	List<Route> routes = new ArrayList<>();
-	
+
+	public List<Route> routes = new ArrayList<>();
+
 	// TODO keep track of transfers, requests
-	
+
+	/**
+	 * @param p Associated problem instance
+	 */
 	public Solution(Problem p) {
 		this.index = p.index;
 		this.p = p;
-		this.createInitialSolution();
 	}
-	
-	void createInitialSolution() {
-		Logger.info("Trying to find a feasible solution for problem instance {000}", this.index);
+
+	/**
+	 * Creates an initial solution where each request is handled by a separate
+	 * vehicle/route. If the problem is infeasible, it will return a pretty close
+	 * solution but log warnings.
+	 */
+	public void createInitialSolution() {
+		Logger.debug("Trying to find a feasible solution for problem instance {000}", this.index);
 		this.cost = 0;
 		for (Request r : p.requests) {
 			double dist = p.distanceBetween(r.pickupNode, r.dropoffNode);
@@ -40,86 +47,96 @@ public class Solution {
 				Logger.warn("No solution for request {000}, distance between pickup and dropoff too large", r.id);
 				Logger.warn("Instance {000} is infeasible!", index);
 				Logger.warn("We will try to find a close starting solution for testing purposes.");
-				//return;
+				// return;
 			}
 			Route route = new Route();
-			
+
 			RouteNode pickup = new RouteNode(r.pickupNode, RouteNodeType.PICKUP);
 			RouteNode dropoff = new RouteNode(r.dropoffNode, RouteNodeType.DROPOFF);
-			
-			// TODO keep track of requests and transfer to easily check feasibility (i.e., update when setting any routenode)
-			
-			// arrive early and wait
-			pickup.arrival = pickup.associatedNode.getE(); // The timewindow is adjusted to ensure that the earliest time is just reachable when leaving from the nearest depot at time 0
-			pickup.setStartOfS(pickup.arrival, false);
-			pickup.numPas = 1;
-			
-			dropoff.arrival = pickup.departure + p.distanceBetween(pickup.associatedNode, dropoff.associatedNode);
-			dropoff.setStartOfS(Math.max(dropoff.associatedNode.getE(), dropoff.arrival), false); // set start of s as early as possible
-			dropoff.numPas = 0;
 
-			
+			// TODO keep track of requests and transfer to easily check feasibility (i.e.,
+			// update when setting any routenode)
+
+			// arrive early and wait\
+			// preprocessing ensures this earliest time window is just reachable
+			pickup.setArrival(pickup.getAssociatedNode().getE()); 
+			pickup.setStartOfS(pickup.getArrival(), false);
+			pickup.setNumPas(1);
+
+			dropoff.setArrival(pickup.getDeparture() + p.distanceBetween(pickup.getAssociatedNode(), dropoff.getAssociatedNode())); // set arrival to departure + travel time
+			dropoff.setStartOfS(Math.max(dropoff.getAssociatedNode().getE(), dropoff.getArrival()), false); // set start of s as early as possible
+			dropoff.setNumPas(0);
+
 			// ensure max ride time is satisfied
-			
-			// TODO make this automagically calculate the next one; what happens when we have multiple in a row. Just try and it check feasibility afterwards? 
-			if (dropoff.startOfS - pickup.departure > r.L) {
-				Logger.debug("Instance {000}: adjusting start of service of pickup time for request {000}. Current: {0.00}", index, r.id, pickup.startOfS);
-				double newStart = pickup.arrival + Math.min(dropoff.waiting, pickup.slack); // adjust 
+			if (dropoff.getStartOfS() - pickup.getDeparture() > r.L) {
+				Logger.debug(
+						"Instance {000}: adjusting start of service of pickup time for request {000}. Current: {0.00}",
+						index, r.id, pickup.getStartOfS());
+				
+				double newStart = pickup.getArrival() + Math.min(dropoff.getWaiting(), pickup.getSlack()); // adjust
 				pickup.setArrival(newStart);
 				pickup.setStartOfS(newStart, true);
-				dropoff.setArrival(pickup.departure + p.distanceBetween(dropoff.associatedNode, pickup.associatedNode));
-				dropoff.setStartOfS(Math.max(dropoff.arrival, dropoff.associatedNode.getE()), true);
+				dropoff.setArrival(pickup.getDeparture() + p.distanceBetween(dropoff.getAssociatedNode(), pickup.getAssociatedNode()));
+				dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.getAssociatedNode().getE()), true);
 			} else {
-				Logger.debug("Instance {000}: initial solution already okay. Pickup.SoS: {0.00} <= {0.00} <= {0.00}, dropoff.arr = {0.00}, dropoff.SoS: {0.00} <= {0.00} <= {0.00}, length = {0.00}, r.L = {0.00}", index, pickup.associatedNode.getE(), pickup.startOfS, pickup.associatedNode.getL(), dropoff.arrival, dropoff.associatedNode.getE(), dropoff.startOfS, dropoff.associatedNode.getL(), dropoff.startOfS - pickup.departure, r.L);
+				Logger.debug(
+						"Instance {000}: initial solution already okay. Pickup.SoS: {0.00} <= {0.00} <= {0.00}, dropoff.arr = {0.00}, dropoff.SoS: {0.00} <= {0.00} <= {0.00}, length = {0.00}, r.L = {0.00}",
+						index, pickup.getAssociatedNode().getE(), pickup.getStartOfS(), pickup.getAssociatedNode().getL(),
+						dropoff.getArrival(), dropoff.getAssociatedNode().getE(), dropoff.getStartOfS(), dropoff.getAssociatedNode().getL(),
+						dropoff.getStartOfS() - pickup.getDeparture(), r.L);
 			}
-			
-			
-			
+
 			RouteNode depotStart = new RouteNode(r.pickupNode.getNearestDepot(), RouteNodeType.DEPOT_START);
-			depotStart.departure = pickup.arrival - p.distanceBetween(depotStart.associatedNode, pickup.associatedNode);
-			
+			depotStart.setDeparture(pickup.getArrival() - p.distanceBetween(depotStart.getAssociatedNode(), pickup.getAssociatedNode()));
+
 			RouteNode depotEnd = new RouteNode(r.dropoffNode.getNearestDepot(), RouteNodeType.DEPOT_END);
-			depotEnd.arrival = dropoff.departure + p.distanceBetween(depotEnd.associatedNode, dropoff.associatedNode);
-			
-			route.route.add(depotStart);
-			route.route.add(pickup);
-			route.route.add(dropoff);
-			route.route.add(depotEnd);
-			
+			depotEnd.setArrival(dropoff.getDeparture() + p.distanceBetween(depotEnd.getAssociatedNode(), dropoff.getAssociatedNode()));
+
+			route.add(depotStart);
+			route.add(pickup);
+			route.add(dropoff);
+			route.add(depotEnd);
+
 			routes.add(route);
-			
-			for (int i = 0; i < route.route.size() - 1; i++) {
-				cost += p.costBetween(route.route.get(i).associatedNode, route.route.get(i+1).associatedNode);
+
+			for (int i = 0; i < route.size() - 1; i++) {
+				cost += p.costBetween(route.get(i).getAssociatedNode(), route.get(i + 1).getAssociatedNode());
 			}
-			// TODO test
 		}
 		Logger.info("Found an initial solution for problem {000} with cost {0.00}", index, cost);
 		logSolution();
 		try {
-			exportSolution();
+			exportSolution(true);
 		} catch (FileNotFoundException e) {
 			Logger.error("Cannot export file for instance {000}", this.index);
 			Logger.error(e);
 		}
 	}
-	
+
+	/**
+	 * Writes a solution to the log. TODO: Add handling of transfers
+	 */
 	public void logSolution() {
 		int index = 1;
 		for (Route r : routes) {
 			Logger.debug("Vehicle {000}", index);
-			for (RouteNode rn : r.route) {
-				switch(rn.type) {
+			for (RouteNode rn : r) {
+				switch (rn.getType()) {
 				case DEPOT_START:
-					Logger.debug("Leave depot {000} at {0.00}", rn.associatedNode.id, rn.departure);
+					Logger.debug("Leave depot {000} at {0.00}", rn.getAssociatedNode().id, rn.getDeparture());
 					break;
 				case PICKUP:
-					Logger.debug("Arrive at pickup  {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}", rn.associatedNode.id, rn.arrival, rn.waiting, rn.startOfS, rn.departure);
+					Logger.debug(
+							"Arrive at pickup  {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}",
+							rn.getAssociatedNode().id, rn.getArrival(), rn.getWaiting(), rn.getStartOfS(), rn.getDeparture());
 					break;
 				case DROPOFF:
-					Logger.debug("Arrive at dropoff {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}", rn.associatedNode.id, rn.arrival, rn.waiting, rn.startOfS, rn.departure);
+					Logger.debug(
+							"Arrive at dropoff {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}",
+							rn.getAssociatedNode().id, rn.getArrival(), rn.getWaiting(), rn.getStartOfS(), rn.getDeparture());
 					break;
 				case DEPOT_END:
-					Logger.debug("Arrive at depot {000} at {0.00}", rn.associatedNode.id, rn.arrival);
+					Logger.debug("Arrive at depot {000} at {0.00}", rn.getAssociatedNode().id, rn.getArrival());
 					break;
 				default:
 					Logger.warn("Invalid routenode");
@@ -129,45 +146,56 @@ public class Solution {
 			index++;
 		}
 	}
-	
-	public void exportSolution() throws FileNotFoundException {
-		try (PrintWriter writer = new PrintWriter(new File(String.format("solutions/initial_oracs_%d.csv", index)))) {
+
+	/**
+	 * Exports a solution as CSV to the default location
+	 * (/solutions/[initial_]oracs_{id}.csv).
+	 * 
+	 * @throws FileNotFoundException
+	 */
+	public void exportSolution(boolean isInitial) throws FileNotFoundException {
+		// TODO handle transfers
+		String file = isInitial ? String.format("solutions/initial_oracs_%d.csv", index)
+				: String.format("solutions/oracs_%d.csv", index);
+		try (PrintWriter writer = new PrintWriter(new File(file))) {
 			writer.println(GROUP);
 			writer.println(index);
-			writer.println(String.format("%.2f", cost)); 
+			writer.println(String.format("%.2f", cost));
 			writer.println(routes.size());
 			// print routes
 			for (Route r : routes) {
 				// empty line
 				writer.println();
 				// order of nodes
-				for (int i = 0; i < r.route.size(); i++) {
-					RouteNode rn = r.route.get(i);
-					if (rn.type == RouteNodeType.TRANSFER_DROPOFF || rn.type == RouteNodeType.TRANSFER_PICKUP) {
-						//writer.print(String.format("1%03d%03d", rn.associatedNode.id, passenger person thing));
+				for (int i = 0; i < r.size(); i++) {
+					RouteNode rn = r.get(i);
+					if (rn.getType() == RouteNodeType.TRANSFER_DROPOFF || rn.getType() == RouteNodeType.TRANSFER_PICKUP) {
+						// writer.print(String.format("1%03d%03d", rn.associatedNode.id, passenger
+						// person thing));
 					}
-					writer.print(rn.associatedNode.id);
+					writer.print(rn.getAssociatedNode().id);
 					// print commas but no trailing commas
-					if (i < r.route.size() - 1) {
+					if (i < r.size() - 1) {
 						writer.print(",");
 					}
 				}
 				writer.println();
 				// service time starts
-				for (int i = 0; i < r.route.size(); i++) {
-					RouteNode rn = r.route.get(i);
-					if (rn.type == RouteNodeType.TRANSFER_DROPOFF || rn.type == RouteNodeType.TRANSFER_PICKUP) {
-						//writer.print(String.format("1%03d%03d", rn.associatedNode.id, passenger person thing));
+				for (int i = 0; i < r.size(); i++) {
+					RouteNode rn = r.get(i);
+					if (rn.getType() == RouteNodeType.TRANSFER_DROPOFF || rn.getType() == RouteNodeType.TRANSFER_PICKUP) {
+						// writer.print(String.format("1%03d%03d", rn.associatedNode.id, passenger
+						// person thing));
 					}
-					if (rn.type == RouteNodeType.DEPOT_START) {
-						writer.print(rn.departure);
-					} else if (rn.type == RouteNodeType.DEPOT_END) {
-						writer.print(rn.arrival);
+					if (rn.getType() == RouteNodeType.DEPOT_START) {
+						writer.print(rn.getDeparture());
+					} else if (rn.getType() == RouteNodeType.DEPOT_END) {
+						writer.print(rn.getArrival());
 					} else {
-						writer.print(rn.startOfS);
+						writer.print(rn.getStartOfS());
 					}
 					// print commas but no trailing commas
-					if (i < r.route.size() - 1) {
+					if (i < r.size() - 1) {
 						writer.print(",");
 					}
 				}
@@ -177,4 +205,18 @@ public class Solution {
 	}
 
 	
+	/**
+	 * Makes a deep copy of the current solution. Each object (except the problem instance) is copied in turn.
+	 * 
+	 * @return a copy of this solution object
+	 */
+	public Solution copy() {
+		Solution next = new Solution(this.p);
+		next.cost = cost;
+		for (Route oldR : routes) {
+			Route newR = oldR.copy();
+			next.routes.add(newR);
+		}
+		return next;
+	}
 }

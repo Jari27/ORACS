@@ -9,13 +9,18 @@ import problem.DepotNode;
 import problem.Problem;
 import problem.Request;
 import problem.TransferNode;
+import solution.RouteNode;
 import solution.Solution;
 
 import org.pmw.tinylog.Logger;
 
+/**
+ * @author Jari Meevis
+ *
+ */
 public class Main {
 	
-	static String fileName = "example_instances.csv";
+	final static String FILE_NAME = "example_instances.csv";
 	static List<Problem> problems;
 	static List<Solution> solutions;
 
@@ -25,15 +30,32 @@ public class Main {
 		solutions = new ArrayList<>();
 		for (Problem p : problems) {
 			Solution s = new Solution(p);
+			s.createInitialSolution();
 			solutions.add(s);
 		}
+		// testing copying
+		Solution aSol = solutions.get(0);
+		Solution copySol = aSol.copy();
+		
+		aSol.logSolution();
+		copySol.logSolution();
+		
+		RouteNode rn = copySol.routes.get(1).get(1);
+		rn.setStartOfS(rn.getStartOfS() + 10, false);
+		
 //		Solution s = new Solution(problems.get(0));
 
 	}
 	
-	static ArrayList<Problem> createProblemInstances() throws IOException {
+	/**
+	 * Creates a list of problem instances as parsed from the CSV.
+	 * 
+	 * @return List<Problem> a list of problems as parsed from the CSV.
+	 * @throws IOException
+	 */
+	static List<Problem> createProblemInstances() throws IOException {
 		ArrayList<Problem> problems = new ArrayList<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				String[] stringData = line.split(", ");
@@ -48,6 +70,12 @@ public class Main {
 		return problems;
 	}
 	
+	/**
+	 * Parses a single problem instance. All numbers should be integers. There are no checks on feasibility or correctness during the parsing.
+	 * 
+	 * @param data a (trimmed) integer array representing a problem instance. Should follow the data description
+	 * @return a Problem
+	 */
 	static Problem parseInstance(int[] data) {
 		Problem p = new Problem();
 		p.index = data[0];
@@ -106,12 +134,8 @@ public class Main {
 			p.depots.add(d);
 			Logger.debug("Depot  \t{000}:\t({00}, {00})", d.id, d.x, d.y);
 		}
-		// calculate distance matrix
+		// preprocess the instance
 		p.preProcess();
-		
-//		for (Node n : p.getAllNodes(true)) {
-//			System.out.printf("The nearest depot to Node %03d is Depot %03d\n", n.id, n.getNearestDepot().id);
-//		}
 		return p;
 	}
 
