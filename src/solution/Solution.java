@@ -49,10 +49,10 @@ public class Solution {
 				Logger.warn("Instance {000} is infeasible!", index);
 				Logger.warn("We will try to find a close starting solution for testing purposes.");
 			}		
-			Route route = new Route();
+			Route route = new Route(r.id);
 
-			RouteNode pickup = new RouteNode(r.pickupNode, RouteNodeType.PICKUP, r);
-			RouteNode dropoff = new RouteNode(r.dropoffNode, RouteNodeType.DROPOFF, r);
+			RouteNode pickup = new RouteNode(r.pickupNode, RouteNodeType.PICKUP, r, route.vehicleId);
+			RouteNode dropoff = new RouteNode(r.dropoffNode, RouteNodeType.DROPOFF, r, route.vehicleId);
 
 			// arrive early and wait\
 			// preprocessing ensures this earliest time window is just reachable
@@ -84,10 +84,10 @@ public class Solution {
 			}
 			
 			// find starting and ending depots
-			RouteNode depotStart = new RouteNode(r.pickupNode.getNearestDepot(), RouteNodeType.DEPOT_START);
+			RouteNode depotStart = new RouteNode(r.pickupNode.getNearestDepot(), RouteNodeType.DEPOT_START, route.vehicleId);
 			depotStart.setDeparture(pickup.getArrival() - p.distanceBetween(depotStart.getAssociatedNode(), pickup.getAssociatedNode()));
 
-			RouteNode depotEnd = new RouteNode(r.dropoffNode.getNearestDepot(), RouteNodeType.DEPOT_END);
+			RouteNode depotEnd = new RouteNode(r.dropoffNode.getNearestDepot(), RouteNodeType.DEPOT_END, route.vehicleId);
 			depotEnd.setArrival(dropoff.getDeparture() + p.distanceBetween(depotEnd.getAssociatedNode(), dropoff.getAssociatedNode()));
 			
 			// keep track of the route
@@ -122,9 +122,8 @@ public class Solution {
 	 * Writes a solution to the log. TODO: Add handling of transfers
 	 */
 	public void logSolution() {
-		int index = 1;
 		for (Route r : routes) {
-			Logger.debug("Vehicle {000}", index);
+			Logger.debug("Vehicle {000}", r.vehicleId);
 			for (RouteNode rn : r) {
 				switch (rn.getType()) {
 				case DEPOT_START:
@@ -148,7 +147,6 @@ public class Solution {
 					break;
 				}
 			}
-			index++;
 		}
 		for (SolutionRequest sr : requests) {
 			Logger.debug("SolutionRequest {000}", sr.id);
@@ -239,16 +237,16 @@ public class Solution {
 		
 		// copy routes
 		for (Route origRoute : routes) {
-			Route copyRoute = new Route();
+			Route copyRoute = new Route(origRoute.vehicleId);
 			
 			for (RouteNode origRN : origRoute) {
 				// create a new RouteNode and set its associated node, type and request (if not a depot)
 				// note; the associated node does not have to be copied since it is the same
 				RouteNode copyRN;
 				if (origRN.getType() == RouteNodeType.DEPOT_START || origRN.getType() == RouteNodeType.DEPOT_END) {
-					copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType());
+					copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.getVehicleId());
 				} else {
-					copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.getAssociatedRequest());
+					copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.getAssociatedRequest(), origRN.getVehicleId());
 				}
 				
 				// Set all relevant fields

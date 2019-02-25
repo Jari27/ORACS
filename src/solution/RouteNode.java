@@ -11,7 +11,6 @@ import problem.Request;
  * only be visited once and thus only have 1 associated RouteNode. Each RouteNode 'knows' what the underlying Node 
  * and Request (if applicable) are. 
  * 
- * TODO allow a routenode to keep track of a vehicle/route it is in?
  * 
  * @author jarim
  *
@@ -24,6 +23,8 @@ public class RouteNode {
 	
 	// The above three fields define a distinct routenode (e.g. type of transfer for request x)
 	
+	private int vehicleId = -1;
+	
 	private double waiting = -1; // time you wait at a node before starting service = startOfS - arrival
 	private double slack = -1; // time you can start service later = l - startOfS
 
@@ -34,22 +35,24 @@ public class RouteNode {
 	private int numPas;
 
 	// only for depots
-	public RouteNode(Node associatedNode, RouteNodeType type) {
+	public RouteNode(Node associatedNode, RouteNodeType type, int vehicleId) {
 		if (type != RouteNodeType.DEPOT_END && type != RouteNodeType.DEPOT_START) {
 			Logger.warn("Attempting to create non-depot {000} without associated request", associatedNode.id);
 		}
 		this.associatedNode = associatedNode;
 		this.type = type;
+		this.vehicleId = vehicleId;
 	}
 	
 	// not for depots!
-	public RouteNode(Node associatedNode, RouteNodeType type, Request associatedRequest) {
+	public RouteNode(Node associatedNode, RouteNodeType type, Request associatedRequest, int vehicleId) {
 		if (type == RouteNodeType.DEPOT_END || type == RouteNodeType.DEPOT_START) {
 			Logger.warn("Attempting to create depot {000} with associated request {000}", associatedNode.id, associatedRequest.id);
 		}
 		this.associatedNode = associatedNode;
 		this.type = type;
 		this.associatedRequest = associatedRequest;
+		this.vehicleId = vehicleId;
 	}
 
 	public void setWaiting(double waiting) {
@@ -160,6 +163,10 @@ public class RouteNode {
 		return String.format(
 				"RouteNode associated with node %03d; type = %s, arrival = %.2f, start of service = %.2f",
 				this.associatedNode.id, this.type, this.arrival, this.startOfS);
+	}
+
+	public int getVehicleId() {
+		return this.vehicleId;
 	}
 	
 }
