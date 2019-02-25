@@ -11,10 +11,10 @@ import problem.Request;
  */
 public class SolutionRequest {
 	
-	Request associatedRequest;
+	public Request associatedRequest;
 	int id;
 	
-	RouteNode pickup, dropoff, transferPickup, transferDropoff;
+	public RouteNode pickup, dropoff, transferPickup, transferDropoff;
 	
 	public SolutionRequest(Request associatedRequest) {
 		this.associatedRequest = associatedRequest;

@@ -15,6 +15,8 @@ public class Solution {
 	static final String GROUP = "Group #";
 
 	int index;
+	
+	private int nextFreeVehicleId = -1;
 
 	Problem p;
 
@@ -33,6 +35,7 @@ public class Solution {
 		this.index = p.index;
 		this.p = p;
 	}
+	
 
 	/**
 	 * Creates an initial solution where each request is handled by a separate
@@ -107,6 +110,8 @@ public class Solution {
 			for (int i = 0; i < route.size() - 1; i++) {
 				cost += p.costBetween(route.get(i).getAssociatedNode(), route.get(i + 1).getAssociatedNode());
 			}
+			
+			this.nextFreeVehicleId = r.id + 1;
 		}
 		Logger.info("Found an initial solution for problem {000} with cost {0.00}", index, cost);
 		logSolution();
@@ -149,6 +154,10 @@ public class Solution {
 			}
 		}
 		for (SolutionRequest sr : requests) {
+			if (sr.pickup == null) {
+				Logger.debug("Request {000} is currently unhandled.", sr.associatedRequest.id);
+				continue;
+			}
 			Logger.debug("SolutionRequest {000}", sr.id);
 			Logger.debug("Request {000} is picked up at node {000} at {000.00}", sr.associatedRequest.id, sr.pickup.getAssociatedNode().id, sr.pickup.getStartOfS());
 			if (sr.hasTransfer()) {
@@ -214,6 +223,10 @@ public class Solution {
 				writer.println();
 			}
 		}
+	}
+	
+	public int getNextFreeVehicleId() {
+		return this.nextFreeVehicleId++;
 	}
 
 	

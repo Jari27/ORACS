@@ -33,6 +33,12 @@ public class Main {
 			solutions.add(s);
 		}
 		
+		// quick and dirty removal check
+		ALNS test = new ALNS(problems.get(1));
+		test.run();
+		
+		if (true) return;
+		
 		// Quick and dirty copying check
 		
 		Solution sol = solutions.get(0);
