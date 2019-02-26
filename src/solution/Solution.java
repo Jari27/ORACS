@@ -228,7 +228,21 @@ public class Solution {
 	public int getNextFreeVehicleId() {
 		return this.nextFreeVehicleId++;
 	}
-
+	// TODO
+	public void calculateWaitingTimeMatrix() {
+		int numRouteNodes = 0;
+		for (Route r : routes) {
+			numRouteNodes += r.size();
+		}
+		
+		float[][] waitingTimeMatrix = new float[numRouteNodes][numRouteNodes];
+		
+	}
+	
+	// TODO finish this feasible method
+	public boolean isFeasible() {
+		return false;
+	}
 	
 	/**
 	 * Makes a deep copy of the current solution. Each object (except the problem instance) is copied in turn.

@@ -52,6 +52,37 @@ public class ALNS implements Runnable {
 
 	}
 	
+	// TODO update slack
+	private void removeTwoNodesFromRoute(Route r, RouteNode removal1, RouteNode removal2) {
+		int numRemoved = 0;
+		RouteNode prev = r.get(0); // points to the last non-removed node
+		for (ListIterator<RouteNode> l = r.listIterator(1); l.hasNext();) {
+			RouteNode cur = l.next();
+
+			// if we have to remove the current node, remove it
+			if (cur == removal1 || cur == removal2) {
+				Logger.debug("Removed RouteNode {} from Route {000}, Request {000}", cur.toString(), r.vehicleId, cur.getAssociatedRequest().id);
+				l.remove();
+				numRemoved++;
+			} else {
+				// if we have removed exactly one node, we have removed transferpickup
+				// so all subsequent nodes have one less passenger
+				// however, if we have removed two nodes, the dropoff is removed too
+				// so the net difference (+1 -1) is zero, so no more updating
+				if (numRemoved == 1) {
+					cur.setNumPas(cur.getNumPas() - 1);
+				}
+				// if we didn't remove the current node but we have already removed some
+				// we need to update the arrival time of the current node, based on the last non-removed node
+				if (numRemoved > 0) {
+					cur.setArrival(prev.getDeparture() + p.distanceBetween(cur.getAssociatedNode(), prev.getAssociatedNode()));
+				}
+				// finally, update the reference to the previous node if we didn't delete it
+				prev = cur;
+			}
+		}
+	}
+	
 	// TODO after removal of routenodes, re-calculate slack and arrival times of route
 	public SolutionRequest destroyRandomRequest(Solution currentSolution) {
 		int index = rand.nextInt(currentSolution.requests.size());
@@ -70,24 +101,12 @@ public class ALNS implements Runnable {
 						r.clear();
 						lr.remove();
 					} else {
-						//this route does more than one request so we just remove the current request
-						int numRemoved = 0;
-						for (ListIterator<RouteNode> l = r.listIterator(); l.hasNext();) {
-							RouteNode rn = l.next();
-							if (rn == toRemove.pickup || rn == toRemove.transferDropoff) {
-								Logger.debug("Removed RouteNode {} from Route {000}, Request {000}", rn.toString(), r.vehicleId, toRemove.associatedRequest.id);
-								l.remove();
-								numRemoved++;
-							}
-						}
-						if (numRemoved != 2) {
-							Logger.warn("Removed {} instead of 2 from Route {000}, Request {000}", numRemoved, r.vehicleId, toRemove.associatedRequest.id);
-						}
-						// TODO update route timings and numpassengers
+						removeTwoNodesFromRoute(r, toRemove.pickup, toRemove.transferDropoff);
 					}
 					toRemove.pickup = null;
 					toRemove.transferDropoff = null;
 					// TODO handle removal from transferlist
+					
 				}
 				// Second vehicle visits transferPickup and dropoff
 				if (r.vehicleId == secondVehicle) {
@@ -96,19 +115,7 @@ public class ALNS implements Runnable {
 						r.clear();
 						lr.remove();
 					} else {
-					int numRemoved = 0;
-						for (ListIterator<RouteNode> l = r.listIterator(); l.hasNext();) {
-							RouteNode rn = l.next();
-							if (rn == toRemove.dropoff || rn == toRemove.transferPickup) {
-								Logger.debug("Removed RouteNode {} from Route {000}, Request {000}", rn.toString(), r.vehicleId, toRemove.associatedRequest.id);
-								l.remove();
-								numRemoved++;
-							}
-						}
-						if (numRemoved != 2) {
-							Logger.warn("Removed {} instead of 2 from Route {000}, Request {000}", numRemoved, r.vehicleId, toRemove.associatedRequest.id);
-						}
-						// TODO update route timings and numpassengers
+						removeTwoNodesFromRoute(r, toRemove.dropoff, toRemove.transferPickup);
 					}
 					toRemove.dropoff = null;
 					toRemove.transferPickup = null;
@@ -126,19 +133,7 @@ public class ALNS implements Runnable {
 						r.clear();
 						lr.remove();
 					} else {
-						int numRemoved = 0;
-						for (ListIterator<RouteNode> l = r.listIterator(); l.hasNext();) {
-							RouteNode rn = l.next();
-							if (rn == toRemove.pickup || rn == toRemove.dropoff) {
-								Logger.debug("Removed RouteNode {} from Route {000}, Request {000}", rn.toString(), r.vehicleId, toRemove.associatedRequest.id);
-								l.remove();
-								numRemoved++;
-							}
-						}
-						if (numRemoved != 2) {
-							Logger.warn("Removed {} instead of 2 from Route {000}, Request {000}", numRemoved, r.vehicleId, toRemove.associatedRequest.id);
-						}
-						// TODO update route timings and numpassengers
+						removeTwoNodesFromRoute(r, toRemove.pickup, toRemove.dropoff);
 					}
 					toRemove.pickup = null;
 					toRemove.dropoff = null;

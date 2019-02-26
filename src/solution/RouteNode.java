@@ -39,6 +39,7 @@ public class RouteNode {
 		if (type != RouteNodeType.DEPOT_END && type != RouteNodeType.DEPOT_START) {
 			Logger.warn("Attempting to create non-depot {000} without associated request", associatedNode.id);
 		}
+		this.numPas = 0;
 		this.associatedNode = associatedNode;
 		this.type = type;
 		this.vehicleId = vehicleId;
@@ -152,9 +153,9 @@ public class RouteNode {
 	}
 
 	public int getNumPas() {
-		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
-			Logger.warn("Retrieving number of passengers of depot {000}.", this.associatedNode.id);
-		}
+//		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
+//			Logger.warn("Retrieving number of passengers of depot {000}.", this.associatedNode.id);
+//		}
 		return numPas;
 	}
 	
