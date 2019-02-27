@@ -20,14 +20,6 @@ public class Route extends LinkedList<RouteNode>{
 		this.vehicleId = vehicleId;
 	}
 	
-<<<<<<< HEAD
-	//TODO max ride
-	public void isFeasible(){
-		Logger.debug("Checking if Route {000} is feasible..", this.vehicleId);
-		int index1 = 0;
-		int index2 = 0;
-		for (ListIterator<RouteNode> l = listIterator(0); l.hasNext();){
-=======
 	// TODO: cache this?
 	public double getCost(Problem p) {
 		double cost = 0;
@@ -47,9 +39,10 @@ public class Route extends LinkedList<RouteNode>{
 	}
 	
 	public boolean isFeasible(){
-		int index = 0;
+		Logger.debug("Checking if Route {000} is feasible..", this.vehicleId);
+		int index1 = 0;
+		int index2 = 0;
 		for (ListIterator<RouteNode> l = listIterator(1); l.hasNext();){
->>>>>>> branch 'master' of https://github.com/Jari27/ORACS.git
 			RouteNode cur = l.next();
 			index1 += nodeIsFeasible(cur);
 			index2 += 1;
@@ -61,7 +54,7 @@ public class Route extends LinkedList<RouteNode>{
 			Logger.debug("Route {000} is unfeasible..", this.vehicleId);
 			//return false;
 		}
-		
+		return false;
 	}
 		
 	public int nodeIsFeasible(RouteNode rn) {
