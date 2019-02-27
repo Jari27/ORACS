@@ -19,6 +19,7 @@ public class Route extends LinkedList<RouteNode>{
 		this.vehicleId = vehicleId;
 	}
 	
+	//TODO max ride
 	public void isFeasible(){
 		Logger.debug("Checking if Route {000} is feasible..", this.vehicleId);
 		int index1 = 0;
