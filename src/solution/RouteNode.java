@@ -20,6 +20,7 @@ public class RouteNode {
 	private Node associatedNode;
 	private Request associatedRequest; // only valid if it's not a depot
 	private RouteNodeType type = RouteNodeType.DEFAULT;
+	private SolutionRequest associatedSolutionRequest;
 	
 	// The above three fields define a distinct routenode (e.g. type of transfer for request x)
 	
@@ -123,7 +124,21 @@ public class RouteNode {
 		}
 		this.associatedRequest = associatedRequest;
 	}
-
+	
+	public void setSolutionRequest(SolutionRequest solutionRequest){
+		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
+			Logger.warn("Attempting to set associated request {000} for depot {000}", associatedRequest.id, this.associatedNode.id);
+		}
+		this.associatedSolutionRequest = solutionRequest;
+	}
+	
+	public SolutionRequest getSolutionRequest() {
+		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
+			Logger.warn("Attempting to get associated request for depot {000}", this.associatedNode.id);
+		}
+		return associatedSolutionRequest;
+	}
+	
 	public RouteNodeType getType() {
 		return type;
 	}

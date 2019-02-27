@@ -38,11 +38,11 @@ public class Route extends LinkedList<RouteNode>{
 		return r;
 	}
 	
-	public boolean isFeasible(){
+	public void isFeasible(){
 		Logger.debug("Checking if Route {000} is feasible..", this.vehicleId);
 		int index1 = 0;
 		int index2 = 0;
-		for (ListIterator<RouteNode> l = listIterator(1); l.hasNext();){
+		for (ListIterator<RouteNode> l = listIterator(0); l.hasNext();){
 			RouteNode cur = l.next();
 			index1 += nodeIsFeasible(cur);
 			index2 += 1;
@@ -54,12 +54,14 @@ public class Route extends LinkedList<RouteNode>{
 			Logger.debug("Route {000} is unfeasible..", this.vehicleId);
 			//return false;
 		}
-		return false;
 	}
 		
 	public int nodeIsFeasible(RouteNode rn) {
 		RouteNodeType type = rn.getType();
 		switch(type){
+		case DEPOT_START:
+			Logger.debug("This is the starting depot, time window always satisfied");
+			return 1;
 		case PICKUP:
 			Request associatedRp = rn.getAssociatedRequest();
 			PickupNode pickup = associatedRp.getPickup();
@@ -74,17 +76,23 @@ public class Route extends LinkedList<RouteNode>{
 		case DROPOFF:
 			Request associatedRd = rn.getAssociatedRequest();
 			DropoffNode dropoff = associatedRd.getDropoff();
-			Logger.debug("This is a dropoff node with time window: {00} - {00}", dropoff.getE(), dropoff.getL());
-			if(rn.getStartOfS() >= dropoff.getE() && rn.getStartOfS() <= dropoff.getL()){
+			SolutionRequest sR = rn.getSolutionRequest();
+			/*sR.talk();
+			RouteNode assPickup = sR.pickup;
+			double startOfSpickup = assPickup.getStartOfS();
+			//get the start of service time of the corresponding pickup node  go to solution request>> routepickupnode
+			Logger.debug("This is a dropoff node with time window: {00} - {00} and max ride time: {000}", dropoff.getE(), dropoff.getL(), startOfSpickup);
+			if(rn.getStartOfS() >= dropoff.getE() && rn.getStartOfS() <= dropoff.getL() && rn.getStartOfS() - startOfSpickup < associatedRd.L){
 				Logger.debug("The service starts at {000} which lies within the time window", rn.getStartOfS());
+				Logger.debug("Start service dropoff: {000}, start service pickup: {000}, max ride time: {000}", rn.getStartOfS(),
+						startOfSpickup, associatedRd.L);
 				return 1;
 			}else{
 				Logger.debug("The service starts at {000} which does not lie within the time window", rn.getStartOfS());
+				Logger.debug("Start service dropoff: {000}, start service pickup: {000}, max ride time: {000}", rn.getStartOfS(),
+						startOfSpickup, associatedRd.L);
 				return 0;
-			}
-		case DEPOT_START:
-			Logger.debug("This is the starting depot, time window always satisfied");
-			return 1;
+			}*/
 		case DEPOT_END:
 			Logger.debug("This is the ending depot, time window always satisfied");
 			return 1;

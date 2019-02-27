@@ -106,6 +106,10 @@ public class Solution {
 			SolutionRequest solReq = new SolutionRequest(r);
 			solReq.pickup = pickup;
 			solReq.dropoff = dropoff;
+			pickup.setSolutionRequest(solReq);
+			dropoff.setSolutionRequest(solReq);
+			SolutionRequest rew = dropoff.getSolutionRequest();
+			rew.talk();
 			this.requests.add(solReq);
 
 			// calculate the cost
