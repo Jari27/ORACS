@@ -9,6 +9,7 @@ import problem.PickupNode;
 import problem.DropoffNode;
 import problem.Request;
 
+import problem.Problem;
 
 @SuppressWarnings("serial")
 public class Route extends LinkedList<RouteNode>{
@@ -19,12 +20,36 @@ public class Route extends LinkedList<RouteNode>{
 		this.vehicleId = vehicleId;
 	}
 	
+<<<<<<< HEAD
 	//TODO max ride
 	public void isFeasible(){
 		Logger.debug("Checking if Route {000} is feasible..", this.vehicleId);
 		int index1 = 0;
 		int index2 = 0;
 		for (ListIterator<RouteNode> l = listIterator(0); l.hasNext();){
+=======
+	// TODO: cache this?
+	public double getCost(Problem p) {
+		double cost = 0;
+		for (int i = 0; i < this.size() - 1; i++) {
+			cost += p.costBetween(this.get(i).getAssociatedNode(), this.get(i+1).getAssociatedNode());
+		}
+		return cost;
+	}
+
+	public Route copy() {
+		Route r = new Route(this.vehicleId);
+		for (RouteNode cur : this) {
+			RouteNode next = cur.copy();
+			r.add(next);
+		}
+		return r;
+	}
+	
+	public boolean isFeasible(){
+		int index = 0;
+		for (ListIterator<RouteNode> l = listIterator(1); l.hasNext();){
+>>>>>>> branch 'master' of https://github.com/Jari27/ORACS.git
 			RouteNode cur = l.next();
 			index1 += nodeIsFeasible(cur);
 			index2 += 1;

@@ -34,7 +34,7 @@ public class Main {
 		}
 		
 		// quick and dirty removal check
-		ALNS test = new ALNS(problems.get(1));
+		ALNS test = new ALNS(problems.get(2));
 		test.run();
 		
 		if (true) return;

@@ -45,7 +45,15 @@ public class RouteNode {
 		this.vehicleId = vehicleId;
 	}
 	
-	// not for depots!
+	// all other nodes
+	/**
+	 * Creates a non-depot node
+	 * 
+	 * @param associatedNode the associated node
+	 * @param type the type of node
+	 * @param associatedRequest the associated request (if not a depot)
+	 * @param vehicleId the vehicle this node belongs to
+	 */
 	public RouteNode(Node associatedNode, RouteNodeType type, Request associatedRequest, int vehicleId) {
 		if (type == RouteNodeType.DEPOT_END || type == RouteNodeType.DEPOT_START) {
 			Logger.warn("Attempting to create depot {000} with associated request {000}", associatedNode.id, associatedRequest.id);
@@ -168,6 +176,26 @@ public class RouteNode {
 
 	public int getVehicleId() {
 		return this.vehicleId;
+	}
+	
+	public void setVehicleId(int vehicleId) {
+		this.vehicleId = vehicleId;
+	}
+
+	public RouteNode copy() {
+		RouteNode copy;
+		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
+			copy = new RouteNode(this.associatedNode, this.type, this.vehicleId);	
+		} else {
+			copy = new RouteNode(this.associatedNode, this.type, this.associatedRequest, this.vehicleId);
+		}
+		copy.waiting = this.waiting;
+		copy.slack = this.slack;
+		copy.startOfS = this.startOfS;
+		copy.arrival = this.arrival;
+		copy.departure = this.departure;
+		copy.numPas = this.numPas;
+		return copy;
 	}
 	
 }
