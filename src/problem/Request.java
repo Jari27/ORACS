@@ -17,5 +17,13 @@ public class Request {
 		Node[] res = { pickupNode, dropoffNode };
 		return (res);
 	}
+	
+	public PickupNode getPickup(){
+		return pickupNode;
+	}
+	
+	public DropoffNode getDropoff(){
+		return dropoffNode;
+	}
 
 }
