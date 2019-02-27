@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
+
 import org.pmw.tinylog.Logger;
 
 import problem.Problem;
@@ -16,14 +18,16 @@ public class Solution {
 
 	int index;
 	
+	private double cost = -1;
+	
 	private int nextFreeVehicleId = -1;
 
 	Problem p;
 
-	double cost = 0;
-
 	public List<Route> routes = new ArrayList<>();
 	
+	
+	// should be sorted!
 	public List<SolutionRequest> requests = new ArrayList<>();
 
 	// TODO keep track of transfers
@@ -44,7 +48,6 @@ public class Solution {
 	 */
 	public void createInitialSolution() {
 		Logger.debug("Trying to find a feasible solution for problem instance {000}", this.index);
-		this.cost = 0;
 		for (Request r : p.requests) {
 			double dist = p.distanceBetween(r.pickupNode, r.dropoffNode);
 			if (dist > r.L) {
@@ -107,11 +110,6 @@ public class Solution {
 			solReq.pickup = pickup;
 			solReq.dropoff = dropoff;
 			this.requests.add(solReq);
-
-			// calculate the cost
-			for (int i = 0; i < route.size() - 1; i++) {
-				cost += p.costBetween(route.get(i).getAssociatedNode(), route.get(i + 1).getAssociatedNode());
-			}
 			
 			this.nextFreeVehicleId = r.id + 1;
 		}
@@ -123,6 +121,15 @@ public class Solution {
 			Logger.error("Cannot export file for instance {000}", this.index);
 			Logger.error(e);
 		}
+	}
+	
+	public void getCost() {
+		cost = 0;
+		for (Route route : routes) {
+			cost += route.getCost(p);
+		}
+		// TODO add cost of transfer locations
+		
 	}
 
 	/**
@@ -246,6 +253,28 @@ public class Solution {
 		return false;
 	}
 	
+	// TODO how to make sure the routenodes are linked correctly to the request and the route??
+	// note that the routenodes in route are a copy of originals so the references are messed up
+	// sr does not have the correct pickup and dropoff reference
+	// possible solution: iterate over both the actual route and its (modified and better) copy
+	// change differences in the actual route to the copy; insert new nodes at the right location
+	// add those new nodes to the solution request
+	// what if something is a transfer? Do we call this function twice? Or extend it to have two routes? (and change the heuristic too?)
+	// probably just give it two routes and change the heuristic
+	public void insertRoute(Route r, SolutionRequest sr) {
+		this.requests.add(sr.id - 1, sr); // add at right position
+		// try to replace a route
+		for (ListIterator<Route> iter = this.routes.listIterator(); iter.hasNext(); ) {
+			Route current = iter.next();
+			if (current.vehicleId == r.vehicleId) {
+				// we are in the right route
+				for (int i = 0; i < Math.max(r.size(), current.size()); i++) {
+					;
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Makes a deep copy of the current solution. Each object (except the problem instance) is copied in turn.
 	 * TODO: Update this as the objects changes. We expect to change the slack in the RouteNode and to add a way of keeping track of the transfers
@@ -254,7 +283,7 @@ public class Solution {
 	 */
 	public Solution copy() {
 		Solution next = new Solution(this.p);
-		next.cost = cost;
+		next.cost = this.cost;
 		
 		// Create solution requests
 		// we make this early so we can assign the correct RouteNodes to them as soon as we make those
@@ -267,6 +296,7 @@ public class Solution {
 		// copy routes
 		for (Route origRoute : routes) {
 			Route copyRoute = new Route(origRoute.vehicleId);
+			//copyRoute.setRouteChanged(); // force recalculation of costs of all routes
 			
 			for (RouteNode origRN : origRoute) {
 				// create a new RouteNode and set its associated node, type and request (if not a depot)
@@ -284,13 +314,15 @@ public class Solution {
 					copyRN.setArrival(origRN.getArrival());
 				}
 				if (origRN.getType() != RouteNodeType.DEPOT_END && origRN.getType() != RouteNodeType.DEPOT_START) {
-					copyRN.setStartOfS(origRN.getStartOfS(), false); // depots have no service nor passengers
-					copyRN.setNumPas(origRN.getNumPas());
+					copyRN.setStartOfS(origRN.getStartOfS(), false); // depots have no service
 				}
 				if (origRN.getType() == RouteNodeType.DEPOT_START) { // starting depots need a manual departure time (that's the only thing they have)
 					copyRN.setDeparture(origRN.getDeparture());
 				}
+				copyRN.setNumPas(origRN.getNumPas());
+				
 				// save the RouteNode in our new route
+				
 				copyRoute.add(copyRN);
 				
 				// Add RouteNode to the SolutionRequest

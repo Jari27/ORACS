@@ -15,22 +15,33 @@ import problem.Problem;
 public class Route extends LinkedList<RouteNode>{
 	
 	public int vehicleId = -1;
+	private double cost = 0;
+	private boolean routeChanged = true;
 	
 	public Route(int vehicleId) {
 		this.vehicleId = vehicleId;
 	}
 	
-	// TODO: cache this?
 	public double getCost(Problem p) {
-		double cost = 0;
-		for (int i = 0; i < this.size() - 1; i++) {
-			cost += p.costBetween(this.get(i).getAssociatedNode(), this.get(i+1).getAssociatedNode());
+		if (routeChanged) {
+			Logger.debug("Calculating new cost of Route {000}. Old: {00.00}", vehicleId, cost);
+			cost = 0;
+			for (int i = 0; i < this.size() - 1; i++) {
+				cost += p.costBetween(this.get(i).getAssociatedNode(), this.get(i+1).getAssociatedNode());
+			}
+			routeChanged = false;
 		}
+		Logger.debug("(New) cost: {00.00}", cost);
 		return cost;
+	}
+	
+	public void setRouteChanged() {
+		this.routeChanged = true;
 	}
 
 	public Route copy() {
 		Route r = new Route(this.vehicleId);
+		r.routeChanged = true; // force cost recalculation after copy
 		for (RouteNode cur : this) {
 			RouteNode next = cur.copy();
 			r.add(next);
