@@ -1,5 +1,6 @@
 package solution;
 
+
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -8,8 +9,8 @@ import org.pmw.tinylog.Logger;
 import problem.PickupNode;
 import problem.DropoffNode;
 import problem.Request;
-
 import problem.Problem;
+import solution.SolutionRequest;
 
 @SuppressWarnings("serial")
 public class Route extends LinkedList<RouteNode>{
@@ -77,22 +78,19 @@ public class Route extends LinkedList<RouteNode>{
 			Request associatedRd = rn.getAssociatedRequest();
 			DropoffNode dropoff = associatedRd.getDropoff();
 			SolutionRequest sR = rn.getSolutionRequest();
-			/*sR.talk();
 			RouteNode assPickup = sR.pickup;
 			double startOfSpickup = assPickup.getStartOfS();
-			//get the start of service time of the corresponding pickup node  go to solution request>> routepickupnode
-			Logger.debug("This is a dropoff node with time window: {00} - {00} and max ride time: {000}", dropoff.getE(), dropoff.getL(), startOfSpickup);
+			
+		Logger.debug("This is a dropoff node with time window: {00} - {00} and max ride time: {000}", dropoff.getE(), dropoff.getL(), associatedRd.L);
 			if(rn.getStartOfS() >= dropoff.getE() && rn.getStartOfS() <= dropoff.getL() && rn.getStartOfS() - startOfSpickup < associatedRd.L){
-				Logger.debug("The service starts at {000} which lies within the time window", rn.getStartOfS());
-				Logger.debug("Start service dropoff: {000}, start service pickup: {000}, max ride time: {000}", rn.getStartOfS(),
-						startOfSpickup, associatedRd.L);
+				Logger.debug("Start service dropoff: {000}, start service pickup: {000}, ride time: {000}", rn.getStartOfS(),
+						startOfSpickup, rn.getStartOfS() - startOfSpickup);
 				return 1;
 			}else{
-				Logger.debug("The service starts at {000} which does not lie within the time window", rn.getStartOfS());
-				Logger.debug("Start service dropoff: {000}, start service pickup: {000}, max ride time: {000}", rn.getStartOfS(),
-						startOfSpickup, associatedRd.L);
+				Logger.debug("Start service dropoff: {000}, start service pickup: {000}, ride time: {000}", rn.getStartOfS(),
+						startOfSpickup, rn.getStartOfS() - startOfSpickup);
 				return 0;
-			}*/
+			}
 		case DEPOT_END:
 			Logger.debug("This is the ending depot, time window always satisfied");
 			return 1;

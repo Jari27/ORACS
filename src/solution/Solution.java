@@ -98,8 +98,6 @@ public class Solution {
 			route.add(pickup);
 			route.add(dropoff);
 			route.add(depotEnd);
-			//check if isFeasible works
-			route.isFeasible();
 			this.routes.add(route);
 			
 			// keep track of the request
@@ -108,8 +106,6 @@ public class Solution {
 			solReq.dropoff = dropoff;
 			pickup.setSolutionRequest(solReq);
 			dropoff.setSolutionRequest(solReq);
-			SolutionRequest rew = dropoff.getSolutionRequest();
-			rew.talk();
 			this.requests.add(solReq);
 
 			// calculate the cost

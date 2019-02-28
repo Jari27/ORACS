@@ -24,9 +24,6 @@ public class SolutionRequest {
 		this.id = associatedRequest.id;
 		this.L = associatedRequest.L;
 	}
-	public void talk(){
-		Logger.debug("Hi..");
-	}
 	
 	public RouteNode getPickup(){
 		return this.pickup;
