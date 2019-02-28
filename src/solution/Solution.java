@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
-
 import org.pmw.tinylog.Logger;
 
 import problem.Problem;
@@ -113,7 +111,7 @@ public class Solution {
 			
 			this.nextFreeVehicleId = r.id + 1;
 		}
-		Logger.info("Found an initial solution for problem {000} with cost {0.00}", index, cost);
+		Logger.info("Found an initial solution for problem {000} with cost {0.00}", index, this.getCost());
 		logSolution();
 		try {
 			exportSolution(true);
@@ -123,44 +121,22 @@ public class Solution {
 		}
 	}
 	
-	public void getCost() {
+	public double getCost() {
 		cost = 0;
 		for (Route route : routes) {
 			cost += route.getCost(p);
 		}
 		// TODO add cost of transfer locations
-		
+		return cost;
 	}
 
 	/**
 	 * Writes a solution to the log. TODO: Add handling of transfers
 	 */
 	public void logSolution() {
+		Logger.debug("Solution {000} - cost {00.00}", this.index, this.getCost());
 		for (Route r : routes) {
-			Logger.debug("Vehicle {000}", r.vehicleId);
-			for (RouteNode rn : r) {
-				switch (rn.getType()) {
-				case DEPOT_START:
-					Logger.debug("Leave depot {000} at {0.00}", rn.getAssociatedNode().id, rn.getDeparture());
-					break;
-				case PICKUP:
-					Logger.debug(
-							"Arrive at pickup  {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}",
-							rn.getAssociatedNode().id, rn.getArrival(), rn.getWaiting(), rn.getStartOfS(), rn.getDeparture());
-					break;
-				case DROPOFF:
-					Logger.debug(
-							"Arrive at dropoff {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}",
-							rn.getAssociatedNode().id, rn.getArrival(), rn.getWaiting(), rn.getStartOfS(), rn.getDeparture());
-					break;
-				case DEPOT_END:
-					Logger.debug("Arrive at depot {000} at {0.00}", rn.getAssociatedNode().id, rn.getArrival());
-					break;
-				default:
-					Logger.warn("Invalid routenode");
-					break;
-				}
-			}
+			r.logRoute();
 		}
 		for (SolutionRequest sr : requests) {
 			if (sr.pickup == null) {
@@ -253,25 +229,74 @@ public class Solution {
 		return false;
 	}
 	
-	// TODO how to make sure the routenodes are linked correctly to the request and the route??
-	// note that the routenodes in route are a copy of originals so the references are messed up
-	// sr does not have the correct pickup and dropoff reference
-	// possible solution: iterate over both the actual route and its (modified and better) copy
-	// change differences in the actual route to the copy; insert new nodes at the right location
-	// add those new nodes to the solution request
-	// what if something is a transfer? Do we call this function twice? Or extend it to have two routes? (and change the heuristic too?)
-	// probably just give it two routes and change the heuristic
-	public void insertRoute(Route r, SolutionRequest sr) {
-		this.requests.add(sr.id - 1, sr); // add at right position
+	/** 
+	 * Modifies a solution by replacing a the route with the same vehicleId by the given route. 
+	 * It does this by inserting new nodes and updating the timings of the old nodes, so that references from SolutionRequests to RouteNodes stay valid
+	 * To ensure that the SolutionRequest that was inserted in the longer route is updated adequately, we need a reference to that too.
+	 * @param r the new route
+	 * @param sr the SolutionRequest of the added request
+	 */
+	public void replaceRouteWithLongerRoute(Route r, SolutionRequest sr) {
+		Logger.debug("Trying to insert Route {000} into Solution {000}", r.vehicleId, this.index);
+		
 		// try to replace a route
-		for (ListIterator<Route> iter = this.routes.listIterator(); iter.hasNext(); ) {
-			Route current = iter.next();
-			if (current.vehicleId == r.vehicleId) {
-				// we are in the right route
-				for (int i = 0; i < Math.max(r.size(), current.size()); i++) {
-					;
+		boolean modificationDone = false; // check if we need to insert
+		for (Route route : this.routes) {
+			if (route.vehicleId == r.vehicleId) {
+				
+				// preprocess starting depot
+				// since this is not stored anywhere else, we do not need to update the references
+				// we can instead directly replace the RouteNode
+				route.removeFirst();
+				route.addFirst(r.getFirst());
+				
+				for (int i = 1; i < r.size() - 1; i++) { // check the biggest one because we insert in the smallest one
+					// we check if each node is that same by comparing associated nodes
+					// for non-transfers, that is enough since each pickup/dropoff is visited only once
+					// so if the associated nodes are the same, the RouteNodes are the same object (albeit with a different reference due to copying)
+					// for transfers we also check the type and associated request
+					RouteNode toUpdate = route.get(i);
+					RouteNode newTimings = r.get(i);
+					if (toUpdate.isEqualExceptTimings(newTimings)) {
+						Logger.debug("RouteNode ({}) and RouteNode ({}) are the same.", toUpdate, newTimings);
+						if (modificationDone) {
+							// we have inserted at least one node, so we need to change subsequent timings
+							toUpdate.setArrival(newTimings.getArrival());
+							toUpdate.setStartOfS(newTimings.getStartOfS());
+							toUpdate.setNumPas(newTimings.getNumPas());
+						}
+					} else {
+						// different node, so insert
+						modificationDone = true;
+						route.add(i, newTimings);
+						switch (newTimings.getType()) {
+						case PICKUP:
+							sr.pickup = newTimings;
+							break;
+						case DROPOFF:
+							sr.dropoff = newTimings;
+							break;
+						case TRANSFER_PICKUP:
+							sr.transferPickup = newTimings;
+							break;
+						case TRANSFER_DROPOFF:
+							sr.transferDropoff = newTimings;
+							break;
+						default:
+							Logger.warn("Problem while inserting RouteNode ({}) into Route {000} at location {000}: it has no valid type", newTimings, route.vehicleId, i);
+							break;
+						}
+					}
 				}
+				// replace last depot
+				route.removeLast();
+				route.addLast(r.getLast());
 			}
+		}
+		if (!modificationDone) {
+			Logger.warn("Route {000} could not be inserted. ");
+		} else {
+			Logger.debug("Replaced Route {000} by modified version in solution {000}", r.vehicleId, this.index);
 		}
 	}
 	
@@ -295,7 +320,7 @@ public class Solution {
 		
 		// copy routes
 		for (Route origRoute : routes) {
-			Route copyRoute = new Route(origRoute.vehicleId);
+			Route copyRoute = new Route(origRoute.vehicleId); // forces recalculation of costs
 			//copyRoute.setRouteChanged(); // force recalculation of costs of all routes
 			
 			for (RouteNode origRN : origRoute) {

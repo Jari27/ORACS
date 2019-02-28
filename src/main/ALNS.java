@@ -26,23 +26,45 @@ public class ALNS implements Runnable {
 	Problem p;
 	List<Solution> solutions = new ArrayList<>();
 	
-	Random rand = new Random();
+	private final int MAX_IT = 50;
+	private final double T_START = 10;
+	
+	private double temp = 10;
+	
+	Random rand;
+	long seed = -1;
 	
 	Solution currentSol;
 	
 	public ALNS(Problem p) {
+		//rand.setSeed(12345678910L);
 		this.p = p;
 		this.currentSol = new Solution(p);
 		this.currentSol.createInitialSolution();
+		this.seed = System.currentTimeMillis();
+		//this.seed = 1551379949306L;
+		this.rand = new Random(this.seed);
+	}
+	
+	public boolean accept(double oldCost, double newCost, double T) {
+		if (newCost < oldCost) return true;
+		if (T == 0) return newCost < oldCost;
+		
+		double annealing = Math.exp(-(newCost - oldCost)/T);
+		if (annealing >= rand.nextDouble()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public double nextTemp() {
+		temp = Math.max(temp - T_START/MAX_IT, 0);
+		return temp;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Runnable#run()
-	 */
 	@Override
 	public void run() {
+		Logger.info("SEED: {}", this.seed);
 		SolutionRequest destroyed;
 //		currentSol.logSolution();
 //		Logger.debug("===========");
@@ -52,21 +74,33 @@ public class ALNS implements Runnable {
 //		Logger.debug("Trying to insert request {000}", destroyed.associatedRequest.id);
 //		insertRequest(destroyed, currentSol);
 		
-		for (int i = 0; i < currentSol.requests.size(); i++) {
+		for (int i = 1; i <= MAX_IT; i++) {
+			Logger.info("ITERATION {}", i);
+			nextTemp();
+			Logger.info("{00.00}",temp);
+			double preDestroyCost = currentSol.getCost();
 			Solution copy = currentSol.copy();
-			destroyed = destroyRequest(copy, i);
-			Logger.debug("Destroyed request {000}", destroyed.associatedRequest.id);
-			Logger.debug("Trying to insert request {000}", destroyed.associatedRequest.id);
-			insertRequest(destroyed, copy);
-			Logger.debug("=============");
+			destroyed = destroyRandomRequest(copy);
+			Logger.info("Destroyed request {000}. Trying insertion.", destroyed.associatedRequest.id);
+			if (bestGreedyInsert(destroyed, copy)) {
+				double postInsertCost = copy.getCost();
+				copy.logSolution(); 
+				Logger.info("Current cost: {00.00}", postInsertCost);
+				if (postInsertCost - preDestroyCost < 0) { // change to simulated annealing, store results
+					Logger.info("Accepted new solution");
+					currentSol = copy;
+				} else if (accept(preDestroyCost, postInsertCost, temp)) {
+					Logger.info("Accepted new solution (sim ann)");
+					currentSol = copy;
+				}
+			} else {
+				Logger.info("No feasible insertion for request {000}.", destroyed.associatedRequest.id);
+				Logger.info("Current cost: {00.00}", preDestroyCost);
+			}
 		}
-		// TODO Auto-generated method stub
-
 	}
 	
-	// TODO the SolutionRequest does not point to the right nodes
-	// nor do the RouteNodes inside the Route
-	public void insertRequest(SolutionRequest toInsert, Solution s) {
+	public boolean bestGreedyInsert(SolutionRequest toInsert, Solution s) {
 		// we do this manually now, we will use cheaper feasibility checking later
 		
 		// try insertion (note: creating a new route is not possible atm TODO)
@@ -129,7 +163,7 @@ public class ALNS implements Runnable {
 						break;
 					}
 					
-					if (j == onlyPickupInsert.size() - 1) { // change ending depot too
+					if (j == onlyPickupInsert.size()) { // change ending depot too
 						
 						RouteNode depotEnd = new RouteNode(dropoff.getAssociatedNode().getNearestDepot(), RouteNodeType.DEPOT_END, onlyPickupInsert.vehicleId);
 						insertBoth.removeLast(); // remove depot
@@ -138,13 +172,13 @@ public class ALNS implements Runnable {
 						depotEnd.setArrival(dropoff.getDeparture() - p.distanceBetween(dropoff.getAssociatedNode(), depotEnd.getAssociatedNode())); // set its arrival time
 					}
 					Logger.debug("Dropoff insertion succesful at location {000}", j);
-					Logger.debug("Checking feasibility of full route", j);
+					Logger.debug("Checking feasibility of full route");
 					// here we have inserted both a pickup and a dropoff
 					// let's verify it's feasible using ride time and time window and capacity
 					boolean feasible = true;
 					
 					// verify all nodes
-					for (int k = 1; k < insertBoth.size() && feasible; k++) {
+					for (int k = 1; k < insertBoth.size(); k++) {
 						RouteNode cur = insertBoth.get(k);
 						RouteNode prev = insertBoth.get(k-1);
 						
@@ -153,12 +187,32 @@ public class ALNS implements Runnable {
 						cur.setStartOfS(Math.max(cur.getArrival(), cur.getAssociatedNode().getE()), false); // dont report on errors, we check those manually
 						
 						// these nodes havent changed in feasibility (they're before the insertion or a depot)
-						// TODO (maybe) it's probably possible to avoid checking nodes that havent changed
-						if (k < j || k >= insertBoth.size() - 1) {
+						if (k < i || k == insertBoth.size() - 1) {
 							continue;
 						}
 						
-						Logger.debug("Checking feasibility of RouteNode {000}: {}", k, cur.toString());
+						// update SolutionRequest so it uses the reference of the last copy
+						if (cur.getAssociatedRequest() == toInsert.associatedRequest) {
+							switch(cur.getType()) {
+							case PICKUP:
+								toInsert.pickup = cur;
+								break;
+							case DROPOFF:
+								toInsert.dropoff = cur;
+								break;
+							case TRANSFER_DROPOFF:
+								toInsert.transferDropoff = cur;
+								break;
+							case TRANSFER_PICKUP:
+								toInsert.transferPickup = cur;
+								break;
+							default:
+								Logger.warn("Found a depot or default transfer that has an associated request");
+								break;
+							}
+						}
+						
+						//Logger.debug("Checking feasibility of RouteNode {000}: {}", k, cur.toString());
 						
 						// verify time window
 						if (cur.getStartOfS() > cur.getAssociatedNode().getL()) { // infeasible
@@ -187,9 +241,11 @@ public class ALNS implements Runnable {
 					}
 					// verify max ride times of all requests
 					// first check max ride time of the insert
-					if (dropoff.getStartOfS() - (pickup.getStartOfS() + pickup.getAssociatedNode().s) > toInsert.associatedRequest.L) { 
-						Logger.debug("Request {000} is infeasible due max ride time {00.00} > {00.00} = L", toInsert.associatedRequest.id, dropoff.getStartOfS() - (pickup.getStartOfS() + pickup.getAssociatedNode().s), toInsert.associatedRequest.L);
+					if (feasible && toInsert.dropoff.getStartOfS() - (toInsert.pickup.getStartOfS() + toInsert.pickup.getAssociatedNode().s) > toInsert.associatedRequest.L) { 
+						Logger.debug("Request {000} is infeasible due max ride time {00.00} > {00.00} = L", toInsert.associatedRequest.id, toInsert.dropoff.getStartOfS() - (toInsert.pickup.getStartOfS() + toInsert.pickup.getAssociatedNode().s), toInsert.associatedRequest.L);
 						feasible = false;
+					} else if (feasible) {
+						Logger.debug("Request {000} is feasible due max ride time {00.00} < {00.00} = L", toInsert.associatedRequest.id, toInsert.dropoff.getStartOfS() - (toInsert.pickup.getStartOfS() + toInsert.pickup.getAssociatedNode().s), toInsert.associatedRequest.L);
 					}
 					// then all others
 					if (feasible) {
@@ -207,8 +263,8 @@ public class ALNS implements Runnable {
 						if (tempCost < priceOfBestRoute || bestRoute == null) {
 							priceOfBestRoute = tempCost;
 							bestRoute = insertBoth;
-							Logger.info("Found a best route with cost = {00.00}", tempCost);
-							//bestRoute.log();
+							Logger.debug("Found a best route with cost = {00.00}", tempCost);
+							bestRoute.logRoute();
 						}
 					}
 				}
@@ -216,8 +272,15 @@ public class ALNS implements Runnable {
 		}
 		// we found the cheapest route
 		// if bestRoute != null ...
-		//s.requests.add(toInsert); 
-		s.insertRoute(bestRoute, toInsert);
+		//s.requests.add(toInsert);
+		if (bestRoute != null) {
+			Logger.info("Best result: inserting Request {000} into Route {000}. Cost of new route: {00.00}", toInsert.associatedRequest.id, bestRoute.vehicleId, priceOfBestRoute);
+			s.replaceRouteWithLongerRoute(bestRoute, toInsert);
+			return true;
+		} else {
+			Logger.debug("Could not insert Request {000} in Solution; no feasible insertions.", toInsert.associatedRequest.id);
+			return false;
+		}
 	}
 	
 	// TODO update slack
@@ -257,6 +320,14 @@ public class ALNS implements Runnable {
 	}
 	
 	// TODO after removal of routenodes, re-calculate slack and arrival times of route
+	/**
+	 * Destroys a solution request by removing its associated nodes from the routes. It does not remove the SolutionRequest itself from the list of requests.
+	 * After this operator, the solution is changed (and incomplete)
+	 * 
+	 * @param currentSolution the current Solution object in which to destroy the SolutionRequest
+	 * @param index the index of the SolutionRequest to destroy
+	 * @return a reference to the destroyed SolutionRequest
+	 */
 	public SolutionRequest destroyRequest(Solution currentSolution, int index) {
 		if (index > currentSolution.requests.size()) {
 			Logger.warn("Trying to remove request {000} but there are only {000} requests! Using random", index, currentSolution.requests.size());

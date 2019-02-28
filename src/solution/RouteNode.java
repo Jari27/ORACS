@@ -198,4 +198,17 @@ public class RouteNode {
 		return copy;
 	}
 	
+	public boolean isTransfer() {
+		return (this.type == RouteNodeType.TRANSFER_DROPOFF || this.type == RouteNodeType.TRANSFER_PICKUP);
+	}
+	
+	public boolean isEqualExceptTimings(RouteNode other) {
+		if (other == null) return false;
+		if (this == other) return true;
+		if (this.vehicleId != other.vehicleId || this.associatedNode != other.associatedNode) return false;
+		// if it's a pickup/dropoff, the RouteNode can only have 1 associated request and 1 type, when given the associated Node, so we don't need to compare those
+		// if it's a depot, we only care that the vehicleId and associated node is equal
+		return (!this.isTransfer() || this.getType() == other.getType() && this.getAssociatedRequest() == other.getAssociatedRequest());
+	}
+	
 }
