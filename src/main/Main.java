@@ -34,13 +34,14 @@ public class Main {
 		}
 		
 		// quick and dirty removal check
-		ALNS test = new ALNS(problems.get(2));
+		ALNS test = new ALNS(problems.get(5));
 		test.run();
 		
 		if (true) return;
 		
 		// Quick and dirty copying check
 		
+		@SuppressWarnings("unused")
 		Solution sol = solutions.get(0);
 		Solution copy = sol.copy();
 		

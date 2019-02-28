@@ -16,14 +16,16 @@ public class Solution {
 
 	int index;
 	
+	private double cost = -1;
+	
 	private int nextFreeVehicleId = -1;
 
 	Problem p;
 
-	double cost = 0;
-
 	public List<Route> routes = new ArrayList<>();
 	
+	
+	// should be sorted!
 	public List<SolutionRequest> requests = new ArrayList<>();
 
 	// TODO keep track of transfers
@@ -44,7 +46,6 @@ public class Solution {
 	 */
 	public void createInitialSolution() {
 		Logger.debug("Trying to find a feasible solution for problem instance {000}", this.index);
-		this.cost = 0;
 		for (Request r : p.requests) {
 			double dist = p.distanceBetween(r.pickupNode, r.dropoffNode);
 			if (dist > r.L) {
@@ -107,15 +108,10 @@ public class Solution {
 			pickup.setSolutionRequest(solReq);
 			dropoff.setSolutionRequest(solReq);
 			this.requests.add(solReq);
-
-			// calculate the cost
-			for (int i = 0; i < route.size() - 1; i++) {
-				cost += p.costBetween(route.get(i).getAssociatedNode(), route.get(i + 1).getAssociatedNode());
-			}
 			
 			this.nextFreeVehicleId = r.id + 1;
 		}
-		Logger.info("Found an initial solution for problem {000} with cost {0.00}", index, cost);
+		Logger.info("Found an initial solution for problem {000} with cost {0.00}", index, this.getCost());
 		logSolution();
 		try {
 			exportSolution(true);
@@ -124,36 +120,23 @@ public class Solution {
 			Logger.error(e);
 		}
 	}
+	
+	public double getCost() {
+		cost = 0;
+		for (Route route : routes) {
+			cost += route.getCost(p);
+		}
+		// TODO add cost of transfer locations
+		return cost;
+	}
 
 	/**
 	 * Writes a solution to the log. TODO: Add handling of transfers
 	 */
 	public void logSolution() {
+		Logger.debug("Solution {000} - cost {00.00}", this.index, this.getCost());
 		for (Route r : routes) {
-			Logger.debug("Vehicle {000}", r.vehicleId);
-			for (RouteNode rn : r) {
-				switch (rn.getType()) {
-				case DEPOT_START:
-					Logger.debug("Leave depot {000} at {0.00}", rn.getAssociatedNode().id, rn.getDeparture());
-					break;
-				case PICKUP:
-					Logger.debug(
-							"Arrive at pickup  {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}",
-							rn.getAssociatedNode().id, rn.getArrival(), rn.getWaiting(), rn.getStartOfS(), rn.getDeparture());
-					break;
-				case DROPOFF:
-					Logger.debug(
-							"Arrive at dropoff {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}",
-							rn.getAssociatedNode().id, rn.getArrival(), rn.getWaiting(), rn.getStartOfS(), rn.getDeparture());
-					break;
-				case DEPOT_END:
-					Logger.debug("Arrive at depot {000} at {0.00}", rn.getAssociatedNode().id, rn.getArrival());
-					break;
-				default:
-					Logger.warn("Invalid routenode");
-					break;
-				}
-			}
+			r.logRoute();
 		}
 		for (SolutionRequest sr : requests) {
 			if (sr.pickup == null) {
@@ -246,6 +229,77 @@ public class Solution {
 		return false;
 	}
 	
+	/** 
+	 * Modifies a solution by replacing a the route with the same vehicleId by the given route. 
+	 * It does this by inserting new nodes and updating the timings of the old nodes, so that references from SolutionRequests to RouteNodes stay valid
+	 * To ensure that the SolutionRequest that was inserted in the longer route is updated adequately, we need a reference to that too.
+	 * @param r the new route
+	 * @param sr the SolutionRequest of the added request
+	 */
+	public void replaceRouteWithLongerRoute(Route r, SolutionRequest sr) {
+		Logger.debug("Trying to insert Route {000} into Solution {000}", r.vehicleId, this.index);
+		
+		// try to replace a route
+		boolean modificationDone = false; // check if we need to insert
+		for (Route route : this.routes) {
+			if (route.vehicleId == r.vehicleId) {
+				
+				// preprocess starting depot
+				// since this is not stored anywhere else, we do not need to update the references
+				// we can instead directly replace the RouteNode
+				route.removeFirst();
+				route.addFirst(r.getFirst());
+				
+				for (int i = 1; i < r.size() - 1; i++) { // check the biggest one because we insert in the smallest one
+					// we check if each node is that same by comparing associated nodes
+					// for non-transfers, that is enough since each pickup/dropoff is visited only once
+					// so if the associated nodes are the same, the RouteNodes are the same object (albeit with a different reference due to copying)
+					// for transfers we also check the type and associated request
+					RouteNode toUpdate = route.get(i);
+					RouteNode newTimings = r.get(i);
+					if (toUpdate.isEqualExceptTimings(newTimings)) {
+						Logger.debug("RouteNode ({}) and RouteNode ({}) are the same.", toUpdate, newTimings);
+						if (modificationDone) {
+							// we have inserted at least one node, so we need to change subsequent timings
+							toUpdate.setArrival(newTimings.getArrival());
+							toUpdate.setStartOfS(newTimings.getStartOfS());
+							toUpdate.setNumPas(newTimings.getNumPas());
+						}
+					} else {
+						// different node, so insert
+						modificationDone = true;
+						route.add(i, newTimings);
+						switch (newTimings.getType()) {
+						case PICKUP:
+							sr.pickup = newTimings;
+							break;
+						case DROPOFF:
+							sr.dropoff = newTimings;
+							break;
+						case TRANSFER_PICKUP:
+							sr.transferPickup = newTimings;
+							break;
+						case TRANSFER_DROPOFF:
+							sr.transferDropoff = newTimings;
+							break;
+						default:
+							Logger.warn("Problem while inserting RouteNode ({}) into Route {000} at location {000}: it has no valid type", newTimings, route.vehicleId, i);
+							break;
+						}
+					}
+				}
+				// replace last depot
+				route.removeLast();
+				route.addLast(r.getLast());
+			}
+		}
+		if (!modificationDone) {
+			Logger.warn("Route {000} could not be inserted. ");
+		} else {
+			Logger.debug("Replaced Route {000} by modified version in solution {000}", r.vehicleId, this.index);
+		}
+	}
+	
 	/**
 	 * Makes a deep copy of the current solution. Each object (except the problem instance) is copied in turn.
 	 * TODO: Update this as the objects changes. We expect to change the slack in the RouteNode and to add a way of keeping track of the transfers
@@ -254,7 +308,7 @@ public class Solution {
 	 */
 	public Solution copy() {
 		Solution next = new Solution(this.p);
-		next.cost = cost;
+		next.cost = this.cost;
 		
 		// Create solution requests
 		// we make this early so we can assign the correct RouteNodes to them as soon as we make those
@@ -266,7 +320,8 @@ public class Solution {
 		
 		// copy routes
 		for (Route origRoute : routes) {
-			Route copyRoute = new Route(origRoute.vehicleId);
+			Route copyRoute = new Route(origRoute.vehicleId); // forces recalculation of costs
+			//copyRoute.setRouteChanged(); // force recalculation of costs of all routes
 			
 			for (RouteNode origRN : origRoute) {
 				// create a new RouteNode and set its associated node, type and request (if not a depot)
@@ -284,13 +339,15 @@ public class Solution {
 					copyRN.setArrival(origRN.getArrival());
 				}
 				if (origRN.getType() != RouteNodeType.DEPOT_END && origRN.getType() != RouteNodeType.DEPOT_START) {
-					copyRN.setStartOfS(origRN.getStartOfS(), false); // depots have no service nor passengers
-					copyRN.setNumPas(origRN.getNumPas());
+					copyRN.setStartOfS(origRN.getStartOfS(), false); // depots have no service
 				}
 				if (origRN.getType() == RouteNodeType.DEPOT_START) { // starting depots need a manual departure time (that's the only thing they have)
 					copyRN.setDeparture(origRN.getDeparture());
 				}
+				copyRN.setNumPas(origRN.getNumPas());
+				
 				// save the RouteNode in our new route
+				
 				copyRoute.add(copyRN);
 				
 				// Add RouteNode to the SolutionRequest
