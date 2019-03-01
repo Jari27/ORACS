@@ -187,6 +187,7 @@ public class Problem {
 	public double getDistanceToNearestDepot(Node a) {
 		return distanceBetween(a, getNearestDepot(a));
 	}
+	
 
 	/*
 	 * should probably be a check on this stuff to prevent NPEs, but that will cost

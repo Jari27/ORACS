@@ -78,6 +78,8 @@ public class ALNS implements Runnable {
 			Logger.info("ITERATION {}", i);
 			nextTemp();
 			Logger.info("{00.00}",temp);
+			//test get expensive request
+			getMostExpensiveRequest(currentSol);
 			double preDestroyCost = currentSol.getCost();
 			Solution copy = currentSol.copy();
 			destroyed = destroyRandomRequest(copy);
@@ -328,6 +330,36 @@ public class ALNS implements Runnable {
 	 * @param index the index of the SolutionRequest to destroy
 	 * @return a reference to the destroyed SolutionRequest
 	 */
+	
+	
+	public void destroyMostExpensiveRequest(Solution solution){
+		int expensiveRequestIndex = getMostExpensiveRequest(solution);
+		destroyRequest(solution, expensiveRequestIndex);
+	}
+	
+	//I think the first request has a place in the list of 0, but it has an id of 1??
+	public int getMostExpensiveRequest(Solution solution){
+		double costSolution = solution.getCost();
+		double highestCost = 0;
+		int index = 0;
+		int indexExpensiveRequest = 0;
+		for (SolutionRequest sr : currentSol.requests){
+			int id = index +1;
+			Solution copy = solution.copy();
+			destroyRequest(copy, index);
+			double newCost = copy.getCost();
+			double costRequest = costSolution - newCost;
+			if(costRequest > highestCost){	
+				highestCost = costRequest;
+				indexExpensiveRequest = index;
+				Logger.debug("Currently, The request with the highest cost is request {000}, with a cost of {000}", id, highestCost);
+			}
+			index++;
+		}
+		Logger.debug("The final request with the highest cost is request {000}, with a cost of {000}", indexExpensiveRequest+1, highestCost);
+		return indexExpensiveRequest;
+	}
+	
 	public SolutionRequest destroyRequest(Solution currentSolution, int index) {
 		if (index > currentSolution.requests.size()) {
 			Logger.warn("Trying to remove request {000} but there are only {000} requests! Using random", index, currentSolution.requests.size());

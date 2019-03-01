@@ -80,7 +80,8 @@ public class Route extends LinkedList<RouteNode>{
 		}
 	}
 	
-	public void isFeasible(){
+	//does not take into account the nr of passengers.. But maybe better to do this in the ALNS, since a route doesnt know in which problem it is
+	public boolean timingIsFeasible(){
 		Logger.debug("Checking if Route {000} is feasible..", this.vehicleId);
 		int index1 = 0;
 		int index2 = 0;
@@ -91,10 +92,10 @@ public class Route extends LinkedList<RouteNode>{
 		}
 		if(index1 == index2){
 			Logger.debug("Route {000} is feasible..", this.vehicleId);
-			//return true;
+			return true;
 		}else{
 			Logger.debug("Route {000} is unfeasible..", this.vehicleId);
-			//return false;
+			return false;
 		}
 	}
 		

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.pmw.tinylog.Logger;
 
+import main.ALNS;
 import problem.Problem;
 import problem.Request;
 
@@ -108,6 +109,7 @@ public class Solution {
 			pickup.setSolutionRequest(solReq);
 			dropoff.setSolutionRequest(solReq);
 			this.requests.add(solReq);
+			
 			
 			this.nextFreeVehicleId = r.id + 1;
 		}
@@ -377,4 +379,6 @@ public class Solution {
 		}
 		return next;
 	}
+	
+
 }
