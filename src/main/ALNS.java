@@ -155,7 +155,7 @@ public class ALNS implements Runnable {
 			
 			SolutionRequest destroyed = destroy.destroySingle(copy); // this always works
 			Logger.info("Destroyed request {000}. Trying insertion.", destroyed.associatedRequest.id);
-			
+
 			if (!repair.repair(destroyed, copy)) {
 				// could not repair
 				Logger.info("{} yielded no valid solution. Going to next iteration.", repair);
