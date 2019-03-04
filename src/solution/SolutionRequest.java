@@ -4,7 +4,6 @@
 package solution;
 
 import problem.Request;
-import org.pmw.tinylog.Logger;
 
 /**
  * @author Jari Meevis
@@ -22,10 +21,6 @@ public class SolutionRequest {
 		this.associatedRequest = associatedRequest;
 		this.id = associatedRequest.id;
 		this.L = associatedRequest.L;
-	}
-	
-	public void talk(){
-		Logger.debug("Hi, I am the first solution request...");
 	}
 	
 	public RouteNode getPickup(){
