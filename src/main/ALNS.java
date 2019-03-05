@@ -26,7 +26,7 @@ import solution.SolutionRequest;
 public class ALNS implements Runnable {
 	
 	// ALNS settings
-	private static final int MAX_IT = 100;
+	private static final int MAX_IT = 1000;
 	private static final double T_START = 10;
 	private double temp = T_START;
 	
@@ -156,7 +156,7 @@ public class ALNS implements Runnable {
 		int iterationsWithoutImprovement = 0;
 		
 		for (int i = 1; i <= MAX_IT; i++) {
-			Logger.info("ITERATION {}", i);
+			Logger.debug("ITERATION {}", i);
 			if (i % 100 == 0) {
 				updateWeights();
 			}
@@ -173,22 +173,20 @@ public class ALNS implements Runnable {
 			Solution copy = currentSol.copy(); // never modify currentSol
 			
 			SolutionRequest destroyed = destroy.destroySingle(copy); // this always works
-			Logger.info("Destroyed request {000}. Trying insertion.", destroyed.associatedRequest.id);
+			Logger.debug("Destroyed request {000}. Trying insertion.", destroyed.associatedRequest.id);
 
 			if (!repair.repair(destroyed, copy)) {
 				// could not repair
-				Logger.info("{} yielded no valid solution. Going to next iteration.", repair);
-				Logger.info("Current cost: {00.00}. Best cost: {00.00}", currentCost, bestCost);
+				Logger.debug("{} yielded no valid solution. Going to next iteration.", repair);
+				Logger.debug("Current cost: {00.00}. Best cost: {00.00}", currentCost, bestCost);
 				continue;
 			}
 			// we have a repaired solution
 			// TODO problems: destroy and insert in same route always accepts (is this a problem?)
 			double newCost = copy.getCost();
-			Logger.info("Cost of new solution: {00.00}", newCost);
-			copy.logSolution();
 			
 			if (newCost < currentCost  || accept(currentCost, newCost, nextTemp())) {
-				Logger.info("Accepted new solution {}", (newCost < currentCost ? "" : "(simulated annealing)"));
+				Logger.debug("Accepted new solution {}", (newCost < currentCost ? "" : "(simulated annealing)"));
 				// update segment weights
 				segmentWeightDestroy[destroyId] += 15; // total: +15
 				segmentWeightRepair[repairId] += 15;
@@ -202,18 +200,22 @@ public class ALNS implements Runnable {
 				acceptedSolutions.add(copy);
 				iterationsWithoutImprovement = 0;
 				
+				copy.logSolution();
+				
 				if (newCost < bestCost) {
 					bestSol = copy;
 					bestCost = newCost;
 					segmentWeightDestroy[destroyId] += 13; //total: +33
 					segmentWeightRepair[repairId] += 13;
+					Logger.info("New best solution. Cost: {00.00}", bestCost);
 				}
 			} else {
-				Logger.info("Solution was not accepted.", destroyed.associatedRequest.id);
-				Logger.info("Current cost: {00.00}. Best cost: {00.00}", currentCost, bestCost);
+				Logger.debug("Solution was not accepted.", destroyed.associatedRequest.id);
+				Logger.debug("New cost: {00.00}. Current cost: {00.00}. Best cost: {00.00}", newCost, currentCost, bestCost);
 				iterationsWithoutImprovement++;
 			}
 		}
+		Logger.info("Best solution cost: {00.00}", bestCost);
 		try {
 			bestSol.exportSolution(false);
 		} catch (FileNotFoundException e) {
@@ -234,33 +236,5 @@ public class ALNS implements Runnable {
 		Logger.info("Updated weights. Repair {}. Destroy {}", smoothedWeightRepair, smoothedWeightDestroy);
 	}
 
-	
-//	public void destroyMostExpensiveRequest(Solution solution){
-//		int expensiveRequestIndex = getMostExpensiveRequest(solution);
-//		destroyRequest(solution, expensiveRequestIndex);
-//	}
-//	
-//	//I think the first request has a place in the list of 0, but it has an id of 1??
-//	public int getMostExpensiveRequest(Solution solution){
-//		double costSolution = solution.getCost();
-//		double highestCost = 0;
-//		int index = 0;
-//		int indexExpensiveRequest = 0;
-//		for (SolutionRequest sr : currentSol.requests){
-//			int id = index +1;
-//			Solution copy = solution.copy();
-//			destroyRequest(copy, index);
-//			double newCost = copy.getCost();
-//			double costRequest = costSolution - newCost;
-//			if(costRequest > highestCost){	
-//				highestCost = costRequest;
-//				indexExpensiveRequest = index;
-//				Logger.debug("Currently, The request with the highest cost is request {000}, with a cost of {000}", id, highestCost);
-//			}
-//			index++;
-//		}
-//		Logger.debug("The final request with the highest cost is request {000}, with a cost of {000}", indexExpensiveRequest+1, highestCost);
-//		return indexExpensiveRequest;
-//	}
 	
 }
