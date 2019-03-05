@@ -46,6 +46,7 @@ public class Route extends LinkedList<RouteNode>{
 	public Route copy() {
 		Route r = new Route(this.vehicleId);
 		r.routeChanged = this.routeChanged;
+		r.cost = this.cost;
 		for (RouteNode cur : this) {
 			RouteNode next = cur.copy();
 			r.add(next);
