@@ -16,7 +16,7 @@ public class GreedyRepairNoTransfer extends RepairHeuristic {
 	}
 
 	@Override
-	public boolean repair(SolutionRequest toInsert, Solution currentSol) {
+	public boolean repairSingle(SolutionRequest toInsert, Solution currentSol) {
 			// we do this manually now, we will use cheaper feasibility checking later
 			
 			// try insertion (note: creating a new route is not possible atm TODO)
@@ -190,7 +190,7 @@ public class GreedyRepairNoTransfer extends RepairHeuristic {
 			// if bestRoute != null ...
 			//s.requests.add(toInsert);
 			if (bestRoute != null) {
-				Logger.info("Best result: inserting Request {000} into Route {000}. Cost of new route: {00.00}", toInsert.associatedRequest.id, bestRoute.vehicleId, priceOfBestRoute);
+				Logger.debug("Best result: inserting Request {000} into Route {000}. Cost of new route: {00.00}", toInsert.associatedRequest.id, bestRoute.vehicleId, priceOfBestRoute);
 				currentSol.replaceRouteWithLongerRoute(bestRoute, toInsert);
 				return true;
 			} else {

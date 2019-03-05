@@ -234,30 +234,30 @@ public class Solution {
 	 * Modifies a solution by replacing a the route with the same vehicleId by the given route. 
 	 * It does this by inserting new nodes and updating the timings of the old nodes, so that references from SolutionRequests to RouteNodes stay valid
 	 * To ensure that the SolutionRequest that was inserted in the longer route is updated adequately, we need a reference to that too.
-	 * @param r the new route
+	 * @param newRoute the new route
 	 * @param sr the SolutionRequest of the added request
 	 */
-	public void replaceRouteWithLongerRoute(Route r, SolutionRequest sr) {
-		Logger.debug("Trying to insert Route {000} into Solution {000}", r.vehicleId, this.index);
+	public void replaceRouteWithLongerRoute(Route newRoute, SolutionRequest sr) {
+		Logger.debug("Trying to insert Route {000} into Solution {000}", newRoute.vehicleId, this.index);
 		
 		// try to replace a route
 		boolean modificationDone = false; // check if we need to insert
-		for (Route route : this.routes) {
-			if (route.vehicleId == r.vehicleId) {
+		for (Route oldRoute : this.routes) {
+			if (oldRoute.vehicleId == newRoute.vehicleId) {
 				
 				// preprocess starting depot
 				// since this is not stored anywhere else, we do not need to update the references
 				// we can instead directly replace the RouteNode
-				route.removeFirst();
-				route.addFirst(r.getFirst());
+				oldRoute.removeFirst();
+				oldRoute.addFirst(newRoute.getFirst());
 				
-				for (int i = 1; i < r.size() - 1; i++) { // check the biggest one because we insert in the smallest one
+				for (int i = 1; i < newRoute.size() - 1; i++) { // check the biggest one because we insert in the smallest one
 					// we check if each node is that same by comparing associated nodes
 					// for non-transfers, that is enough since each pickup/dropoff is visited only once
 					// so if the associated nodes are the same, the RouteNodes are the same object (albeit with a different reference due to copying)
 					// for transfers we also check the type and associated request
-					RouteNode toUpdate = route.get(i);
-					RouteNode newTimings = r.get(i);
+					RouteNode toUpdate = oldRoute.get(i);
+					RouteNode newTimings = newRoute.get(i);
 					if (toUpdate.isEqualExceptTimings(newTimings)) {
 						Logger.debug("RouteNode ({}) and RouteNode ({}) are the same.", toUpdate, newTimings);
 						if (modificationDone) {
@@ -269,7 +269,7 @@ public class Solution {
 					} else {
 						// different node, so insert
 						modificationDone = true;
-						route.add(i, newTimings);
+						oldRoute.add(i, newTimings);
 						switch (newTimings.getType()) {
 						case PICKUP:
 							sr.pickup = newTimings;
@@ -284,20 +284,20 @@ public class Solution {
 							sr.transferDropoff = newTimings;
 							break;
 						default:
-							Logger.warn("Problem while inserting RouteNode ({}) into Route {000} at location {000}: it has no valid type", newTimings, route.vehicleId, i);
+							Logger.warn("Problem while inserting RouteNode ({}) into Route {000} at location {000}: it has no valid type", newTimings, oldRoute.vehicleId, i);
 							break;
 						}
 					}
 				}
 				// replace last depot
-				route.removeLast();
-				route.addLast(r.getLast());
+				oldRoute.removeLast();
+				oldRoute.addLast(newRoute.getLast());
 			}
 		}
 		if (!modificationDone) {
 			Logger.warn("Route {000} could not be inserted. ");
 		} else {
-			Logger.debug("Replaced Route {000} by modified version in solution {000}", r.vehicleId, this.index);
+			Logger.debug("Replaced Route {000} by modified version in solution {000}", newRoute.vehicleId, this.index);
 		}
 	}
 	
@@ -322,7 +322,8 @@ public class Solution {
 		// copy routes
 		for (Route origRoute : routes) {
 			Route copyRoute = new Route(origRoute.vehicleId); // forces recalculation of costs
-			//copyRoute.setRouteChanged(); // force recalculation of costs of all routes
+			copyRoute.setRouteUnchanged(); // prevents cost recalculation
+			copyRoute.setCost(origRoute.getCost(p)); // sets cost correctly
 			
 			for (RouteNode origRN : origRoute) {
 				// create a new RouteNode and set its associated node, type and request (if not a depot)

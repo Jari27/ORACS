@@ -12,6 +12,7 @@ import java.util.Random;
 import org.pmw.tinylog.Logger;
 
 import heuristics.destroy.DestroyHeuristic;
+import heuristics.destroy.MostExpensiveDestroy;
 import heuristics.destroy.RandomDestroy;
 import heuristics.repair.GreedyRepairNoTransfer;
 import heuristics.repair.RepairHeuristic;
@@ -31,8 +32,9 @@ public class ALNS implements Runnable {
 	private double temp = T_START;
 	
 	// Config settings
-	private static final int NUM_DESTROY_HEURISTICS = 1;
+	private static final int NUM_DESTROY_HEURISTICS = 2;
 	private static final int NUM_REPAIR_HEURISTICS = 1;
+	
 	private static final double SMOOTHING_FACTOR = 0.1;
 	
 	private static final int ITERATIONS_BEFORE_FORCED_CHANGE = 25;
@@ -70,7 +72,9 @@ public class ALNS implements Runnable {
 	private void initHeuristics() {
 		// destroy
 		DestroyHeuristic random = new RandomDestroy(p, rand);
+		DestroyHeuristic mostExpensive = new MostExpensiveDestroy(p);
 		destroyHeuristics[0] = random;
+		destroyHeuristics[1] = mostExpensive;
 		
 		// repair
 		RepairHeuristic greedyNoTransfer = new GreedyRepairNoTransfer(p);
@@ -147,6 +151,18 @@ public class ALNS implements Runnable {
 
 	@Override
 	public void run() {
+		// test
+//		Logger.info("Testing most expensive destroy");
+//		currentSol.logSolution();
+//		Solution copy1 = currentSol.copy();
+//		destroyHeuristics[1].destroySingle(copy1);
+//		//copy1.logSolution();
+//		Solution copy2 = currentSol.copy();
+//		destroyHeuristics[1].destroyMultiple(copy2, 3);
+//		copy2.logSolution();
+//		if (true) return;
+		
+		
 		Logger.info("SEED: {}", this.seed);
 		Logger.info("Initial cost: {00.00}", currentSol.getCost());
 		
@@ -175,7 +191,7 @@ public class ALNS implements Runnable {
 			SolutionRequest destroyed = destroy.destroySingle(copy); // this always works
 			Logger.debug("Destroyed request {000}. Trying insertion.", destroyed.associatedRequest.id);
 
-			if (!repair.repair(destroyed, copy)) {
+			if (!repair.repairSingle(destroyed, copy)) {
 				// could not repair
 				Logger.debug("{} yielded no valid solution. Going to next iteration.", repair);
 				Logger.debug("Current cost: {00.00}. Best cost: {00.00}", currentCost, bestCost);

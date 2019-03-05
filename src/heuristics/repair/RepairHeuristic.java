@@ -12,7 +12,7 @@ public abstract class RepairHeuristic {
 		this.problem = p;
 	}
 	
-	public abstract boolean repair(SolutionRequest toInsert, Solution currentSol);
+	public abstract boolean repairSingle(SolutionRequest toInsert, Solution currentSol);
 	
 	@Override
 	public abstract String toString();

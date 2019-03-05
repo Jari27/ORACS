@@ -28,19 +28,27 @@ public class Route extends LinkedList<RouteNode>{
 	
 	public double getCost(Problem p) {
 		if (routeChanged) {
-			Logger.debug("Calculating new cost of Route {000}. Old: {00.00}", vehicleId, cost);
+			Logger.trace("Calculating new cost of Route {000}. Old: {00.00}", vehicleId, cost);
 			cost = 0;
 			for (int i = 0; i < this.size() - 1; i++) {
 				cost += p.costBetween(this.get(i).getAssociatedNode(), this.get(i+1).getAssociatedNode());
 			}
 			routeChanged = false;
 		}
-		Logger.debug("(New) cost: {00.00}", cost);
+		Logger.trace("(New) cost: {00.00}", cost);
 		return cost;
 	}
 	
 	public void setRouteChanged() {
 		this.routeChanged = true;
+	}
+	
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
+	
+	public void setRouteUnchanged(){
+		this.routeChanged = false;
 	}
 
 	public Route copy() {
