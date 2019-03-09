@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.pmw.tinylog.Logger;
 
 import problem.Problem;
 import problem.Request;
+import problem.TransferNode;
 
 public class Solution {
 
@@ -24,16 +28,19 @@ public class Solution {
 
 	public List<Route> routes = new ArrayList<>();
 	
+	public List<TransferNode> openTransfers, closedTransfers;
+	
 	
 	// should be sorted!
 	public List<SolutionRequest> requests = new ArrayList<>();
-
-	// TODO keep track of transfers
 
 	/**
 	 * @param p Associated problem instance
 	 */
 	public Solution(Problem p) {
+		this.openTransfers = new ArrayList<>();
+		this.closedTransfers = new ArrayList<>();
+		this.closedTransfers.addAll(p.transfers);
 		this.index = p.index;
 		this.p = p;
 	}
@@ -127,12 +134,14 @@ public class Solution {
 		for (Route route : routes) {
 			cost += route.getCost(p);
 		}
-		// TODO add cost of transfer locations
+		for (TransferNode tn : openTransfers) {
+			cost += tn.f;
+		}
 		return cost;
 	}
 
 	/**
-	 * Writes a solution to the log. TODO: Add handling of transfers
+	 * Writes a solution to the log.
 	 */
 	public void logSolution() {
 		Logger.debug("Solution {000} - cost {00.00}", this.index, this.getCost());
@@ -176,11 +185,13 @@ public class Solution {
 				// order of nodes
 				for (int i = 0; i < r.size(); i++) {
 					RouteNode rn = r.get(i);
-					if (rn.getType() == RouteNodeType.TRANSFER_DROPOFF || rn.getType() == RouteNodeType.TRANSFER_PICKUP) {
-						// writer.print(String.format("1%03d%03d", rn.associatedNode.id, passenger
-						// person thing));
+					if (rn.getType() == RouteNodeType.TRANSFER_DROPOFF) {
+						writer.print(String.format("10%03d%03d", rn.getAssociatedNode().id, rn.getAssociatedRequest().id));
+					} else if (rn.getType() == RouteNodeType.TRANSFER_PICKUP) {
+						writer.print(String.format("11%03d%03d", rn.getAssociatedNode().id, rn.getAssociatedRequest().id));
+					} else {
+						writer.print(rn.getAssociatedNode().id);
 					}
-					writer.print(rn.getAssociatedNode().id);
 					// print commas but no trailing commas
 					if (i < r.size() - 1) {
 						writer.print(",");
@@ -190,10 +201,6 @@ public class Solution {
 				// service time starts
 				for (int i = 0; i < r.size(); i++) {
 					RouteNode rn = r.get(i);
-					if (rn.getType() == RouteNodeType.TRANSFER_DROPOFF || rn.getType() == RouteNodeType.TRANSFER_PICKUP) {
-						// writer.print(String.format("1%03d%03d", rn.associatedNode.id, passenger
-						// person thing));
-					}
 					if (rn.getType() == RouteNodeType.DEPOT_START) {
 						writer.print(rn.getDeparture());
 					} else if (rn.getType() == RouteNodeType.DEPOT_END) {
@@ -225,10 +232,6 @@ public class Solution {
 //		
 //	}
 	
-	// TODO finish this feasible method
-	public boolean isFeasible() {
-		return false;
-	}
 	
 	/** 
 	 * Modifies a solution by replacing a the route with the same vehicleId by the given route. 
@@ -292,7 +295,9 @@ public class Solution {
 				// replace last depot
 				oldRoute.removeLast();
 				oldRoute.addLast(newRoute.getLast());
+				break;
 			}
+
 		}
 		if (!modificationDone) {
 			Logger.warn("Route {000} could not be inserted. ");
@@ -380,5 +385,97 @@ public class Solution {
 		return next;
 	}
 	
+	public boolean isMaxRideSatisfied() {
+		for (SolutionRequest sr : this.requests) {
+			if (sr.pickup == null || sr.dropoff == null) {
+				Logger.warn("Request {000} is unplanned (or not correctly updated)!", sr.id);
+				return false;
+			}
+			if (sr.dropoff.getStartOfS() - (sr.pickup.getStartOfS() + sr.pickup.getAssociatedNode().s) > sr.associatedRequest.L) {
+				Logger.debug("Max ride time of request {000} not satisfied. {00.00} - ({00.00} + {00.00}) > {}", sr.id, sr.dropoff.getStartOfS(), sr.pickup.getStartOfS(), sr.pickup.getAssociatedNode().s, sr.associatedRequest.L);
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean isFeasible() {
+		// check timewindows
+		for (Route r : routes) {
+			for (RouteNode rn : r) {
+				if (!rn.isDepot() && !rn.isTransfer() && (rn.getStartOfS() > rn.getAssociatedNode().getL() || rn.getStartOfS() < rn.getAssociatedNode().getE())) {
+					Logger.debug("Not feasible because of time windows of node {000}: {00.00}.", rn, rn.getStartOfS());
+					return false;
+				}
+				if (rn.getVehicleId() != r.vehicleId) {
+					Logger.warn("Invalid RouteNode (vehicle id is not the same as the route vehicle id!), node = ", rn.toString());
+				}
+			}
+			// check timings
+			for (int i = 1; i < r.size(); i++) {
+				RouteNode prev = r.get(i-1);
+				RouteNode cur = r.get(i);
+				if (cur.getArrival() < prev.getDeparture() + p.distanceBetween(cur.getAssociatedNode(), prev.getAssociatedNode())) {
+					Logger.warn("Invalid arrival times of node {} and {} in route {}", cur, prev, r.vehicleId);
+				}
+			}
+		}
+		// check max ride time && transfer precedence
+		for (SolutionRequest sr : requests) {
+			if (sr.pickup == null || sr.dropoff == null || (sr.transferDropoff == null && sr.transferPickup != null) || (sr.transferDropoff != null && sr.transferPickup == null)) {
+				Logger.warn("Unplanned request! {000}", sr.id);
+			}
+			if (sr.dropoff.getStartOfS() - (sr.pickup.getStartOfS() + sr.pickup.getAssociatedNode().s) > sr.L) {
+				Logger.debug("Not feasible because request {000} does not satisfy max ride time", sr.id);
+				return false;
+			}
+			if (sr.hasTransfer()) {
+				if (sr.transferDropoff.getStartOfS() + sr.transferDropoff.getAssociatedNode().s < sr.transferPickup.getStartOfS()) {
+					Logger.warn("Pickup before dropoff! Impossible. Request: {000}", sr.id);
+				}
+				if (sr.transferDropoff.getAssociatedNode() != sr.transferPickup.getAssociatedNode()) {
+					Logger.warn("Transfer pickup and dropoff at different nodes (wtf?)");
+				}
+			}
+		}
+		return true;
+	}
+	
+	public boolean hasOrphanRouteNodes() {
+		boolean isCorrect = true;
+		Set<RouteNode> routeNodesFromRoutes = new HashSet<>();
+		Set<RouteNode> routeNodesFromRequests = new HashSet<>();
+		for (Route r : routes) {
+			for (RouteNode rn : r) {
+				if (routeNodesFromRoutes.contains(rn)) {
+					Logger.warn("Same routenode in multiple routes. Node = {}, second Route = {000}", rn.toString(), r.vehicleId);
+					isCorrect = false;
+				} else {
+					routeNodesFromRoutes.add(rn);
+				}
+			}
+		}
+		for (SolutionRequest sr : requests) {
+			routeNodesFromRequests.add(sr.pickup);
+			routeNodesFromRequests.add(sr.dropoff);
+			if (sr.hasTransfer()) {
+				routeNodesFromRequests.add(sr.transferPickup);
+				routeNodesFromRequests.add(sr.transferDropoff);
+			}
+		}
+		for (RouteNode r : routeNodesFromRequests) {
+			if (!routeNodesFromRoutes.contains(r)) {
+				Logger.warn("RouteNode {} from requests not in any route", r);
+				isCorrect = false;
+			}
+		}
+		for (RouteNode r : routeNodesFromRoutes) {
+			if (!r.isDepot() && !routeNodesFromRequests.contains(r)) {
+				Logger.warn("RouteNode {} from route not in any request", r);
+				isCorrect = false;
+			}
+		}
+		return !isCorrect;
+	}
 
 }

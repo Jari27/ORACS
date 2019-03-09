@@ -233,6 +233,10 @@ public class RouteNode {
 		return (this.type == RouteNodeType.TRANSFER_DROPOFF || this.type == RouteNodeType.TRANSFER_PICKUP);
 	}
 	
+	public boolean isDepot() {
+		return (this.type == RouteNodeType.DEPOT_START || this.type == RouteNodeType.DEPOT_END);
+	}
+	
 	public boolean isEqualExceptTimings(RouteNode other) {
 		if (other == null) return false;
 		if (this == other) return true;

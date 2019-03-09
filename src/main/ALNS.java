@@ -63,7 +63,8 @@ public class ALNS implements Runnable {
 		this.currentSol.createInitialSolution();
 		this.bestSol = this.currentSol;
 		this.acceptedSolutions.add(currentSol);
-		this.seed = System.currentTimeMillis(); // to allow printing
+//		this.seed = System.currentTimeMillis(); // to allow printing
+		this.seed = 1552148781793L;
 		this.rand = new Random(this.seed);
 		
 		this.initHeuristics();
@@ -197,6 +198,12 @@ public class ALNS implements Runnable {
 				Logger.debug("Current cost: {00.00}. Best cost: {00.00}", currentCost, bestCost);
 				continue;
 			}
+			
+			if (!copy.isFeasible() || copy.hasOrphanRouteNodes()) {
+				Logger.warn("Found an invalid solution!");
+				break;
+			}
+			
 			// we have a repaired solution
 			// TODO problems: destroy and insert in same route always accepts (is this a problem?)
 			double newCost = copy.getCost();
@@ -216,7 +223,7 @@ public class ALNS implements Runnable {
 				acceptedSolutions.add(copy);
 				iterationsWithoutImprovement = 0;
 				
-				copy.logSolution();
+//				copy.logSolution();
 				
 				if (newCost < bestCost) {
 					bestSol = copy;
