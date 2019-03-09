@@ -28,6 +28,8 @@ public class RouteNode {
 	
 	private double waiting = -1; // time you wait at a node before starting service = startOfS - arrival
 	private double slack = -1; // time you can start service later = l - startOfS
+	
+	private double virtualE, virtualL = -1; // TODO add getter, setter, check and function to update
 
 	private double startOfS = -1;
 	private double arrival = -1;
@@ -87,6 +89,20 @@ public class RouteNode {
 		this.waiting = this.startOfS - this.arrival;
 		this.departure = this.startOfS + this.associatedNode.s;
 		this.slack = this.associatedNode.getL() - this.startOfS;
+	}
+	
+	public double getVirtualE() {
+		if (this.getType() == RouteNodeType.DEPOT_END || this.getType() == RouteNodeType.DEPOT_START) {
+			Logger.warn("Retrieving virtual E of depot. This should not happen.");
+		}
+		return this.virtualE;
+	}
+	
+	public double getVirtualL() {
+		if (this.getType() == RouteNodeType.DEPOT_END || this.getType() == RouteNodeType.DEPOT_START) {
+			Logger.warn("Retrieving virtual E of depot. This should not happen.");
+		}
+		return this.virtualL;
 	}
 	
 	public void setStartOfS(double startOfS) {
