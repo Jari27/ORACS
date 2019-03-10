@@ -21,8 +21,8 @@ public class Problem {
 	public double[][] costMatrix;
 
 	public List<Request> requests = new ArrayList<>();
-	public List<TransferNode> transfers = new ArrayList<>();
-	public List<DepotNode> depots = new ArrayList<>();
+	public List<Node> transfers = new ArrayList<>();
+	public List<Node> depots = new ArrayList<>();
 
 	public Map<Node, Node> nearestDepot = new HashMap<>();
 
@@ -43,10 +43,10 @@ public class Problem {
 	private void adjustTimeWindows() {
 		Logger.debug("Instance {000}: adjusting time windows", this.index);
 		for (Request r : requests) {
-			DepotNode near = r.dropoffNode.getNearestDepot();
+			Node near = nearestDepot.get(r.dropoffNode);
 			r.dropoffNode.e = Math.max(r.dropoffNode.e, this.distanceBetween(r.dropoffNode, near));
 
-			near = r.pickupNode.getNearestDepot();
+			near = nearestDepot.get(r.pickupNode);
 			r.pickupNode.e = Math.max(r.pickupNode.e, this.distanceBetween(r.pickupNode, near));
 		}
 	}
@@ -73,9 +73,9 @@ public class Problem {
 		for (Node a : allNodes) {
 			// we do not skip the depots
 			// calculate nearest depot for all other nodes
-			DepotNode nearest = null;
+			Node nearest = null;
 			double distance = -1;
-			for (DepotNode d : depots) {
+			for (Node d : depots) {
 				double tmpDist = distanceBetween(a, d);
 				if (distance == -1 || tmpDist < distance) {
 					nearest = d;
@@ -83,16 +83,11 @@ public class Problem {
 				}
 			}
 			nearestDepot.put(a, nearest);
-			a.setNearestDepot(nearest, travelCost);
 		}
 	}
 
 	// verify that the problem has a feasible solution
 	public boolean isFeasible() {
-		// we need to verify that the travel distance between a pickup and dropoff node
-		// is less than L
-		// and that the difference between the latest pickup time and the earliest
-		// dropoff time is less than L
 		boolean feasible = true;
 		for (Request r : requests) {
 			if (distanceBetween(r.pickupNode, r.dropoffNode) > r.L) {
@@ -132,13 +127,11 @@ public class Problem {
 					distanceMatrix[a.id - 1][b.id - 1] = 0; // ids are 1-indexed, arrays 0-indexed
 				} else {
 					distanceMatrix[a.id - 1][b.id - 1] = Math
-							.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)); // Euclidian distance
+							.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 				}
 				costMatrix[a.id - 1][b.id - 1] = travelCost * distanceMatrix[a.id - 1][b.id - 1];
 			}
 		}
-
-		// printDistanceMatrix();
 	}
 
 	/* Prints the distance matrix with node ids */
@@ -162,24 +155,6 @@ public class Problem {
 	public Node getNearestDepot(Node a) {
 		// try to retrieve it before calculating it
 		Node nearest = nearestDepot.get(a);
-		if (nearest != null) {
-			return nearest;
-		}
-		// we havent seen it yet, so calculate
-		// this should never happen
-		Logger.warn(
-				"Instance {000}: nearest depot to node {000} was not calculated. Did you forget to run Problem.preProcess()?",
-				this.index, a.id);
-		double distance = -1;
-		for (DepotNode d : depots) {
-			double tmpDist = distanceBetween(a, d);
-			if (distance == -1 || tmpDist < distance) {
-				nearest = d;
-				distance = tmpDist;
-			}
-		}
-		// save it for future use
-		nearestDepot.put(a, nearest);
 		return nearest;
 	}
 
@@ -187,7 +162,6 @@ public class Problem {
 	public double getDistanceToNearestDepot(Node a) {
 		return distanceBetween(a, getNearestDepot(a));
 	}
-	
 
 	/*
 	 * should probably be a check on this stuff to prevent NPEs, but that will cost
@@ -197,7 +171,7 @@ public class Problem {
 		return distanceBetween(a.id, b.id);
 	}
 
-	public double distanceBetween(int id1, int id2) {
+	private double distanceBetween(int id1, int id2) {
 		return distanceMatrix[id1 - 1][id2 - 1];
 	}
 
@@ -205,7 +179,7 @@ public class Problem {
 		return costBetween(a.id, b.id);
 	}
 
-	public double costBetween(int id1, int id2) {
+	private double costBetween(int id1, int id2) {
 		return costMatrix[id1 - 1][id2 - 1];
 	}
 

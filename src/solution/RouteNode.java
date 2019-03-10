@@ -19,35 +19,18 @@ public class RouteNode {
 
 	private Node associatedNode;
 	private Request associatedRequest; // only valid if it's not a depot
-	private RouteNodeType type = RouteNodeType.DEFAULT;
+	private RouteNodeType type;
 	private SolutionRequest associatedSolutionRequest;
 	
 	// The above three fields define a distinct routenode (e.g. type of transfer for request x)
 	
 	private int vehicleId = -1;
-	
-	private double waiting = -1; // time you wait at a node before starting service = startOfS - arrival
-	private double slack = -1; // time you can start service later = l - startOfS
-	
-	private double virtualE, virtualL = -1; // TODO add getter, setter, check and function to update
 
 	private double startOfS = -1;
 	private double arrival = -1;
-	private double departure = -1;
 
 	private int numPas;
 
-	// only for depots
-	public RouteNode(Node associatedNode, RouteNodeType type, int vehicleId) {
-		if (type != RouteNodeType.DEPOT_END && type != RouteNodeType.DEPOT_START) {
-			Logger.warn("Attempting to create non-depot {000} without associated request", associatedNode.id);
-		}
-		this.numPas = 0;
-		this.associatedNode = associatedNode;
-		this.type = type;
-		this.vehicleId = vehicleId;
-	}
-	
 	// all other nodes
 	/**
 	 * Creates a non-depot node
@@ -58,51 +41,18 @@ public class RouteNode {
 	 * @param vehicleId the vehicle this node belongs to
 	 */
 	public RouteNode(Node associatedNode, RouteNodeType type, Request associatedRequest, int vehicleId) {
-		if (type == RouteNodeType.DEPOT_END || type == RouteNodeType.DEPOT_START) {
-			Logger.warn("Attempting to create depot {000} with associated request {000}", associatedNode.id, associatedRequest.id);
-		}
 		this.associatedNode = associatedNode;
 		this.type = type;
 		this.associatedRequest = associatedRequest;
 		this.vehicleId = vehicleId;
 	}
 
-	public void setWaiting(double waiting) {
-		this.waiting = waiting;
-		this.startOfS = this.arrival + this.waiting;
-		this.departure = this.startOfS + this.associatedNode.s;
-		this.slack = this.associatedNode.getL() - this.startOfS;
-
-		// check feasibility here? Or keep it separate?
-		// return true/false if feasible?
-		// we might want to allow infeasible stuff, since we need to move a lot of nodes
-		// simultaneously in a route to ensure we make our windows
-	}
-
 	public void setStartOfS(double startOfS, boolean warnOnError) {
 		// is this check necessary?
-		if (warnOnError && this.associatedNode.hasTimeWindow()
-				&& (startOfS < this.associatedNode.getE() || startOfS > this.associatedNode.getL())) {
-			Logger.warn("Invalid starting time {00.00} <= {00.00} (= SoS) <= {00.00} for {}", this.associatedNode.getE(), startOfS, this.associatedNode.getL(), this.toString());
+		if ((startOfS < this.associatedNode.e || startOfS > this.associatedNode.l)) {
+			Logger.warn("Invalid starting time {00.00} <= {00.00} (= SoS) <= {00.00} for {}", this.associatedNode.e, startOfS, this.associatedNode.l, this.toString());
 		}
 		this.startOfS = startOfS;
-		this.waiting = this.startOfS - this.arrival;
-		this.departure = this.startOfS + this.associatedNode.s;
-		this.slack = this.associatedNode.getL() - this.startOfS;
-	}
-	
-	public double getVirtualE() {
-		if (this.getType() == RouteNodeType.DEPOT_END || this.getType() == RouteNodeType.DEPOT_START) {
-			Logger.warn("Retrieving virtual E of depot. This should not happen.");
-		}
-		return this.virtualE;
-	}
-	
-	public double getVirtualL() {
-		if (this.getType() == RouteNodeType.DEPOT_END || this.getType() == RouteNodeType.DEPOT_START) {
-			Logger.warn("Retrieving virtual E of depot. This should not happen.");
-		}
-		return this.virtualL;
 	}
 	
 	public void setStartOfS(double startOfS) {
@@ -112,11 +62,6 @@ public class RouteNode {
 	public void setArrival(double arrival) {
 		// keep startOfS constant
 		this.arrival = arrival;
-		this.waiting = this.arrival - this.startOfS;
-	}
-	
-	public void setDeparture(double departure) {
-		this.departure = departure;
 	}
 	
 	public void setNumPas(int numPas) {
@@ -128,30 +73,18 @@ public class RouteNode {
 	}
 
 	public Request getAssociatedRequest() {
-		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
-			Logger.warn("Attempting to get associated request for depot {000}", associatedRequest.id, this.associatedNode.id);
-		}
 		return associatedRequest;
 	}
 
 	public void setAssociatedRequest(Request associatedRequest) {
-		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
-			Logger.warn("Attempting to set associated request {000} for depot {000}", associatedRequest.id, this.associatedNode.id);
-		}
 		this.associatedRequest = associatedRequest;
 	}
 	
 	public void setSolutionRequest(SolutionRequest solutionRequest){
-		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
-			Logger.warn("Attempting to set associated request {000} for depot {000}", associatedRequest.id, this.associatedNode.id);
-		}
 		this.associatedSolutionRequest = solutionRequest;
 	}
 	
 	public SolutionRequest getSolutionRequest() {
-		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
-			Logger.warn("Attempting to get associated request for depot {000}", this.associatedNode.id);
-		}
 		return associatedSolutionRequest;
 	}
 	
@@ -159,42 +92,19 @@ public class RouteNode {
 		return type;
 	}
 
-	public double getWaiting() {
-		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
-			Logger.warn("Retrieving waiting time of depot {000}.", this.associatedNode.id);
-		}
-		return waiting;
-	}
-
-	public double getSlack() {
-		return slack;
-	}
-
 	public double getStartOfS() {
-		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
-			Logger.warn("Retrieving start of service time of depot {000}.", this.associatedNode.id);
-		}
 		return startOfS;
 	}
 
 	public double getArrival() {
-		if (this.type == RouteNodeType.DEPOT_START) {
-			Logger.warn("Retrieving arrival time of (starting) depot {000}.", this.associatedNode.id);
-		}
 		return arrival;
 	}
 
 	public double getDeparture() {
-		if (this.type == RouteNodeType.DEPOT_END) {
-			Logger.warn("Retrieving departure time of (ending) depot {000}.", this.associatedNode.id);
-		}
-		return departure;
+		return this.startOfS + this.associatedNode.s;
 	}
 
 	public int getNumPas() {
-//		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
-//			Logger.warn("Retrieving number of passengers of depot {000}.", this.associatedNode.id);
-//		}
 		return numPas;
 	}
 	
@@ -214,27 +124,15 @@ public class RouteNode {
 	}
 
 	public RouteNode copy() {
-		RouteNode copy;
-		if (this.type == RouteNodeType.DEPOT_END || this.type == RouteNodeType.DEPOT_START) {
-			copy = new RouteNode(this.associatedNode, this.type, this.vehicleId);	
-		} else {
-			copy = new RouteNode(this.associatedNode, this.type, this.associatedRequest, this.vehicleId);
-		}
-		copy.waiting = this.waiting;
-		copy.slack = this.slack;
+		RouteNode copy = new RouteNode(this.associatedNode, this.type, this.associatedRequest, this.vehicleId);
 		copy.startOfS = this.startOfS;
 		copy.arrival = this.arrival;
-		copy.departure = this.departure;
 		copy.numPas = this.numPas;
 		return copy;
 	}
 	
 	public boolean isTransfer() {
 		return (this.type == RouteNodeType.TRANSFER_DROPOFF || this.type == RouteNodeType.TRANSFER_PICKUP);
-	}
-	
-	public boolean isDepot() {
-		return (this.type == RouteNodeType.DEPOT_START || this.type == RouteNodeType.DEPOT_END);
 	}
 	
 	public boolean isEqualExceptTimings(RouteNode other) {

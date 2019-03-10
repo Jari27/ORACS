@@ -3,17 +3,12 @@ package solution;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 import org.pmw.tinylog.Logger;
 
-import problem.PickupNode;
-import problem.DropoffNode;
-import problem.Request;
 import problem.Problem;
-import solution.SolutionRequest;
 
 @SuppressWarnings("serial")
 public class Route extends LinkedList<RouteNode>{
@@ -29,7 +24,13 @@ public class Route extends LinkedList<RouteNode>{
 	public double getCost(Problem p) {
 		if (routeChanged) {
 			Logger.trace("Calculating new cost of Route {000}. Old: {00.00}", vehicleId, cost);
-			cost = 0;
+			
+			// depot costs			
+			problem.Node first = this.getFirst().getAssociatedNode();
+			problem.Node last = this.getLast().getAssociatedNode();
+			
+			cost = p.costBetween(first, p.getNearestDepot(first)) + p.costBetween(last, p.getNearestDepot(last));
+			
 			for (int i = 0; i < this.size() - 1; i++) {
 				cost += p.costBetween(this.get(i).getAssociatedNode(), this.get(i+1).getAssociatedNode());
 			}
@@ -65,95 +66,9 @@ public class Route extends LinkedList<RouteNode>{
 	public void logRoute() {
 		Logger.debug("Vehicle {000}", this.vehicleId);
 		for (RouteNode rn : this) {
-			switch (rn.getType()) {
-			case DEPOT_START:
-				Logger.debug("Leave depot {000} at {0.00}", rn.getAssociatedNode().id, rn.getDeparture());
-				break;
-			case PICKUP:
-				Logger.debug(
-						"Arrive at pickup  {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}",
-						rn.getAssociatedNode().id, rn.getArrival(), rn.getWaiting(), rn.getStartOfS(), rn.getDeparture());
-				break;
-			case DROPOFF:
-				Logger.debug(
-						"Arrive at dropoff {000} at {0.00}, wait {0.00}, start service at {0.00}, leave at {0.00}",
-						rn.getAssociatedNode().id, rn.getArrival(), rn.getWaiting(), rn.getStartOfS(), rn.getDeparture());
-				break;
-			case DEPOT_END:
-				Logger.debug("Arrive at depot {000} at {0.00}", rn.getAssociatedNode().id, rn.getArrival());
-				break;
-			default:
-				Logger.warn("Invalid routenode");
-				break;
-			}
-		}
-	}
-	
-	//does not take into account the nr of passengers.. But maybe better to do this in the ALNS, since a route doesnt know in which problem it is
-	public boolean timingIsFeasible(){
-		Logger.debug("Checking if Route {000} is feasible..", this.vehicleId);
-		int index1 = 0;
-		int index2 = 0;
-		for (ListIterator<RouteNode> l = listIterator(0); l.hasNext();){
-			RouteNode cur = l.next();
-			index1 += nodeIsFeasible(cur);
-			index2 += 1;
-		}
-		if(index1 == index2){
-			Logger.debug("Route {000} is feasible..", this.vehicleId);
-			return true;
-		}else{
-			Logger.debug("Route {000} is unfeasible..", this.vehicleId);
-			return false;
-		}
-	}
-		
-	public int nodeIsFeasible(RouteNode rn) {
-		RouteNodeType type = rn.getType();
-		switch(type){
-		case DEPOT_START:
-			Logger.debug("This is the starting depot, time window always satisfied");
-			return 1;
-		case PICKUP:
-			Request associatedRp = rn.getAssociatedRequest();
-			PickupNode pickup = associatedRp.getPickup();
-			Logger.debug("This is a pickup node with time window: {00} - {00}", pickup.getE(), pickup.getL());
-			if(rn.getStartOfS() >= pickup.getE() && rn.getStartOfS() <= pickup.getL()){
-				Logger.debug("The service starts at {000} which lies within the time window", rn.getStartOfS());
-				return 1;
-			}else{
-				Logger.debug("The service starts at {000} which does not lie within the time window", rn.getStartOfS());
-				return 0;
-			}
-		case DROPOFF:
-			Request associatedRd = rn.getAssociatedRequest();
-			DropoffNode dropoff = associatedRd.getDropoff();
-			SolutionRequest sR = rn.getSolutionRequest();
-			RouteNode assPickup = sR.pickup;
-			double startOfSpickup = assPickup.getStartOfS();
-			
-		Logger.debug("This is a dropoff node with time window: {00} - {00} and max ride time: {000}", dropoff.getE(), dropoff.getL(), associatedRd.L);
-			if(rn.getStartOfS() >= dropoff.getE() && rn.getStartOfS() <= dropoff.getL() && rn.getStartOfS() - startOfSpickup < associatedRd.L){
-				Logger.debug("Start service dropoff: {000}, start service pickup: {000}, ride time: {000}", rn.getStartOfS(),
-						startOfSpickup, rn.getStartOfS() - startOfSpickup);
-				return 1;
-			}else{
-				Logger.debug("Start service dropoff: {000}, start service pickup: {000}, ride time: {000}", rn.getStartOfS(),
-						startOfSpickup, rn.getStartOfS() - startOfSpickup);
-				return 0;
-			}
-		case DEPOT_END:
-			Logger.debug("This is the ending depot, time window always satisfied");
-			return 1;
-		case TRANSFER_PICKUP:
-			Logger.debug("This is a tranfer pickup node, it has no hard time window");
-			return 1;
-		case TRANSFER_DROPOFF:
-			Logger.debug("This is a tranfer dropoff node, it has no hard time window");
-			return 1;
-		default:
-			Logger.debug("This is a default node");
-			return 1;
+			Logger.debug(
+					"Arrive at {} {000} at {0.00}, start service at {0.00}, leave at {0.00}", rn.getType().toString(),
+					rn.getAssociatedNode().id, rn.getArrival(), rn.getStartOfS(), rn.getDeparture());
 		}
 	}
 

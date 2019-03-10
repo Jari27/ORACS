@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import problem.DepotNode;
+import problem.Node;
+import problem.NodeType;
 import problem.Problem;
 import problem.Request;
-import problem.TransferNode;
 import solution.Solution;
 
 import org.pmw.tinylog.Logger;
@@ -30,12 +30,14 @@ public class Main {
 		for (Problem p : problems) {
 			Solution s = new Solution(p);
 			s.createInitialSolution();
-			solutions.add(s);
+			s.logSolution();
+			//solutions.add(s);
 		}
 		
+		
 		// quick and dirty removal check
-		ALNS test = new ALNS(problems.get(5));
-		test.run();
+//		ALNS test = new ALNS(problems.get(5));
+//		test.run();
 		
 		if (true) return;
 		
@@ -138,7 +140,7 @@ public class Main {
 		int transferServiceTimeOffset = 6 + 11 * p.numRequests + 2 * p.numDepots + 3 * p.numTransferCandidates;
 		int transferLocationOffset = 6 + p.numTransferCandidates + 4 * p.numRequests;
 		for (int i = 0; i < p.numTransferCandidates; i++) {
-			TransferNode t = new TransferNode(1 + p.numRequests * 2 + i);
+			Node t = new Node(1 + p.numRequests * 2 + i, NodeType.TRANSFER);
 			t.f = data[6 + i];
 			t.s = data[i + transferServiceTimeOffset];
 			t.x = data[2*i + transferLocationOffset];
@@ -149,7 +151,7 @@ public class Main {
 		// create depot data
 		int depotLocationOffset = 6 + p.numTransferCandidates + 4 * p.numRequests + 2 * p.numTransferCandidates;
 		for (int i = 0; i < p.numDepots; i++) {
-			DepotNode d = new DepotNode(i+1 + p.numRequests * 2 + p.numTransferCandidates);
+			Node d = new Node(i+1 + p.numRequests * 2 + p.numTransferCandidates, NodeType.DEPOT);
 			d.x = data[2*i + depotLocationOffset];
 			d.y = data[2*i + 1 + depotLocationOffset];
 			p.depots.add(d);

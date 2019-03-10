@@ -10,25 +10,18 @@ import java.util.Set;
 
 import org.pmw.tinylog.Logger;
 
+import problem.Node;
 import problem.Problem;
 import problem.Request;
-import problem.TransferNode;
 
 public class Solution {
 
-	static final String GROUP = "Group #";
-
-	int index;
-	
-	private double cost = -1;
-	
 	private int nextFreeVehicleId = -1;
 
 	Problem p;
 
 	public List<Route> routes = new ArrayList<>();
-	
-	public List<TransferNode> openTransfers, closedTransfers;
+	public List<Node> openTransfers, closedTransfers;
 	
 	
 	// should be sorted!
@@ -41,7 +34,6 @@ public class Solution {
 		this.openTransfers = new ArrayList<>();
 		this.closedTransfers = new ArrayList<>();
 		this.closedTransfers.addAll(p.transfers);
-		this.index = p.index;
 		this.p = p;
 	}
 	
@@ -52,14 +44,8 @@ public class Solution {
 	 * solution but log warnings.
 	 */
 	public void createInitialSolution() {
-		Logger.debug("Trying to find a feasible solution for problem instance {000}", this.index);
-		for (Request r : p.requests) {
-			double dist = p.distanceBetween(r.pickupNode, r.dropoffNode);
-			if (dist > r.L) {
-				Logger.warn("No solution for request {000}, distance between pickup and dropoff too large", r.id);
-				Logger.warn("Instance {000} is infeasible!", index);
-				Logger.warn("We will try to find a close starting solution for testing purposes.");
-			}		
+		Logger.debug("Trying to find a feasible solution for problem instance {000}", p.index);
+		for (Request r : p.requests) {	
 			Route route = new Route(r.id);
 
 			RouteNode pickup = new RouteNode(r.pickupNode, RouteNodeType.PICKUP, r, route.vehicleId);
@@ -67,45 +53,35 @@ public class Solution {
 
 			// arrive early and wait\
 			// preprocessing ensures this earliest time window is just reachable
-			pickup.setArrival(pickup.getAssociatedNode().getE()); 
+			pickup.setArrival(pickup.getAssociatedNode().e); 
 			pickup.setStartOfS(pickup.getArrival(), false);
 			pickup.setNumPas(1);
 
 			dropoff.setArrival(pickup.getDeparture() + p.distanceBetween(pickup.getAssociatedNode(), dropoff.getAssociatedNode())); // set arrival to departure + travel time
-			dropoff.setStartOfS(Math.max(dropoff.getAssociatedNode().getE(), dropoff.getArrival()), false); // set start of s as early as possible
+			dropoff.setStartOfS(Math.max(dropoff.getAssociatedNode().e, dropoff.getArrival()), false); // set start of s as early as possible
 			dropoff.setNumPas(0);
 
 			// ensure max ride time is satisfied
 			if (dropoff.getStartOfS() - pickup.getDeparture() > r.L) {
-				Logger.debug(
+				Logger.trace(
 						"Instance {000}: adjusting start of service of pickup time for request {000}. Current: {0.00}",
-						index, r.id, pickup.getStartOfS());
-				
-				double newStart = pickup.getArrival() + Math.min(dropoff.getWaiting(), pickup.getSlack()); // adjust
+						p.index, r.id, pickup.getStartOfS());
+				double newStart = pickup.getArrival() + (dropoff.getStartOfS() - dropoff.getArrival());
 				pickup.setArrival(newStart);
 				pickup.setStartOfS(newStart, true);
 				dropoff.setArrival(pickup.getDeparture() + p.distanceBetween(dropoff.getAssociatedNode(), pickup.getAssociatedNode()));
-				dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.getAssociatedNode().getE()), true);
+				dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.getAssociatedNode().e), true);
 			} else {
-				Logger.debug(
+				Logger.trace(
 						"Instance {000}: initial solution already okay. Pickup.SoS: {0.00} <= {0.00} <= {0.00}, dropoff.arr = {0.00}, dropoff.SoS: {0.00} <= {0.00} <= {0.00}, length = {0.00}, r.L = {0.00}",
-						index, pickup.getAssociatedNode().getE(), pickup.getStartOfS(), pickup.getAssociatedNode().getL(),
-						dropoff.getArrival(), dropoff.getAssociatedNode().getE(), dropoff.getStartOfS(), dropoff.getAssociatedNode().getL(),
+						p.index, pickup.getAssociatedNode().e, pickup.getStartOfS(), pickup.getAssociatedNode().l,
+						dropoff.getArrival(), dropoff.getAssociatedNode().e, dropoff.getStartOfS(), dropoff.getAssociatedNode().l,
 						dropoff.getStartOfS() - pickup.getDeparture(), r.L);
 			}
 			
-			// find starting and ending depots
-			RouteNode depotStart = new RouteNode(r.pickupNode.getNearestDepot(), RouteNodeType.DEPOT_START, route.vehicleId);
-			depotStart.setDeparture(pickup.getArrival() - p.distanceBetween(depotStart.getAssociatedNode(), pickup.getAssociatedNode()));
-
-			RouteNode depotEnd = new RouteNode(r.dropoffNode.getNearestDepot(), RouteNodeType.DEPOT_END, route.vehicleId);
-			depotEnd.setArrival(dropoff.getDeparture() + p.distanceBetween(depotEnd.getAssociatedNode(), dropoff.getAssociatedNode()));
-			
 			// keep track of the route
-			route.add(depotStart);
 			route.add(pickup);
 			route.add(dropoff);
-			route.add(depotEnd);
 			this.routes.add(route);
 			
 			// keep track of the request
@@ -116,26 +92,25 @@ public class Solution {
 			dropoff.setSolutionRequest(solReq);
 			this.requests.add(solReq);
 			
-			
 			this.nextFreeVehicleId = r.id + 1;
 		}
-		Logger.info("Found an initial solution for problem {000} with cost {0.00}", index, this.getCost());
+		Logger.info("Found an initial solution for problem {000} with cost {0.00}", p.index, this.getCost());
 		logSolution();
 		try {
 			exportSolution(true);
 		} catch (FileNotFoundException e) {
-			Logger.error("Cannot export file for instance {000}", this.index);
+			Logger.error("Cannot export file for instance {000}", p.index);
 			Logger.error(e);
 		}
 	}
 	
 	public double getCost() {
-		cost = 0;
+		double cost = 0;
 		for (Route route : routes) {
 			cost += route.getCost(p);
 		}
-		for (TransferNode tn : openTransfers) {
-			cost += tn.f;
+		for (Node transfer : openTransfers) {
+			cost += transfer.f;
 		}
 		return cost;
 	}
@@ -144,7 +119,7 @@ public class Solution {
 	 * Writes a solution to the log.
 	 */
 	public void logSolution() {
-		Logger.debug("Solution {000} - cost {00.00}", this.index, this.getCost());
+		Logger.debug("Cost of the current solution: {00.00}", this.getCost());
 		for (Route r : routes) {
 			r.logRoute();
 		}
@@ -171,18 +146,21 @@ public class Solution {
 	 */
 	public void exportSolution(boolean isInitial) throws FileNotFoundException {
 		// TODO handle transfers
-		String file = isInitial ? String.format("solutions/initial_oracs_%d.csv", index)
-				: String.format("solutions/oracs_%d.csv", index);
+		String file = isInitial ? String.format("solutions/initial_oracs_%d.csv", p.index)
+				: String.format("solutions/oracs_%d.csv", p.index);
 		try (PrintWriter writer = new PrintWriter(new File(file))) {
-			writer.println(GROUP);
-			writer.println(index);
-			writer.println(String.format("%.2f", cost));
+			writer.println("Group 6");
+			writer.println(p.index);
+			writer.println(String.format("%.2f", this.getCost()));
 			writer.println(routes.size());
 			// print routes
 			for (Route r : routes) {
 				// empty line
 				writer.println();
 				// order of nodes
+				// starting depot
+				Node startingDepot = p.getNearestDepot(r.getFirst().getAssociatedNode());
+				writer.print(startingDepot.id);
 				for (int i = 0; i < r.size(); i++) {
 					RouteNode rn = r.get(i);
 					if (rn.getType() == RouteNodeType.TRANSFER_DROPOFF) {
@@ -192,27 +170,23 @@ public class Solution {
 					} else {
 						writer.print(rn.getAssociatedNode().id);
 					}
-					// print commas but no trailing commas
-					if (i < r.size() - 1) {
-						writer.print(",");
-					}
+					writer.print(",");
 				}
+				// ending depot
+				Node endingDepot = p.getNearestDepot(r.getLast().getAssociatedNode());
+				writer.print(endingDepot.id);
+				
 				writer.println();
 				// service time starts
+				// starting depot departure time
+				writer.print(r.getFirst().getArrival() - p.distanceBetween(r.getFirst().getAssociatedNode(), startingDepot));
 				for (int i = 0; i < r.size(); i++) {
 					RouteNode rn = r.get(i);
-					if (rn.getType() == RouteNodeType.DEPOT_START) {
-						writer.print(rn.getDeparture());
-					} else if (rn.getType() == RouteNodeType.DEPOT_END) {
-						writer.print(rn.getArrival());
-					} else {
-						writer.print(rn.getStartOfS());
-					}
-					// print commas but no trailing commas
-					if (i < r.size() - 1) {
-						writer.print(",");
-					}
+					writer.print(rn.getStartOfS());
+					writer.print(",");
 				}
+				// ending depot arrival time
+				writer.print(r.getLast().getDeparture() + p.distanceBetween(r.getLast().getAssociatedNode(), endingDepot));
 				writer.println();
 			}
 		}
@@ -221,16 +195,6 @@ public class Solution {
 	public int getNextFreeVehicleId() {
 		return this.nextFreeVehicleId++;
 	}
-//	// TODO
-//	public void calculateWaitingTimeMatrix() {
-//		int numRouteNodes = 0;
-//		for (Route r : routes) {
-//			numRouteNodes += r.size();
-//		}
-//		
-//		float[][] waitingTimeMatrix = new float[numRouteNodes][numRouteNodes];
-//		
-//	}
 	
 	
 	/** 
@@ -241,7 +205,7 @@ public class Solution {
 	 * @param sr the SolutionRequest of the added request
 	 */
 	public void replaceRouteWithLongerRoute(Route newRoute, SolutionRequest sr) {
-		Logger.debug("Trying to insert Route {000} into Solution {000}", newRoute.vehicleId, this.index);
+		Logger.debug("Trying to insert Route {000}", newRoute.vehicleId);
 		
 		// try to replace a route
 		boolean modificationDone = false; // check if we need to insert
@@ -302,7 +266,7 @@ public class Solution {
 		if (!modificationDone) {
 			Logger.warn("Route {000} could not be inserted. ");
 		} else {
-			Logger.debug("Replaced Route {000} by modified version in solution {000}", newRoute.vehicleId, this.index);
+			Logger.debug("Replaced Route {000} by modified version", newRoute.vehicleId);
 		}
 	}
 	
@@ -314,7 +278,7 @@ public class Solution {
 	 */
 	public Solution copy() {
 		Solution next = new Solution(this.p);
-		next.cost = this.cost;
+		next.nextFreeVehicleId = this.nextFreeVehicleId;
 		
 		// Create solution requests
 		// we make this early so we can assign the correct RouteNodes to them as soon as we make those
@@ -333,35 +297,19 @@ public class Solution {
 			for (RouteNode origRN : origRoute) {
 				// create a new RouteNode and set its associated node, type and request (if not a depot)
 				// note; the associated node does not have to be copied since it is the same
-				RouteNode copyRN;
-				if (origRN.getType() == RouteNodeType.DEPOT_START || origRN.getType() == RouteNodeType.DEPOT_END) {
-					copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.getVehicleId());
-				} else {
-					copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.getAssociatedRequest(), origRN.getVehicleId());
-				}
+				RouteNode copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.getAssociatedRequest(), origRN.getVehicleId());
 				
 				// Set all relevant fields
 				// TODO ensure we update this as we update RouteNode (i.e. slack etc)
-				if (origRN.getType() != RouteNodeType.DEPOT_START) { // start depots have no arrival
-					copyRN.setArrival(origRN.getArrival());
-				}
-				if (origRN.getType() != RouteNodeType.DEPOT_END && origRN.getType() != RouteNodeType.DEPOT_START) {
-					copyRN.setStartOfS(origRN.getStartOfS(), false); // depots have no service
-				}
-				if (origRN.getType() == RouteNodeType.DEPOT_START) { // starting depots need a manual departure time (that's the only thing they have)
-					copyRN.setDeparture(origRN.getDeparture());
-				}
+				copyRN.setArrival(origRN.getArrival());
+				copyRN.setStartOfS(origRN.getStartOfS(), false); 
 				copyRN.setNumPas(origRN.getNumPas());
 				
 				// save the RouteNode in our new route
-				
 				copyRoute.add(copyRN);
 				
 				// Add RouteNode to the SolutionRequest
-				int tmpRequestId = -1;
-				if (origRN.getType() != RouteNodeType.DEPOT_END && origRN.getType() != RouteNodeType.DEPOT_START) {
-					tmpRequestId = origRN.getAssociatedRequest().id;
-				}
+				int tmpRequestId = origRN.getAssociatedRequest().id;
 				switch (origRN.getType()) {
 				case PICKUP:
 					next.requests.get(tmpRequestId - 1).pickup = copyRN; // our requests are 1-indexed instead of 0
@@ -403,7 +351,7 @@ public class Solution {
 		// check timewindows
 		for (Route r : routes) {
 			for (RouteNode rn : r) {
-				if (!rn.isDepot() && !rn.isTransfer() && (rn.getStartOfS() > rn.getAssociatedNode().getL() || rn.getStartOfS() < rn.getAssociatedNode().getE())) {
+				if (!rn.isTransfer() && (rn.getStartOfS() > rn.getAssociatedNode().l || rn.getStartOfS() < rn.getAssociatedNode().e)) {
 					Logger.debug("Not feasible because of time windows of node {000}: {00.00}.", rn, rn.getStartOfS());
 					return false;
 				}
@@ -470,7 +418,7 @@ public class Solution {
 			}
 		}
 		for (RouteNode r : routeNodesFromRoutes) {
-			if (!r.isDepot() && !routeNodesFromRequests.contains(r)) {
+			if (!routeNodesFromRequests.contains(r)) {
 				Logger.warn("RouteNode {} from route not in any request", r);
 				isCorrect = false;
 			}
