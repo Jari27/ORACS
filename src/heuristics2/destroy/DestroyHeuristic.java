@@ -26,8 +26,9 @@ public abstract class DestroyHeuristic {
 	}
 	
 	/**
-	 * Destroys a solution in place. 
-	 * 
+	 * Destroys a solution in place
+	 * @param s the solution to destroy
+	 * @param number the number of request to destroy
 	 * @return true if the solution was destroyed successfully, false otherwise
 	 */
 	public abstract boolean destroy(Solution s, int number);
