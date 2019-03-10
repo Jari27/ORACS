@@ -322,8 +322,4 @@ public class Route extends LinkedList<RouteNode>{
 		this.setRouteChanged();
 		return super.set(index, element);
 	}
-	
-	
-	// TODO some function to calculate feasible times given a route
-	// TODO some function to check whether an insertion is valid?
 }

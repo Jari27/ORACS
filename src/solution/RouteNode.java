@@ -3,7 +3,6 @@ package solution;
 import org.pmw.tinylog.Logger;
 
 import problem.Node;
-import problem.Request;
 
 /**
  * A RouteNode defines an 'action'. It is a pickup/dropoff/depot visit at a certain time with an associated request.
@@ -15,12 +14,15 @@ import problem.Request;
  * @author jarim
  *
  */
+/**
+ * @author jarim
+ *
+ */
 public class RouteNode {
 
-	private Node associatedNode;
-	private Request associatedRequest; // only valid if it's not a depot
-	private RouteNodeType type;
-	private SolutionRequest associatedSolutionRequest;
+	public Node associatedNode;
+	public RouteNodeType type;
+	public int requestId;
 	
 	// The above three fields define a distinct routenode (e.g. type of transfer for request x)
 	
@@ -28,22 +30,20 @@ public class RouteNode {
 
 	private double startOfS = -1;
 	private double arrival = -1;
+	private int numPas = 0;
 
-	private int numPas;
-
-	// all other nodes
 	/**
-	 * Creates a non-depot node
+	 * Creates a node
 	 * 
 	 * @param associatedNode the associated node
 	 * @param type the type of node
-	 * @param associatedRequest the associated request (if not a depot)
+	 * @param requestId the id of the associated request
 	 * @param vehicleId the vehicle this node belongs to
 	 */
-	public RouteNode(Node associatedNode, RouteNodeType type, Request associatedRequest, int vehicleId) {
+	public RouteNode(Node associatedNode, RouteNodeType type, int requestId, int vehicleId) {
 		this.associatedNode = associatedNode;
 		this.type = type;
-		this.associatedRequest = associatedRequest;
+		this.requestId = requestId;
 		this.vehicleId = vehicleId;
 	}
 
@@ -70,22 +70,6 @@ public class RouteNode {
 
 	public Node getAssociatedNode() {
 		return associatedNode;
-	}
-
-	public Request getAssociatedRequest() {
-		return associatedRequest;
-	}
-
-	public void setAssociatedRequest(Request associatedRequest) {
-		this.associatedRequest = associatedRequest;
-	}
-	
-	public void setSolutionRequest(SolutionRequest solutionRequest){
-		this.associatedSolutionRequest = solutionRequest;
-	}
-	
-	public SolutionRequest getSolutionRequest() {
-		return associatedSolutionRequest;
 	}
 	
 	public RouteNodeType getType() {
@@ -123,8 +107,14 @@ public class RouteNode {
 		this.vehicleId = vehicleId;
 	}
 
+	
+	/**
+	 * Don't forget to manually set the correct associated SolutionRequest
+	 * @return a copy of this node
+	 */
 	public RouteNode copy() {
-		RouteNode copy = new RouteNode(this.associatedNode, this.type, this.associatedRequest, this.vehicleId);
+		//RouteNode copy = new RouteNode(this.associatedNode, this.type, this.associatedRequest, this.vehicleId);
+		RouteNode copy = new RouteNode(this.associatedNode, this.type, this.requestId, this.vehicleId);
 		copy.startOfS = this.startOfS;
 		copy.arrival = this.arrival;
 		copy.numPas = this.numPas;
@@ -141,7 +131,7 @@ public class RouteNode {
 		if (this.vehicleId != other.vehicleId || this.associatedNode != other.associatedNode) return false;
 		// if it's a pickup/dropoff, the RouteNode can only have 1 associated request and 1 type, when given the associated Node, so we don't need to compare those
 		// if it's a depot, we only care that the vehicleId and associated node is equal
-		return (!this.isTransfer() || this.getType() == other.getType() && this.getAssociatedRequest() == other.getAssociatedRequest());
+		return (!this.isTransfer() || this.getType() == other.getType() && this.requestId == other.requestId);
 	}
 	
 }

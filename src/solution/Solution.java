@@ -48,8 +48,8 @@ public class Solution {
 		for (Request r : p.requests) {	
 			Route route = new Route(r.id);
 
-			RouteNode pickup = new RouteNode(r.pickupNode, RouteNodeType.PICKUP, r, route.vehicleId);
-			RouteNode dropoff = new RouteNode(r.dropoffNode, RouteNodeType.DROPOFF, r, route.vehicleId);
+			RouteNode pickup = new RouteNode(r.pickupNode, RouteNodeType.PICKUP, r.id, route.vehicleId);
+			RouteNode dropoff = new RouteNode(r.dropoffNode, RouteNodeType.DROPOFF,  r.id, route.vehicleId);
 
 			// arrive early and wait\
 			// preprocessing ensures this earliest time window is just reachable
@@ -88,10 +88,8 @@ public class Solution {
 			SolutionRequest solReq = new SolutionRequest(r);
 			solReq.pickup = pickup;
 			solReq.dropoff = dropoff;
-			pickup.setSolutionRequest(solReq);
-			dropoff.setSolutionRequest(solReq);
-			this.requests.add(solReq);
 			
+			this.requests.add(solReq);
 			this.nextFreeVehicleId = r.id + 1;
 		}
 		Logger.info("Found an initial solution for problem {000} with cost {0.00}", p.index, this.getCost());
@@ -164,9 +162,9 @@ public class Solution {
 				for (int i = 0; i < r.size(); i++) {
 					RouteNode rn = r.get(i);
 					if (rn.getType() == RouteNodeType.TRANSFER_DROPOFF) {
-						writer.print(String.format("10%03d%03d", rn.getAssociatedNode().id, rn.getAssociatedRequest().id));
+						writer.print(String.format("10%03d%03d", rn.getAssociatedNode().id, rn.requestId));
 					} else if (rn.getType() == RouteNodeType.TRANSFER_PICKUP) {
-						writer.print(String.format("11%03d%03d", rn.getAssociatedNode().id, rn.getAssociatedRequest().id));
+						writer.print(String.format("11%03d%03d", rn.getAssociatedNode().id, rn.requestId));
 					} else {
 						writer.print(rn.getAssociatedNode().id);
 					}
@@ -297,7 +295,7 @@ public class Solution {
 			for (RouteNode origRN : origRoute) {
 				// create a new RouteNode and set its associated node, type and request (if not a depot)
 				// note; the associated node does not have to be copied since it is the same
-				RouteNode copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.getAssociatedRequest(), origRN.getVehicleId());
+				RouteNode copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.requestId, origRN.getVehicleId());
 				
 				// Set all relevant fields
 				// TODO ensure we update this as we update RouteNode (i.e. slack etc)
@@ -309,7 +307,7 @@ public class Solution {
 				copyRoute.add(copyRN);
 				
 				// Add RouteNode to the SolutionRequest
-				int tmpRequestId = origRN.getAssociatedRequest().id;
+				int tmpRequestId = origRN.requestId;
 				switch (origRN.getType()) {
 				case PICKUP:
 					next.requests.get(tmpRequestId - 1).pickup = copyRN; // our requests are 1-indexed instead of 0
