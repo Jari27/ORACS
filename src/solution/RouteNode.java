@@ -14,19 +14,15 @@ import problem.Node;
  * @author jarim
  *
  */
-/**
- * @author jarim
- *
- */
 public class RouteNode {
 
-	public Node associatedNode;
+	public Node problemNode;
 	public RouteNodeType type;
 	public int requestId;
 	
-	// The above three fields define a distinct routenode (e.g. type of transfer for request x)
+	public int vehicleId; // to quickly find the route it belongs to
 	
-	private int vehicleId = -1;
+	// The above three fields define a distinct routenode (e.g. type of transfer for request x)
 
 	private double startOfS = -1;
 	private double arrival = -1;
@@ -38,10 +34,9 @@ public class RouteNode {
 	 * @param associatedNode the associated node
 	 * @param type the type of node
 	 * @param requestId the id of the associated request
-	 * @param vehicleId the vehicle this node belongs to
 	 */
 	public RouteNode(Node associatedNode, RouteNodeType type, int requestId, int vehicleId) {
-		this.associatedNode = associatedNode;
+		this.problemNode = associatedNode;
 		this.type = type;
 		this.requestId = requestId;
 		this.vehicleId = vehicleId;
@@ -49,8 +44,8 @@ public class RouteNode {
 
 	public void setStartOfS(double startOfS, boolean warnOnError) {
 		// is this check necessary?
-		if ((startOfS < this.associatedNode.e || startOfS > this.associatedNode.l)) {
-			Logger.warn("Invalid starting time {00.00} <= {00.00} (= SoS) <= {00.00} for {}", this.associatedNode.e, startOfS, this.associatedNode.l, this.toString());
+		if ((startOfS < this.problemNode.e || startOfS > this.problemNode.l)) {
+			Logger.warn("Invalid starting time {00.00} <= {00.00} (= SoS) <= {00.00} for {}", this.problemNode.e, startOfS, this.problemNode.l, this.toString());
 		}
 		this.startOfS = startOfS;
 	}
@@ -69,7 +64,7 @@ public class RouteNode {
 	}
 
 	public Node getAssociatedNode() {
-		return associatedNode;
+		return problemNode;
 	}
 	
 	public RouteNodeType getType() {
@@ -85,7 +80,7 @@ public class RouteNode {
 	}
 
 	public double getDeparture() {
-		return this.startOfS + this.associatedNode.s;
+		return this.startOfS + this.problemNode.s;
 	}
 
 	public int getNumPas() {
@@ -96,15 +91,7 @@ public class RouteNode {
 	public String toString() {
 		return String.format(
 				"RouteNode associated with node %03d; type = %s, arrival = %.2f, start of service = %.2f",
-				this.associatedNode.id, this.type, this.arrival, this.startOfS);
-	}
-
-	public int getVehicleId() {
-		return this.vehicleId;
-	}
-	
-	public void setVehicleId(int vehicleId) {
-		this.vehicleId = vehicleId;
+				this.problemNode.id, this.type, this.arrival, this.startOfS);
 	}
 
 	
@@ -114,7 +101,7 @@ public class RouteNode {
 	 */
 	public RouteNode copy() {
 		//RouteNode copy = new RouteNode(this.associatedNode, this.type, this.associatedRequest, this.vehicleId);
-		RouteNode copy = new RouteNode(this.associatedNode, this.type, this.requestId, this.vehicleId);
+		RouteNode copy = new RouteNode(this.problemNode, this.type, this.requestId, this.vehicleId);
 		copy.startOfS = this.startOfS;
 		copy.arrival = this.arrival;
 		copy.numPas = this.numPas;
@@ -128,7 +115,7 @@ public class RouteNode {
 	public boolean isEqualExceptTimings(RouteNode other) {
 		if (other == null) return false;
 		if (this == other) return true;
-		if (this.vehicleId != other.vehicleId || this.associatedNode != other.associatedNode) return false;
+		if (this.problemNode != other.problemNode) return false;
 		// if it's a pickup/dropoff, the RouteNode can only have 1 associated request and 1 type, when given the associated Node, so we don't need to compare those
 		// if it's a depot, we only care that the vehicleId and associated node is equal
 		return (!this.isTransfer() || this.getType() == other.getType() && this.requestId == other.requestId);

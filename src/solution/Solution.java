@@ -295,7 +295,7 @@ public class Solution {
 			for (RouteNode origRN : origRoute) {
 				// create a new RouteNode and set its associated node, type and request (if not a depot)
 				// note; the associated node does not have to be copied since it is the same
-				RouteNode copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.requestId, origRN.getVehicleId());
+				RouteNode copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.requestId, origRN.vehicleId);
 				
 				// Set all relevant fields
 				// TODO ensure we update this as we update RouteNode (i.e. slack etc)
@@ -352,9 +352,6 @@ public class Solution {
 				if (!rn.isTransfer() && (rn.getStartOfS() > rn.getAssociatedNode().l || rn.getStartOfS() < rn.getAssociatedNode().e)) {
 					Logger.debug("Not feasible because of time windows of node {000}: {00.00}.", rn, rn.getStartOfS());
 					return false;
-				}
-				if (rn.getVehicleId() != r.vehicleId) {
-					Logger.warn("Invalid RouteNode (vehicle id is not the same as the route vehicle id!), node = ", rn.toString());
 				}
 			}
 			// check timings

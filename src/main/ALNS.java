@@ -63,8 +63,8 @@ public class ALNS implements Runnable {
 		this.currentSol.createInitialSolution();
 		this.bestSol = this.currentSol;
 		this.acceptedSolutions.add(currentSol);
-//		this.seed = System.currentTimeMillis(); // to allow printing
-		this.seed = 1552148781793L;
+		this.seed = System.currentTimeMillis(); // to allow printing
+//		this.seed = 1552148781793L;
 		this.rand = new Random(this.seed);
 		
 		this.initHeuristics();
@@ -163,6 +163,11 @@ public class ALNS implements Runnable {
 //		copy2.logSolution();
 //		if (true) return;
 		
+		currentSol.logSolution();
+		heuristics2.destroy.RandomDestroy rd = new heuristics2.destroy.RandomDestroy(p, rand);
+		rd.destroy(currentSol, 1);
+		currentSol.logSolution();
+		if (true) return;
 		
 		Logger.info("SEED: {}", this.seed);
 		Logger.info("Initial cost: {00.00}", currentSol.getCost());

@@ -35,9 +35,9 @@ public class Main {
 		}
 		
 		
-		// quick and dirty removal check
-//		ALNS test = new ALNS(problems.get(5));
-//		test.run();
+//		 quick and dirty removal check
+		ALNS test = new ALNS(problems.get(5));
+		test.run();
 		
 		if (true) return;
 		
@@ -133,8 +133,8 @@ public class Main {
 			}
 			p.requests.add(r);
 			//System.out.printf("Request  %03d: L = %d\n", r.id, r.L);
-			Logger.debug("Pickup \t{000}:\t({00}, {00})\ts = {00}\ttime = [{00.00}, {00.00}]\tL={  0}",r.pickupNode.id, r.pickupNode.x, r.pickupNode.y, r.pickupNode.s, r.pickupNode.e, r.pickupNode.l, r.L);
-			Logger.debug("Dropoff\t{000}:\t({00}, {00})\ts = {00}\ttime = [{00.00}, {00.00}]",r.dropoffNode.id, r.dropoffNode.x, r.dropoffNode.y, r.dropoffNode.s, r.dropoffNode.e, r.dropoffNode.l);
+			Logger.trace("Pickup \t{000}:\t({00}, {00})\ts = {00}\ttime = [{00.00}, {00.00}]\tL={  0}",r.pickupNode.id, r.pickupNode.x, r.pickupNode.y, r.pickupNode.s, r.pickupNode.e, r.pickupNode.l, r.L);
+			Logger.trace("Dropoff\t{000}:\t({00}, {00})\ts = {00}\ttime = [{00.00}, {00.00}]",r.dropoffNode.id, r.dropoffNode.x, r.dropoffNode.y, r.dropoffNode.s, r.dropoffNode.e, r.dropoffNode.l);
 		}
 		// create transfer node date
 		int transferServiceTimeOffset = 6 + 11 * p.numRequests + 2 * p.numDepots + 3 * p.numTransferCandidates;
@@ -146,7 +146,7 @@ public class Main {
 			t.x = data[2*i + transferLocationOffset];
 			t.y = data[2*i + 1 + transferLocationOffset];
 			p.transfers.add(t);
-			Logger.debug("Transf.\t{000}:\t({00}, {00})\ts = {00}\tf = {00}", t.id, t.x, t.y, t.s, t.f);
+			Logger.trace("Transf.\t{000}:\t({00}, {00})\ts = {00}\tf = {00}", t.id, t.x, t.y, t.s, t.f);
 		}
 		// create depot data
 		int depotLocationOffset = 6 + p.numTransferCandidates + 4 * p.numRequests + 2 * p.numTransferCandidates;
@@ -155,7 +155,7 @@ public class Main {
 			d.x = data[2*i + depotLocationOffset];
 			d.y = data[2*i + 1 + depotLocationOffset];
 			p.depots.add(d);
-			Logger.debug("Depot  \t{000}:\t({00}, {00})", d.id, d.x, d.y);
+			Logger.trace("Depot  \t{000}:\t({00}, {00})", d.id, d.x, d.y);
 		}
 		// preprocess the instance
 		p.preProcess();
