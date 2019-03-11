@@ -20,9 +20,9 @@ public class RandomDestroy extends DestroyHeuristic {
 	
 	Random rand;
 	
-	public RandomDestroy(Problem p, Random r) {
-		super(p);
-		this.rand = r;
+	public RandomDestroy(Problem problem, Random rand) {
+		super(problem);
+		this.rand = rand;
 	}
 
 	/* (non-Javadoc)

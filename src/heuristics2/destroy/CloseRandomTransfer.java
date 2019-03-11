@@ -13,8 +13,8 @@ public class CloseRandomTransfer extends DestroyHeuristic {
 	
 	private Random rand;
 
-	public CloseRandomTransfer(Problem p, Random rand) {
-		super(p);
+	public CloseRandomTransfer(Problem problem, Random rand) {
+		super(problem);
 		this.rand = rand;
 	}
 
