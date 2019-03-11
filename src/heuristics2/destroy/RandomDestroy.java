@@ -3,6 +3,8 @@
  */
 package heuristics2.destroy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.pmw.tinylog.Logger;
@@ -27,9 +29,11 @@ public class RandomDestroy extends DestroyHeuristic {
 	 * @see heuristics2.destroy.DestroyHeuristic#destroy(solution.Solution)
 	 */
 	@Override
-	public boolean destroy(Solution s, int number) {
+	public List<Integer> destroy(Solution s, int number) {
+		List<Integer> destroyedRequestIds = new ArrayList<>();
 		if (number > s.requests.size()) { 
-			return false; 
+			Logger.warn("Trying to destroy {}/{} requests. Impossible!", number, s.requests.size());
+			return destroyedRequestIds; 
 		}
 		
 		int numFails = 0;
@@ -47,9 +51,10 @@ public class RandomDestroy extends DestroyHeuristic {
 				numFails++;
 				Logger.warn("Failure (total = {}) during destruction of request {000}", numFails, index + 1);
 			}
+			destroyedRequestIds.add(index);
 
 		}
-		return numFails == 0;
+		return destroyedRequestIds;
 	}
 
 }

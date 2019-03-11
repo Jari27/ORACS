@@ -3,6 +3,7 @@
  */
 package heuristics2.destroy;
 
+import java.util.List;
 import java.util.ListIterator;
 
 import org.pmw.tinylog.Logger;
@@ -31,7 +32,7 @@ public abstract class DestroyHeuristic {
 	 * @param number the number of request to destroy
 	 * @return true if the solution was destroyed successfully, false otherwise
 	 */
-	public abstract boolean destroy(Solution s, int number);
+	public abstract List<Integer> destroy(Solution s, int number);
 	
 	public boolean destroySpecific(Solution s, int requestId) {
 		SolutionRequest sr = s.requests.get(requestId - 1);
