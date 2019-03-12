@@ -53,12 +53,12 @@ public class Solution {
 
 			// arrive early and wait\
 			// preprocessing ensures this earliest time window is just reachable
-			pickup.setArrival(pickup.getAssociatedNode().e); 
+			pickup.setArrival(pickup.associatedNode.e); 
 			pickup.setStartOfS(pickup.getArrival(), false);
 			pickup.setNumPas(1);
 
-			dropoff.setArrival(pickup.getDeparture() + p.distanceBetween(pickup.getAssociatedNode(), dropoff.getAssociatedNode())); // set arrival to departure + travel time
-			dropoff.setStartOfS(Math.max(dropoff.getAssociatedNode().e, dropoff.getArrival()), false); // set start of s as early as possible
+			dropoff.setArrival(pickup.getDeparture() + p.distanceBetween(pickup.associatedNode, dropoff.associatedNode)); // set arrival to departure + travel time
+			dropoff.setStartOfS(Math.max(dropoff.associatedNode.e, dropoff.getArrival()), false); // set start of s as early as possible
 			dropoff.setNumPas(0);
 
 			// ensure max ride time is satisfied
@@ -69,13 +69,13 @@ public class Solution {
 				double newStart = pickup.getArrival() + (dropoff.getStartOfS() - dropoff.getArrival());
 				pickup.setArrival(newStart);
 				pickup.setStartOfS(newStart, true);
-				dropoff.setArrival(pickup.getDeparture() + p.distanceBetween(dropoff.getAssociatedNode(), pickup.getAssociatedNode()));
-				dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.getAssociatedNode().e), true);
+				dropoff.setArrival(pickup.getDeparture() + p.distanceBetween(dropoff.associatedNode, pickup.associatedNode));
+				dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.associatedNode.e), true);
 			} else {
 				Logger.trace(
 						"Instance {000}: initial solution already okay. Pickup.SoS: {0.00} <= {0.00} <= {0.00}, dropoff.arr = {0.00}, dropoff.SoS: {0.00} <= {0.00} <= {0.00}, length = {0.00}, r.L = {0.00}",
-						p.index, pickup.getAssociatedNode().e, pickup.getStartOfS(), pickup.getAssociatedNode().l,
-						dropoff.getArrival(), dropoff.getAssociatedNode().e, dropoff.getStartOfS(), dropoff.getAssociatedNode().l,
+						p.index, pickup.associatedNode.e, pickup.getStartOfS(), pickup.associatedNode.l,
+						dropoff.getArrival(), dropoff.associatedNode.e, dropoff.getStartOfS(), dropoff.associatedNode.l,
 						dropoff.getStartOfS() - pickup.getDeparture(), r.L);
 			}
 			
@@ -127,12 +127,12 @@ public class Solution {
 				continue;
 			}
 			Logger.debug("SolutionRequest {000}", sr.id);
-			Logger.debug("Request {000} is picked up at node {000} at {000.00}", sr.associatedRequest.id, sr.pickup.getAssociatedNode().id, sr.pickup.getStartOfS());
+			Logger.debug("Request {000} is picked up at node {000} at {000.00}", sr.associatedRequest.id, sr.pickup.associatedNode.id, sr.pickup.getStartOfS());
 			if (sr.hasTransfer()) {
-				Logger.debug("Request {000} is transferred to node {000} at {000.00}", sr.associatedRequest.id, sr.transferDropoff.getAssociatedNode().id, sr.transferDropoff.getStartOfS());
-				Logger.debug("Request {000} is transferred to node {000} at {000.00}", sr.associatedRequest.id, sr.transferPickup.getAssociatedNode().id, sr.transferPickup.getStartOfS());
+				Logger.debug("Request {000} is transferred to node {000} at {000.00}", sr.associatedRequest.id, sr.transferDropoff.associatedNode.id, sr.transferDropoff.getStartOfS());
+				Logger.debug("Request {000} is transferred to node {000} at {000.00}", sr.associatedRequest.id, sr.transferPickup.associatedNode.id, sr.transferPickup.getStartOfS());
 			} 
-			Logger.debug("Request {000} is dropped of at node {000} at {000.00}", sr.associatedRequest.id, sr.dropoff.getAssociatedNode().id, sr.dropoff.getStartOfS());
+			Logger.debug("Request {000} is dropped of at node {000} at {000.00}", sr.associatedRequest.id, sr.dropoff.associatedNode.id, sr.dropoff.getStartOfS());
 		}
 	}
 
@@ -157,34 +157,34 @@ public class Solution {
 				writer.println();
 				// order of nodes
 				// starting depot
-				Node startingDepot = p.getNearestDepot(r.getFirst().getAssociatedNode());
+				Node startingDepot = p.getNearestDepot(r.getFirst().associatedNode);
 				writer.print(startingDepot.id);
 				for (int i = 0; i < r.size(); i++) {
 					RouteNode rn = r.get(i);
 					if (rn.getType() == RouteNodeType.TRANSFER_DROPOFF) {
-						writer.print(String.format("10%03d%03d", rn.getAssociatedNode().id, rn.requestId));
+						writer.print(String.format("10%03d%03d", rn.associatedNode.id, rn.requestId));
 					} else if (rn.getType() == RouteNodeType.TRANSFER_PICKUP) {
-						writer.print(String.format("11%03d%03d", rn.getAssociatedNode().id, rn.requestId));
+						writer.print(String.format("11%03d%03d", rn.associatedNode.id, rn.requestId));
 					} else {
-						writer.print(rn.getAssociatedNode().id);
+						writer.print(rn.associatedNode.id);
 					}
 					writer.print(",");
 				}
 				// ending depot
-				Node endingDepot = p.getNearestDepot(r.getLast().getAssociatedNode());
+				Node endingDepot = p.getNearestDepot(r.getLast().associatedNode);
 				writer.print(endingDepot.id);
 				
 				writer.println();
 				// service time starts
 				// starting depot departure time
-				writer.print(r.getFirst().getArrival() - p.distanceBetween(r.getFirst().getAssociatedNode(), startingDepot));
+				writer.print(r.getFirst().getArrival() - p.distanceBetween(r.getFirst().associatedNode, startingDepot));
 				for (int i = 0; i < r.size(); i++) {
 					RouteNode rn = r.get(i);
 					writer.print(rn.getStartOfS());
 					writer.print(",");
 				}
 				// ending depot arrival time
-				writer.print(r.getLast().getDeparture() + p.distanceBetween(r.getLast().getAssociatedNode(), endingDepot));
+				writer.print(r.getLast().getDeparture() + p.distanceBetween(r.getLast().associatedNode, endingDepot));
 				writer.println();
 			}
 		}
@@ -295,7 +295,7 @@ public class Solution {
 			for (RouteNode origRN : origRoute) {
 				// create a new RouteNode and set its associated node, type and request (if not a depot)
 				// note; the associated node does not have to be copied since it is the same
-				RouteNode copyRN = new RouteNode(origRN.getAssociatedNode(), origRN.getType(), origRN.requestId, origRN.vehicleId);
+				RouteNode copyRN = new RouteNode(origRN.associatedNode, origRN.getType(), origRN.requestId, origRN.vehicleId);
 				
 				// Set all relevant fields
 				// TODO ensure we update this as we update RouteNode (i.e. slack etc)
@@ -337,19 +337,19 @@ public class Solution {
 				Logger.warn("Request {000} is unplanned (or not correctly updated)!", sr.id);
 				return false;
 			}
-			if (sr.dropoff.getStartOfS() - (sr.pickup.getStartOfS() + sr.pickup.getAssociatedNode().s) > sr.associatedRequest.L) {
-				Logger.debug("Max ride time of request {000} not satisfied. {00.00} - ({00.00} + {00.00}) > {}", sr.id, sr.dropoff.getStartOfS(), sr.pickup.getStartOfS(), sr.pickup.getAssociatedNode().s, sr.associatedRequest.L);
+			if (sr.dropoff.getStartOfS() - (sr.pickup.getStartOfS() + sr.pickup.associatedNode.s) > sr.associatedRequest.L) {
+				Logger.debug("Max ride time of request {000} not satisfied. {00.00} - ({00.00} + {00.00}) > {}", sr.id, sr.dropoff.getStartOfS(), sr.pickup.getStartOfS(), sr.pickup.associatedNode.s, sr.associatedRequest.L);
 				return false;
 			}
 		}
 		return true;
 	}
 	
-	public boolean isFeasible() {
+	public boolean isFeasibleVerify() {
 		// check timewindows
 		for (Route r : routes) {
 			for (RouteNode rn : r) {
-				if (!rn.isTransfer() && (rn.getStartOfS() > rn.getAssociatedNode().l || rn.getStartOfS() < rn.getAssociatedNode().e)) {
+				if (!rn.isTransfer() && (rn.getStartOfS() > rn.associatedNode.l || rn.getStartOfS() < rn.associatedNode.e)) {
 					Logger.debug("Not feasible because of time windows of node {000}: {00.00}.", rn, rn.getStartOfS());
 					return false;
 				}
@@ -358,7 +358,7 @@ public class Solution {
 			for (int i = 1; i < r.size(); i++) {
 				RouteNode prev = r.get(i-1);
 				RouteNode cur = r.get(i);
-				if (cur.getArrival() < prev.getDeparture() + p.distanceBetween(cur.getAssociatedNode(), prev.getAssociatedNode())) {
+				if (cur.getArrival() < prev.getDeparture() + p.distanceBetween(cur.associatedNode, prev.associatedNode)) {
 					Logger.warn("Invalid arrival times of node {} and {} in route {}", cur, prev, r.vehicleId);
 				}
 			}
@@ -368,15 +368,15 @@ public class Solution {
 			if (sr.pickup == null || sr.dropoff == null || (sr.transferDropoff == null && sr.transferPickup != null) || (sr.transferDropoff != null && sr.transferPickup == null)) {
 				Logger.warn("Unplanned request! {000}", sr.id);
 			}
-			if (sr.dropoff.getStartOfS() - (sr.pickup.getStartOfS() + sr.pickup.getAssociatedNode().s) > sr.L) {
+			if (sr.dropoff.getStartOfS() - (sr.pickup.getStartOfS() + sr.pickup.associatedNode.s) > sr.L) {
 				Logger.debug("Not feasible because request {000} does not satisfy max ride time", sr.id);
 				return false;
 			}
 			if (sr.hasTransfer()) {
-				if (sr.transferDropoff.getStartOfS() + sr.transferDropoff.getAssociatedNode().s < sr.transferPickup.getStartOfS()) {
+				if (sr.transferDropoff.getStartOfS() + sr.transferDropoff.associatedNode.s < sr.transferPickup.getStartOfS()) {
 					Logger.warn("Pickup before dropoff! Impossible. Request: {000}", sr.id);
 				}
-				if (sr.transferDropoff.getAssociatedNode() != sr.transferPickup.getAssociatedNode()) {
+				if (sr.transferDropoff.associatedNode != sr.transferPickup.associatedNode) {
 					Logger.warn("Transfer pickup and dropoff at different nodes (wtf?)");
 				}
 			}
@@ -419,6 +419,27 @@ public class Solution {
 			}
 		}
 		return !isCorrect;
+	}
+	
+	// TODO NC1, NC2
+	public boolean isFeasible() {
+		
+		return true;
+	}
+
+	
+	/*
+	 * Calculates the tight time windows as described in Masson et al. 2014
+	 */
+	
+	// TODO how in V2?
+	public void calcTightWindows() {
+		for (Route r : routes) {
+			for (RouteNode rn : r) {
+				// how?
+			}
+		}
+		
 	}
 
 }

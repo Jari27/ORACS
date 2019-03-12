@@ -62,10 +62,6 @@ public class RouteNode {
 	public void setNumPas(int numPas) {
 		this.numPas = numPas;
 	}
-
-	public Node getAssociatedNode() {
-		return associatedNode;
-	}
 	
 	public RouteNodeType getType() {
 		return type;
@@ -120,5 +116,14 @@ public class RouteNode {
 		// if it's a depot, we only care that the vehicleId and associated node is equal
 		return (!this.isTransfer() || this.getType() == other.getType() && this.requestId == other.requestId);
 	}
+
+	public boolean isLFeasible() {
+		return this.startOfS <= this.associatedNode.l;
+	}
+	
+	public boolean isEFeasible() {
+		return this.startOfS >= this.associatedNode.e;
+	}
+
 	
 }
