@@ -31,7 +31,8 @@ public abstract class RepairHeuristic {
 				Logger.debug("Inserting pickup of request {000} in route {000} at location {000}", toInsert.associatedRequest.id, oldR.vehicleId, i);
 				// first insert pickup
 				Route onlyPickupInsert = oldR.copy(); // this also forces the cost to be recalculated
-				RouteNode pickup = new RouteNode(toInsert.associatedRequest.pickupNode, RouteNodeType.PICKUP, toInsert.associatedRequest, onlyPickupInsert.vehicleId);
+				
+				RouteNode pickup = new RouteNode(toInsert.associatedRequest.pickupNode, RouteNodeType.PICKUP, toInsert, onlyPickupInsert.vehicleId);
 				//toInsert.pickup = pickup;
 
 				if (i == 1) { //first place so remove/replace starting depot too
@@ -67,7 +68,7 @@ public abstract class RepairHeuristic {
 					Logger.debug("Inserting dropoff of request {000} in route {000} at location {000}", toInsert.associatedRequest.id, oldR.vehicleId, j);
 
 					Route insertBoth = onlyPickupInsert.copy();
-					RouteNode dropoff = new RouteNode(toInsert.associatedRequest.dropoffNode, RouteNodeType.DROPOFF, toInsert.associatedRequest, onlyPickupInsert.vehicleId);					
+					RouteNode dropoff = new RouteNode(toInsert.associatedRequest.dropoffNode, RouteNodeType.DROPOFF, toInsert.associatedRequest.id, onlyPickupInsert.vehicleId);					
 					//toInsert.dropoff = dropoff;
 
 					// do insertion at location j
