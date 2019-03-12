@@ -19,8 +19,8 @@ public abstract class RepairHeuristic {
 	
 	Problem problem;
 	
-	public RepairHeuristic(Problem p) {
-		this.problem = p;
+	public RepairHeuristic(Problem problem) {
+		this.problem = problem;
 	}
 	
 	/**
