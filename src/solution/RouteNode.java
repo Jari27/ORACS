@@ -27,6 +27,12 @@ public class RouteNode {
 	private double startOfS = -1;
 	private double arrival = -1;
 	private int numPas = 0;
+	
+	// Tarjan's Algorithm Stuff
+	public double tightL;
+	public RouteNode before;
+	public RouteNode parent;
+	public RouteNode after;
 
 	/**
 	 * Creates a node
@@ -44,7 +50,7 @@ public class RouteNode {
 
 	public void setStartOfS(double startOfS, boolean warnOnError) {
 		// is this check necessary?
-		if ((startOfS < this.associatedNode.e || startOfS > this.associatedNode.l)) {
+		if (warnOnError && (startOfS < this.associatedNode.e || startOfS > this.associatedNode.l)) {
 			Logger.warn("Invalid starting time {00.00} <= {00.00} (= SoS) <= {00.00} for {}", this.associatedNode.e, startOfS, this.associatedNode.l, this.toString());
 		}
 		this.startOfS = startOfS;

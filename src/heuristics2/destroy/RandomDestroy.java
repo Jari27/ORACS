@@ -51,7 +51,7 @@ public class RandomDestroy extends DestroyHeuristic {
 				numFails++;
 				Logger.warn("Failure (total = {}) during destruction of request {000}", numFails, index + 1);
 			}
-			destroyedRequestIds.add(index);
+			destroyedRequestIds.add(index + 1);
 
 		}
 		return destroyedRequestIds;

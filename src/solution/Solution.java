@@ -6,15 +6,19 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import org.pmw.tinylog.Logger;
 
 import problem.Node;
+import problem.NodeType;
 import problem.Problem;
 import problem.Request;
 
 public class Solution {
+	
+	final static double ARBIT_HIGH = 100000;
 
 	private int nextFreeVehicleId = -1;
 
@@ -345,12 +349,12 @@ public class Solution {
 		return true;
 	}
 	
-	public boolean isFeasibleVerify() {
+	public boolean isFeasibleVerify(boolean canBePartial) {
 		// check timewindows
 		for (Route r : routes) {
 			for (RouteNode rn : r) {
 				if (!rn.isTransfer() && (rn.getStartOfS() > rn.associatedNode.l || rn.getStartOfS() < rn.associatedNode.e)) {
-					Logger.debug("Not feasible because of time windows of node {000}: {00.00}.", rn, rn.getStartOfS());
+					Logger.debug("Not feasible because of time windows of node {000}: s = {00.00}.", rn, rn.getStartOfS());
 					return false;
 				}
 			}
@@ -365,8 +369,11 @@ public class Solution {
 		}
 		// check max ride time && transfer precedence
 		for (SolutionRequest sr : requests) {
-			if (sr.pickup == null || sr.dropoff == null || (sr.transferDropoff == null && sr.transferPickup != null) || (sr.transferDropoff != null && sr.transferPickup == null)) {
-				Logger.warn("Unplanned request! {000}", sr.id);
+			if ((sr.pickup == null || sr.dropoff == null || (sr.transferDropoff == null && sr.transferPickup != null) || (sr.transferDropoff != null && sr.transferPickup == null))) {
+				if (!canBePartial) {
+					Logger.warn("Unplanned request! {000}", sr.id);
+				}
+				continue;
 			}
 			if (sr.dropoff.getStartOfS() - (sr.pickup.getStartOfS() + sr.pickup.associatedNode.s) > sr.L) {
 				Logger.debug("Not feasible because request {000} does not satisfy max ride time", sr.id);
@@ -423,7 +430,17 @@ public class Solution {
 	
 	// TODO NC1, NC2
 	public boolean isFeasible() {
-		
+		if (calcTightL()) {
+			for (Route r : routes) {
+				for (RouteNode rn : r) {
+					if (rn.tightL > rn.associatedNode.e) {
+						rn.setStartOfS(rn.tightL);
+					} else {
+						return false;
+					}
+				}
+			}
+		}
 		return true;
 	}
 
@@ -434,12 +451,128 @@ public class Solution {
 	
 	// TODO how in V2?
 	public void calcTightWindows() {
+		calcTightL();
+//		for (Route r : routes) {
+//			for (RouteNode rn : r) {
+//				// how?
+//			}
+//		}
+		
+	}
+	
+	// Tarjans algorithm with distance updates
+	public boolean calcTightL() {
+		RouteNode fakeZero = new RouteNode(null, null, 0, 0);
+		List<RouteNode> unlabeled = new ArrayList<>();
+		List<RouteNode> scanned = new ArrayList<>();
+		List<RouteNode> labeled = new ArrayList<>();
+		fakeZero.tightL = 0;
+		fakeZero.before = fakeZero;
+		fakeZero.after = fakeZero;
+		labeled.add(fakeZero);
+		
 		for (Route r : routes) {
 			for (RouteNode rn : r) {
-				// how?
+				rn.tightL = ARBIT_HIGH;
+				rn.before = null;
+				rn.parent = null;
+				unlabeled.add(rn);
 			}
 		}
+		// calculate fakezero first since it has different arcs
+		for (Route r : routes) {
+			for (RouteNode w : r) { // these are all arcs out of fakeZero
+				double delta = w.tightL - fakeZero.tightL - Math.min(w.associatedNode.l, ARBIT_HIGH); // prevent numbers so high the calcs are shit
+				if (w.associatedNode.type == NodeType.TRANSFER) {
+					// transfer have to time windows, so delta = inf - 0 - inf = 0
+					delta = 0;
+				}
+				if (delta > 0) {
+					if (!calcTightLInner(fakeZero, w, delta, labeled, unlabeled)) {
+						return false;
+					}
+				}
+			}
+		}
+		scanned.add(fakeZero);
+		labeled.remove(fakeZero);
 		
+		// all routenodes are now part of labeled
+		// so we can iterate over the routes instead of labeled
+		for (Route route : routes) {
+			int s = route.size();
+			RouteNode prev = null;
+			for (int i = 0; i < s; i++) {
+				RouteNode v = route.get(i);
+				// for each outgoing arc, do the inner loop
+				// max ride time arc
+				if (v.type == RouteNodeType.PICKUP) {
+					// get associated node and update it
+					SolutionRequest sr = requests.get(v.requestId - 1);
+					double delta = sr.dropoff.tightL - v.tightL - sr.L; // length of arc is L
+					if (delta > 0) {
+						if (!calcTightLInner(v, sr.dropoff, delta, labeled, unlabeled)) {
+							return false;
+						}
+					}
+				}
+				// previous node arc
+				if (prev != null) {
+					double delta = prev.tightL - v.tightL - (-p.distanceBetween(v.associatedNode, prev.associatedNode) - prev.associatedNode.s);
+					if (delta > 0) {
+						if (!calcTightLInner(v, prev, delta, labeled, unlabeled)) {
+							return false;
+						}
+					}
+				} 
+				// transfer precedence arc
+				if (v.type == RouteNodeType.TRANSFER_PICKUP) {
+					SolutionRequest sr = requests.get(v.requestId - 1);
+					double delta = sr.transferDropoff.tightL - v.tightL - (-sr.transferDropoff.associatedNode.s);
+					if (delta > 0) {
+						if (!calcTightLInner(v, prev, delta, labeled, unlabeled)) {
+							return false;
+						}
+					}
+				}
+				prev = v;
+				scanned.add(v);
+				labeled.remove(v);
+			}	
+		}
+		return true;
+	}
+	
+	// source: http://www.cs.princeton.edu/courses/archive/spr11/cos423/Lectures/ShortestPaths.pdf, slide 44
+	private boolean calcTightLInner(RouteNode v, RouteNode w, double delta, List<RouteNode> labeled, List<RouteNode> unlabeled) {
+		w.tightL = w.tightL - delta;
+		w.parent = v;
+		labeled.add(w);
+		unlabeled.remove(w);
+		RouteNode x = w.before;
+		w.before = null;
+		RouteNode y = w.after;
+		while (y != null && y.parent != null && y.parent.before == null) { // modified
+			if (y == v) {
+				// found a negative cycle
+				return false;
+			} else {
+				y.tightL = y.tightL - delta + 0.00001;
+				y.before = null;
+				y = y.after;
+			}
+		}
+		if (x != null) { //modifed
+			x.after = y;
+		}
+		if (y != null) { // modified
+			y.before = x;
+		}
+		w.after = v.after;
+		w.after.before = w;
+		w.before = v;
+		v.after = w;
+		return true;
 	}
 
 }
