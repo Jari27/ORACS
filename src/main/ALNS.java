@@ -11,11 +11,10 @@ import java.util.Random;
 
 import org.pmw.tinylog.Logger;
 
-import heuristics.destroy.DestroyHeuristic;
-import heuristics.destroy.MostExpensiveDestroy;
-import heuristics.destroy.RandomDestroy;
-import heuristics.repair.GreedyRepairNoTransfer;
-import heuristics.repair.RepairHeuristic;
+import heuristics2.destroy.DestroyHeuristic;
+import heuristics2.destroy.RandomDestroy;
+import heuristics2.repair.GreedyNoTransferRepair;
+import heuristics2.repair.RepairHeuristic;
 import problem.Problem;
 import solution.Solution;
 import solution.SolutionRequest;
@@ -32,7 +31,7 @@ public class ALNS implements Runnable {
 	private double temp = T_START;
 	
 	// Config settings
-	private static final int NUM_DESTROY_HEURISTICS = 2;
+	private static final int NUM_DESTROY_HEURISTICS = 1;
 	private static final int NUM_REPAIR_HEURISTICS = 1;
 	
 	private static final double SMOOTHING_FACTOR = 0.1;
@@ -51,8 +50,11 @@ public class ALNS implements Runnable {
 	DestroyHeuristic[] destroyHeuristics = new DestroyHeuristic[NUM_DESTROY_HEURISTICS];
 	RepairHeuristic[] repairHeuristics = new RepairHeuristic[NUM_REPAIR_HEURISTICS];
 	
-	int[] segmentWeightDestroy = new int[NUM_DESTROY_HEURISTICS];
-	int[] segmentWeightRepair = new int[NUM_REPAIR_HEURISTICS];
+	int[] segmentPointsDestroy = new int[NUM_DESTROY_HEURISTICS];
+	int[] segmentPointsRepair = new int[NUM_REPAIR_HEURISTICS];
+	
+	int[] segmentNumUsedDestroy = new int[NUM_DESTROY_HEURISTICS];
+	int[] segmentNumUsedRepair = new int[NUM_REPAIR_HEURISTICS];
 	
 	int[] smoothedWeightDestroy = new int[NUM_DESTROY_HEURISTICS];
 	int[] smoothedWeightRepair = new int[NUM_REPAIR_HEURISTICS];
@@ -63,8 +65,8 @@ public class ALNS implements Runnable {
 		this.currentSol.createInitialSolution();
 		this.bestSol = this.currentSol;
 		this.acceptedSolutions.add(currentSol);
-		this.seed = System.currentTimeMillis(); // to allow printing
-//		this.seed = 1552148781793L;
+//		this.seed = System.currentTimeMillis(); // to allow printing
+		this.seed = 1552506105126L;
 		this.rand = new Random(this.seed);
 		
 		this.initHeuristics();
@@ -73,22 +75,22 @@ public class ALNS implements Runnable {
 	private void initHeuristics() {
 		// destroy
 		DestroyHeuristic random = new RandomDestroy(p, rand);
-		DestroyHeuristic mostExpensive = new MostExpensiveDestroy(p);
 		destroyHeuristics[0] = random;
-		destroyHeuristics[1] = mostExpensive;
 		
 		// repair
-		RepairHeuristic greedyNoTransfer = new GreedyRepairNoTransfer(p);
+		RepairHeuristic greedyNoTransfer = new GreedyNoTransferRepair(p);
 		repairHeuristics[0] = greedyNoTransfer;
 		
 		// weights
 		for (int i = 0; i < NUM_DESTROY_HEURISTICS; i++) {
-			smoothedWeightDestroy[i] = 1; // set to 1, to prevent removing a heuristic from the pool completely
-			segmentWeightDestroy[i] = 1;
+			smoothedWeightDestroy[i] = 0;
+			segmentPointsDestroy[i] = 0;
+			segmentNumUsedDestroy[i] = 0;
 		}
 		for (int i = 0; i < NUM_REPAIR_HEURISTICS; i++) {
-			smoothedWeightRepair[i] = 1;
-			segmentWeightRepair[i] = 1;
+			smoothedWeightRepair[i] = 0;
+			segmentPointsRepair[i] = 0;
+			segmentNumUsedRepair[i] = 0;
 		}
 	}
 	
@@ -152,23 +154,6 @@ public class ALNS implements Runnable {
 
 	@Override
 	public void run() {
-		// test
-//		Logger.info("Testing most expensive destroy");
-//		currentSol.logSolution();
-//		Solution copy1 = currentSol.copy();
-//		destroyHeuristics[1].destroySingle(copy1);
-//		//copy1.logSolution();
-//		Solution copy2 = currentSol.copy();
-//		destroyHeuristics[1].destroyMultiple(copy2, 3);
-//		copy2.logSolution();
-//		if (true) return;
-		
-		currentSol.logSolution();
-		heuristics2.destroy.RandomDestroy rd = new heuristics2.destroy.RandomDestroy(p, rand);
-		rd.destroy(currentSol, 1);
-		currentSol.logSolution();
-		if (true) return;
-		
 		Logger.info("SEED: {}", this.seed);
 		Logger.info("Initial cost: {00.00}", currentSol.getCost());
 		
@@ -183,8 +168,11 @@ public class ALNS implements Runnable {
 				updateWeights();
 			}
 			
+			// select heuristic
 			int destroyId = selectDestroy();
 			int repairId = selectRepair();
+			segmentNumUsedRepair[repairId]++;
+			segmentNumUsedDestroy[destroyId]++;
 			DestroyHeuristic destroy = destroyHeuristics[destroyId];
 			RepairHeuristic repair = repairHeuristics[repairId];
 			
@@ -194,10 +182,10 @@ public class ALNS implements Runnable {
 			
 			Solution copy = currentSol.copy(); // never modify currentSol
 			
-			SolutionRequest destroyed = destroy.destroySingle(copy); // this always works
-			Logger.debug("Destroyed request {000}. Trying insertion.", destroyed.associatedRequest.id);
+			List<Integer> destroyed = destroy.destroy(copy, 1); // this always works
+			Logger.debug("Finished destroying the solution.");
 
-			if (!repair.repairSingle(destroyed, copy)) {
+			if (!repair.repair(copy, destroyed)) {
 				// could not repair
 				Logger.debug("{} yielded no valid solution. Going to next iteration.", repair);
 				Logger.debug("Current cost: {00.00}. Best cost: {00.00}", currentCost, bestCost);
@@ -216,11 +204,11 @@ public class ALNS implements Runnable {
 			if (newCost < currentCost  || accept(currentCost, newCost, nextTemp())) {
 				Logger.debug("Accepted new solution {}", (newCost < currentCost ? "" : "(simulated annealing)"));
 				// update segment weights
-				segmentWeightDestroy[destroyId] += 15; // total: +15
-				segmentWeightRepair[repairId] += 15;
+				segmentPointsDestroy[destroyId] += 15; // total: +15
+				segmentPointsRepair[repairId] += 15;
 				if (newCost < currentCost) {
-					segmentWeightDestroy[destroyId] += 5; //total: +20
-					segmentWeightRepair[repairId] += 5;
+					segmentPointsDestroy[destroyId] += 5; //total: +20
+					segmentPointsRepair[repairId] += 5;
 				}
 				// update new solution
 				currentCost = newCost;
@@ -233,12 +221,12 @@ public class ALNS implements Runnable {
 				if (newCost < bestCost) {
 					bestSol = copy;
 					bestCost = newCost;
-					segmentWeightDestroy[destroyId] += 13; //total: +33
-					segmentWeightRepair[repairId] += 13;
+					segmentPointsDestroy[destroyId] += 13; //total: +33
+					segmentPointsRepair[repairId] += 13;
 					Logger.info("New best solution. Cost: {00.00}", bestCost);
 				}
 			} else {
-				Logger.debug("Solution was not accepted.", destroyed.associatedRequest.id);
+				Logger.debug("Repaired solution was not accepted.");
 				Logger.debug("New cost: {00.00}. Current cost: {00.00}. Best cost: {00.00}", newCost, currentCost, bestCost);
 				iterationsWithoutImprovement++;
 			}
@@ -254,12 +242,12 @@ public class ALNS implements Runnable {
 
 	private void updateWeights() {
 		for (int i = 0; i < NUM_REPAIR_HEURISTICS; i++) {
-			smoothedWeightRepair[i] = (int) Math.round(SMOOTHING_FACTOR * segmentWeightRepair[i] + (1 - SMOOTHING_FACTOR) * smoothedWeightRepair[i]); 
-			segmentWeightRepair[i] = 1;
+			smoothedWeightRepair[i] = (int) Math.round(SMOOTHING_FACTOR * segmentPointsRepair[i] + (1 - SMOOTHING_FACTOR) * smoothedWeightRepair[i]); 
+			segmentPointsRepair[i] = 1;
 		}
 		for (int i = 0; i < NUM_DESTROY_HEURISTICS; i++) {
-			smoothedWeightDestroy[i] = (int) Math.round(SMOOTHING_FACTOR * segmentWeightDestroy[i] + (1 - SMOOTHING_FACTOR) * smoothedWeightDestroy[i]); 
-			segmentWeightDestroy[i] = 1;
+			smoothedWeightDestroy[i] = (int) Math.round(SMOOTHING_FACTOR * segmentPointsDestroy[i] + (1 - SMOOTHING_FACTOR) * smoothedWeightDestroy[i]); 
+			segmentPointsDestroy[i] = 1;
 		}
 		Logger.info("Updated weights. Repair {}. Destroy {}", smoothedWeightRepair, smoothedWeightDestroy);
 	}

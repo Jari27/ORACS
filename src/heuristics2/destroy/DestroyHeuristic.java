@@ -69,9 +69,9 @@ public abstract class DestroyHeuristic {
 						if (numRemoved > 0) {
 							// we need to update the current node
 							if (prev == null) {
-								cur.setArrival(cur.getAssociatedNode().e);
+								cur.setArrival(cur.associatedNode.e);
 							} else {
-								cur.setArrival(prev.getDeparture() + problem.distanceBetween(cur.getAssociatedNode(), prev.getAssociatedNode()));
+								cur.setArrival(prev.getDeparture() + problem.distanceBetween(cur.associatedNode, prev.associatedNode));
 							}
 						}
 						if (numRemoved == 1) { // we've only removed a pickup, so all subs. nodes have one passenger less
@@ -120,9 +120,9 @@ public abstract class DestroyHeuristic {
 						if (numRemoved > 0 && routesDone == 0 || numRemoved > 2 && routesDone == 1) {
 							// we need to update the current node
 							if (prev == null) {
-								cur.setArrival(cur.getAssociatedNode().e);
+								cur.setArrival(cur.associatedNode.e);
 							} else {
-								cur.setArrival(prev.getDeparture() + problem.distanceBetween(cur.getAssociatedNode(), prev.getAssociatedNode()));
+								cur.setArrival(prev.getDeparture() + problem.distanceBetween(cur.associatedNode, prev.associatedNode));
 							}
 						}
 						if (numRemoved == 1 || numRemoved == 3) { // we've only removed a pickup, so all subseq. nodes have one passenger less

@@ -27,6 +27,12 @@ public class RouteNode {
 	private double startOfS = -1;
 	private double arrival = -1;
 	private int numPas = 0;
+	
+	// Tarjan's Algorithm Stuff
+	public double tightL;
+	public RouteNode before;
+	public RouteNode parent;
+	public RouteNode after;
 
 	/**
 	 * Creates a node
@@ -44,7 +50,7 @@ public class RouteNode {
 
 	public void setStartOfS(double startOfS, boolean warnOnError) {
 		// is this check necessary?
-		if ((startOfS < this.associatedNode.e || startOfS > this.associatedNode.l)) {
+		if (warnOnError && (startOfS < this.associatedNode.e || startOfS > this.associatedNode.l)) {
 			Logger.warn("Invalid starting time {00.00} <= {00.00} (= SoS) <= {00.00} for {}", this.associatedNode.e, startOfS, this.associatedNode.l, this.toString());
 		}
 		this.startOfS = startOfS;
@@ -61,10 +67,6 @@ public class RouteNode {
 	
 	public void setNumPas(int numPas) {
 		this.numPas = numPas;
-	}
-
-	public Node getAssociatedNode() {
-		return associatedNode;
 	}
 	
 	public RouteNodeType getType() {
@@ -120,5 +122,14 @@ public class RouteNode {
 		// if it's a depot, we only care that the vehicleId and associated node is equal
 		return (!this.isTransfer() || this.getType() == other.getType() && this.requestId == other.requestId);
 	}
+
+	public boolean isLFeasible() {
+		return this.startOfS <= this.associatedNode.l;
+	}
+	
+	public boolean isEFeasible() {
+		return this.startOfS >= this.associatedNode.e;
+	}
+
 	
 }

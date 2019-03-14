@@ -32,12 +32,12 @@ public class Route extends LinkedList<RouteNode>{
 		Logger.trace("Updating cost and slack of Route {000}. Old cost: {00.00}", vehicleId, cost);
 		
 		// depot costs			
-		problem.Node first = this.getFirst().getAssociatedNode();
-		problem.Node last = this.getLast().getAssociatedNode();
+		problem.Node first = this.getFirst().associatedNode;
+		problem.Node last = this.getLast().associatedNode;
 		
 		cost = p.costBetween(first, p.getNearestDepot(first)) + p.costBetween(last, p.getNearestDepot(last));
 		for (int i = 0; i < this.size() - 1; i++) {
-			cost += p.costBetween(this.get(i).getAssociatedNode(), this.get(i+1).getAssociatedNode());
+			cost += p.costBetween(this.get(i).associatedNode, this.get(i+1).associatedNode);
 		}
 		Logger.trace("(New) cost: {00.00}", cost);
 		routeChanged = false;
@@ -71,7 +71,7 @@ public class Route extends LinkedList<RouteNode>{
 		for (RouteNode rn : this) {
 			Logger.debug(
 					"Arrive at {} {000} at {0.00}, start service at {0.00}, leave at {0.00}", rn.getType().toString(),
-					rn.getAssociatedNode().id, rn.getArrival(), rn.getStartOfS(), rn.getDeparture());
+					rn.associatedNode.id, rn.getArrival(), rn.getStartOfS(), rn.getDeparture());
 		}
 	}
 
