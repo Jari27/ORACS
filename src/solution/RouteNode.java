@@ -33,6 +33,8 @@ public class RouteNode {
 	public RouteNode before;
 	public RouteNode parent;
 	public RouteNode after;
+	public double negativeTightE; // this is temporary for during the algorithm
+	public double tightE; // this is the actual value
 
 	/**
 	 * Creates a node

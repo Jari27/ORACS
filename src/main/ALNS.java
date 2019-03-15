@@ -66,7 +66,7 @@ public class ALNS implements Runnable {
 		this.bestSol = this.currentSol;
 		this.acceptedSolutions.add(currentSol);
 //		this.seed = System.currentTimeMillis(); // to allow printing
-		this.seed = 1552506105126L;
+		this.seed = 1552596372812L;
 		this.rand = new Random(this.seed);
 		
 		this.initHeuristics();
