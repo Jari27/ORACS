@@ -32,7 +32,6 @@ public abstract class RepairHeuristic {
 	public abstract boolean repair(Solution s, List<Integer> requestIdsToRepair);
 	
 	protected Route findBestRoute(SolutionRequest toInsert, Solution currentSol){
-		//i wanna get the pickup node corresponding to the request id
 		Route bestRoute = null;
 		double bestInsertionCost = 0;
 		for (Route oldR : currentSol.routes){
@@ -43,11 +42,11 @@ public abstract class RepairHeuristic {
 				RouteNode pickup = new RouteNode(toInsert.associatedRequest.pickupNode, RouteNodeType.PICKUP, toInsert.id, onlyPickupInsert.vehicleId);
 				onlyPickupInsert.add(i, pickup);
 				RouteNode prevNode = onlyPickupInsert.get(i-1);
-				pickup.setArrival(prevNode.getDeparture() + problem.distanceBetween(prevNode.getAssociatedNode(), pickup.getAssociatedNode())); // set arrival
-				pickup.setStartOfS(Math.max(pickup.getArrival(), pickup.getAssociatedNode().e), false); // max of arrival and time window (dont check errors, we do that manually)
+				pickup.setArrival(prevNode.getDeparture() + problem.distanceBetween(prevNode.associatedNode, pickup.associatedNode)); // set arrival
+				pickup.setStartOfS(Math.max(pickup.getArrival(), pickup.associatedNode.e), false); // max of arrival and time window (dont check errors, we do that manually)
 				pickup.setNumPas(prevNode.getNumPas() + 1);
-				if (pickup.getStartOfS() > pickup.getAssociatedNode().l) { // infeasible insertion, we cannot insert here or later so break
-					Logger.debug("Insertion was infeasible due to time window {00.00} <= {00.00} <= {00.00}", pickup.getAssociatedNode().e, pickup.getStartOfS(), pickup.getAssociatedNode().l);
+				if (pickup.getStartOfS() > pickup.associatedNode.l) { // infeasible insertion, we cannot insert here or later so break
+					Logger.debug("Insertion was infeasible due to time window {00.00} <= {00.00} <= {00.00}", pickup.associatedNode.e, pickup.getStartOfS(), pickup.associatedNode.l);
 					break;
 				} else if (pickup.getNumPas() > problem.capacity) { // infeasible selection, over capacity. try next insert place
 					Logger.debug("Insertion was infeasible due to capacity {} > {} = max cap", pickup.getNumPas(), problem.capacity);
@@ -65,10 +64,10 @@ public abstract class RepairHeuristic {
 					insertBoth.add(j, dropoff);
 					// calculate timings
 					RouteNode prevNode1 = insertBoth.get(j - 1);
-					dropoff.setArrival(prevNode1.getDeparture() + problem.distanceBetween(prevNode1.getAssociatedNode(), dropoff.getAssociatedNode())); // set arrival time
-					dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.getAssociatedNode().e), false); // set starting time as max of arrival, e (don't check errors)
-					if (dropoff.getStartOfS() > dropoff.getAssociatedNode().l) {  // infeasible insertion, we cannot insert here or later so break
-						Logger.debug("Insertion was infeasible due to time window {00.00} <= {00.00} <= {00.00}", dropoff.getAssociatedNode().e, dropoff.getStartOfS(), dropoff.getAssociatedNode().l);
+					dropoff.setArrival(prevNode1.getDeparture() + problem.distanceBetween(prevNode1.associatedNode, dropoff.associatedNode)); // set arrival time
+					dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.associatedNode.e), false); // set starting time as max of arrival, e (don't check errors)
+					if (dropoff.getStartOfS() > dropoff.associatedNode.l) {  // infeasible insertion, we cannot insert here or later so break
+						Logger.debug("Insertion was infeasible due to time window {00.00} <= {00.00} <= {00.00}", dropoff.associatedNode.e, dropoff.getStartOfS(), dropoff.associatedNode.l);
 						break;
 					}
 
@@ -99,8 +98,8 @@ public abstract class RepairHeuristic {
 					RouteNode prev = newRoute.get(k-1);
 
 					// update all timings
-					cur.setArrival(prev.getDeparture() + problem.distanceBetween(prev.getAssociatedNode(), cur.getAssociatedNode()));
-					cur.setStartOfS(Math.max(cur.getArrival(), cur.getAssociatedNode().e), false); // dont report on errors, we check those manually
+					cur.setArrival(prev.getDeparture() + problem.distanceBetween(prev.associatedNode, cur.associatedNode));
+					cur.setStartOfS(Math.max(cur.getArrival(), cur.associatedNode.e), false); // dont report on errors, we check those manually
 
 					// these nodes haven't changed in feasibility (they're before the insertion or a depot)
 					if (k < locationOfFirstInsertion || k == newRoute.size() - 1) {
@@ -131,8 +130,8 @@ public abstract class RepairHeuristic {
 					//Logger.debug("Checking feasibility of RouteNode {000}: {}", k, cur.toString());
 
 					// verify time window (don't need to check start of service, since we set this to arrival or E above
-					if (cur.getStartOfS() > cur.getAssociatedNode().l) { // infeasible
-						Logger.debug("Route is infeasible due to Node {000} time window {00.00} <= {00.00} <= {00.00}", k, cur.getAssociatedNode().e, cur.getStartOfS(), cur.getAssociatedNode().l);
+					if (cur.getStartOfS() > cur.associatedNode.l) { // infeasible
+						Logger.debug("Route is infeasible due to Node {000} time window {00.00} <= {00.00} <= {00.00}", k, cur.associatedNode.e, cur.getStartOfS(), cur.associatedNode.l);
 						return false;
 					} 
 
@@ -155,8 +154,8 @@ public abstract class RepairHeuristic {
 				}
 				// verify max ride times of all requests
 				// first check max ride time of the insert
-				if (insertedSolution.dropoff.getStartOfS() - (insertedSolution.pickup.getStartOfS() + insertedSolution.pickup.getAssociatedNode().s) > insertedSolution.associatedRequest.L) { 
-					Logger.debug("Request {000} is infeasible due max ride time {00.00} > {00.00} = L", insertedSolution.associatedRequest.id, insertedSolution.dropoff.getStartOfS() - (insertedSolution.pickup.getStartOfS() + insertedSolution.pickup.getAssociatedNode().s), insertedSolution.associatedRequest.L);
+				if (insertedSolution.dropoff.getStartOfS() - (insertedSolution.pickup.getStartOfS() + insertedSolution.pickup.associatedNode.s) > insertedSolution.associatedRequest.L) { 
+					Logger.debug("Request {000} is infeasible due max ride time {00.00} > {00.00} = L", insertedSolution.associatedRequest.id, insertedSolution.dropoff.getStartOfS() - (insertedSolution.pickup.getStartOfS() + insertedSolution.pickup.associatedNode.s), insertedSolution.associatedRequest.L);
 					return false;
 				} else {
 					//Logger.debug("Request {000} is feasible due max ride time {00.00} < {00.00} = L", insertedSolution.associatedRequest.id, insertedSolution.dropoff.getStartOfS() - (insertedSolution.pickup.getStartOfS() + insertedSolution.pickup.getAssociatedNode().s), insertedSolution.associatedRequest.L);

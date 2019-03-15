@@ -116,6 +116,17 @@ public class Solution {
 		}
 		return cost;
 	}
+	
+	public double latestService(){
+		double latestTiming = -1;
+		for(SolutionRequest sr:requests){
+			if(sr.dropoff.getStartOfS() > latestTiming ){
+				latestTiming = sr.dropoff.getStartOfS();
+			}
+		}
+		return latestTiming;
+	}
+	
 
 	/**
 	 * Writes a solution to the log.
