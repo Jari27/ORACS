@@ -29,6 +29,7 @@ public class RouteNode {
 	private int numPas = 0;
 	
 	// Tarjan's Algorithm Stuff
+	public RouteNode prev;
 	public double tightL;
 	public RouteNode before;
 	public RouteNode parent;
