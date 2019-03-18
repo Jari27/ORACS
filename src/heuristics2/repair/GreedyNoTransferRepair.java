@@ -56,7 +56,7 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 		double oldCost = oldRoute.getCost(problem);
 		
 		Solution costCalc = s.copy();
-		costCalc.calcTightWindows();
+		//costCalc.calcTightWindows();
 		
 		for (int i = 0; i < requestIdsToRepair.size(); i++) {
 			int reqId = requestIdsToRepair.get(i);
@@ -153,9 +153,9 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 					}
 					sr.pickup = null;
 					sr.dropoff = null;	
-					newRoute.remove(j);
+					newRoute.remove(k);
 				}
-				newRoute.remove(i);
+				newRoute.remove(j);
 			}
 		}
 		return new CostRouteNode(costs, routes, newNodes);

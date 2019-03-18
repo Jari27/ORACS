@@ -28,14 +28,16 @@ public class RouteNode {
 	private double arrival = -1;
 	private int numPas = 0;
 	
+	public double tightL;
+	public double tightE;
+	
 	// Tarjan's Algorithm Stuff
 	public RouteNode prev;
-	public double tightL;
 	public RouteNode before;
 	public RouteNode parent;
 	public RouteNode after;
 	public double negativeTightE; // this is temporary for during the algorithm
-	public double tightE; // this is the actual value
+	public boolean isScanned;
 
 	/**
 	 * Creates a node
