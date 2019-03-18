@@ -319,6 +319,8 @@ public class Solution {
 				copyRN.setArrival(origRN.getArrival());
 				copyRN.setStartOfS(origRN.getStartOfS(), false); 
 				copyRN.setNumPas(origRN.getNumPas());
+				copyRN.tightE = origRN.tightE;
+				copyRN.tightL = origRN.tightL;
 				
 				// save the RouteNode in our new route
 				copyRoute.add(copyRN);
@@ -454,7 +456,6 @@ public class Solution {
 	 * Calculates the tight time windows as described in Masson et al. 2014
 	 */
 	
-	// TODO how in V2?
 	public boolean calcTightWindows() {
 		if (npassL() && npassE()) {
 			tightWindowsToSolution();

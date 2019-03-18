@@ -193,7 +193,7 @@ public class ALNS implements Runnable {
 				continue;
 			}
 			
-			if (!copy.isFeasible() || copy.hasOrphanRouteNodes()) {
+			if (!copy.isFeasibleVerify(false) || copy.hasOrphanRouteNodes()) {
 				Logger.warn("Found an invalid solution!");
 				break;
 			}

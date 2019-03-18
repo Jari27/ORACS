@@ -28,14 +28,42 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 	@Override
 	public boolean repair(Solution s, List<Integer> requestIdsToRepair) {
 		CostRouteNode[] crns = calculateFullInsertionMatrix(s, requestIdsToRepair);
-		
-		for (int rIndex = 0; rIndex < requestIdsToRepair.size(); rIndex++) {
-			// insert into route
-			// update references
-			// recalculate
+		 // TODO this only does one
+		int bestRoute = -1;
+		int bestRequest = -1;
+		double bestCost = Double.POSITIVE_INFINITY;
+		for (int routeIndex = 0; routeIndex < crns.length; routeIndex++) {
+			CostRouteNode crn = crns[routeIndex];
+			for (int requestIndex = 0; requestIndex < requestIdsToRepair.size(); requestIndex++) {
+				if (crn.costs[requestIndex] < bestCost) {
+					bestCost = crn.costs[requestIndex];
+					bestRoute = routeIndex;
+					bestRequest = requestIndex;
+				}
+			}
 		}
-		// TODO finish
-		return false;
+		
+		s.routes.set(bestRoute, crns[bestRoute].routes[bestRequest]);
+		// correct references
+		for (RouteNode rn : s.routes.get(bestRoute)) {
+			SolutionRequest sr = s.requests.get(rn.requestId - 1);
+			switch (rn.type) {
+			case PICKUP:
+				sr.pickup = rn;
+				break;
+			case DROPOFF:
+				sr.dropoff = rn;
+				break;
+			case TRANSFER_PICKUP:
+				sr.transferPickup = rn;
+				break;
+			case TRANSFER_DROPOFF:
+				sr.transferDropoff = rn;
+				break;
+			}
+		}
+		s.calcTightWindows();
+		return true;
 	}
 
 	private CostRouteNode[] calculateFullInsertionMatrix(Solution s, List<Integer> requestIdsToRepair) {

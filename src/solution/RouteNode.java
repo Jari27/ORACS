@@ -30,14 +30,15 @@ public class RouteNode {
 	private double arrival = -1;
 	private int numPas = 0;
 	
+	public double tightE; // this is the actual value
+	public double tightL;
+	
 	// Tarjan's Algorithm Stuff
 	public RouteNode prev;
-	public double tightL;
 	public RouteNode before;
 	public RouteNode parent;
 	public RouteNode after;
 	public double negativeTightE; // this is temporary for during the algorithm
-	public double tightE; // this is the actual value
 	public List<RouteNode> set; // to which set does it belong
 	public RouteNode scannedFrom;
 

@@ -33,11 +33,6 @@ public class Main {
 			s.logSolution();
 		}
 		
-		
-		Solution s = new Solution(problems.get(0));
-		s.createInitialSolution();
-		s.calcTightWindows();
-		
 //		 quick and dirty removal check
 		ALNS test = new ALNS(problems.get(0));
 		test.run();
