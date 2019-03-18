@@ -48,14 +48,14 @@ public class ShawRemoval extends DestroyHeuristic{
 			return destroyedRequestIds; 
 		}
 		int index = rand.nextInt(s.requests.size());
-		Logger.debug("We randomly selected request {000} to select the {000} requests with the highest relatedness and destroy them.",index+1, number);
+		Logger.debug("We randomly selected request {} to select the {} requests with the highest relatedness and destroy them.",index+1, number);
 		int[] highlyRelatedIds = new int[number];
 		double[] highlyRelated = new double[number];
 		double lowestRelatedness = 0; 
 		int lowestRelatednessIndex = 0;
 		for(SolutionRequest sr : s.requests){
 			double relatedness = CalculateRelatedness(s.requests.get(index), sr, s);
-			Logger.debug("This is request {000}, it has relatedness {000}", sr.id, relatedness);
+			Logger.debug("This is request {}, it has relatedness {}", sr.id, relatedness);
 			//double requestIDLowestRelatedness = highlyRelated[0][lowestRelatednessIndex];
 			lowestRelatedness = 10;
 			for(int i = 0; i< number;i++){
@@ -64,19 +64,19 @@ public class ShawRemoval extends DestroyHeuristic{
 					lowestRelatednessIndex = i;
 				}
 			}
-			Logger.debug("Lowest position is: {000}, the lowest relatedness is: {000}",lowestRelatednessIndex+1 ,lowestRelatedness);
+			Logger.debug("Lowest position is: {}, the lowest relatedness is: {}",lowestRelatednessIndex+1 ,lowestRelatedness);
 			if(relatedness > lowestRelatedness){ 
 				highlyRelatedIds[lowestRelatednessIndex] = sr.id;
 				highlyRelated[lowestRelatednessIndex] = relatedness;
 			}
-			Logger.debug("RequestID: {000}, relatedness: {000},RequestID: {000}, relatedness: {000},RequestID: {000}, relatedness: {000},RequestID: {000}, relatedness: {000}",
+			Logger.debug("RequestID: {}, relatedness: {},RequestID: {}, relatedness: {},RequestID: {}, relatedness: {},RequestID: {}, relatedness: {}",
 					highlyRelatedIds[0],highlyRelated[0],highlyRelatedIds[1],highlyRelated[1],highlyRelatedIds[2],highlyRelated[2],highlyRelatedIds[3],highlyRelated[3]);
 		}
 		destroyedRequestIds.add(index+1);
-		Logger.debug("Destroyed request {000}:", index+1);
+		Logger.debug("Destroyed request {}:", index+1);
 		for(int k=0;k<number ; k++){
 			destroyedRequestIds.add(highlyRelatedIds[k]);
-			Logger.debug("Destroyed request: {000}", highlyRelatedIds[k]);
+			Logger.debug("Destroyed request: {}", highlyRelatedIds[k]);
 
 		}
 		return destroyedRequestIds;

@@ -14,6 +14,7 @@ import org.pmw.tinylog.Logger;
 import heuristics2.destroy.DestroyHeuristic;
 import heuristics2.destroy.RandomDestroy;
 import heuristics2.destroy.ShawRemoval;
+import heuristics2.repair.GreedyNoTransferOneByOne;
 import heuristics2.repair.GreedyNoTransferRepair;
 import heuristics2.repair.RepairHeuristic;
 import problem.Problem;
@@ -79,8 +80,11 @@ public class ALNS implements Runnable {
 		destroyHeuristics[0] = random;
 		
 		// repair
-		RepairHeuristic greedyNoTransfer = new GreedyNoTransferRepair(p);
-		repairHeuristics[0] = greedyNoTransfer;
+		//RepairHeuristic greedyNoTransfer = new GreedyNoTransferRepair(p);
+		//repairHeuristics[0] = greedyNoTransfer;
+		RepairHeuristic noTransferOnebyOne = new GreedyNoTransferOneByOne(p);
+		repairHeuristics[0] = noTransferOnebyOne;
+		
 		
 		// weights
 		for (int i = 0; i < NUM_DESTROY_HEURISTICS; i++) {
@@ -182,10 +186,10 @@ public class ALNS implements Runnable {
 			}
 			
 			Solution copy = currentSol.copy(); // never modify currentSol
-			if(i <7){
+/*			if(i <7){
 				ShawRemoval Shaw = new ShawRemoval(this.p, this.rand);
 				List<Integer> destroyed432 = Shaw.destroy(copy,4);
-			}
+			}*/
 
 
 			List<Integer> destroyed = destroy.destroy(copy, 1); // this always works

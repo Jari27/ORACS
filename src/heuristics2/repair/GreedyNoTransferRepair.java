@@ -101,6 +101,7 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 					
 					if (!dropoff.isLFeasible()) {
 						Logger.trace("Insertion of pickup of request {000} at location {} in Route {} was infeasible due to time windows", reqId, j, routeIndex);
+						newRoute.remove(k);
 						break;
 					}
 					// maybe (?) feasible solution
@@ -153,9 +154,9 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 					}
 					sr.pickup = null;
 					sr.dropoff = null;	
-					newRoute.remove(j);
+					newRoute.remove(k);
 				}
-				newRoute.remove(i);
+				newRoute.remove(j);
 			}
 		}
 		return new CostRouteNode(costs, routes, newNodes);
