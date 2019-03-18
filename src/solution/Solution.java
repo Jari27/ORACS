@@ -407,6 +407,7 @@ public class Solution {
 	}
 	
 	public boolean hasOrphanRouteNodes() {
+		//node is in multiple routes, or 
 		boolean isCorrect = true;
 		Set<RouteNode> routeNodesFromRoutes = new HashSet<>();
 		Set<RouteNode> routeNodesFromRequests = new HashSet<>();
@@ -530,6 +531,7 @@ public class Solution {
 						updateNodeL(u, v, dist, B);
 					}
 				}
+<<<<<<< HEAD
 				// transfer pickup may have associated transfer dropoff
 				if (u.type == RouteNodeType.TRANSFER_PICKUP) {
 					SolutionRequest sr = requests.get(u.requestId - 1);
@@ -570,6 +572,10 @@ public class Solution {
 			}
 			
 		} while (B.size() > 0);
+=======
+			}
+		}
+>>>>>>> branch 'v2' of https://github.com/Jari27/ORACS.git
 		return true;
 	}
 	

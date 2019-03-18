@@ -37,7 +37,7 @@ public abstract class RepairHeuristic {
 		for (Route oldR : currentSol.routes){
 			double oldCost = oldR.getCost(this.problem);
 			for (int i = 1; i < oldR.size(); i++){
-				Logger.debug("Inserting pickup of request {000} in route {000} at location {000}", toInsert, oldR.vehicleId, i);
+				Logger.debug("Inserting pickup of request {000} in route {000} at location {000}", toInsert.associatedRequest.id, oldR.vehicleId, i);
 				Route onlyPickupInsert = oldR.copy();
 				RouteNode pickup = new RouteNode(toInsert.associatedRequest.pickupNode, RouteNodeType.PICKUP, toInsert.id, onlyPickupInsert.vehicleId);
 				onlyPickupInsert.add(i, pickup);
@@ -89,7 +89,38 @@ public abstract class RepairHeuristic {
 				}
 			}
 		}
-		return bestRoute;
+		//In case the insertion is not possible, we have to deploy a new vehicle
+		if(bestRoute == null){
+			Logger.debug("Insertion was infeasible, creating new route...");
+			int newVehicleID = currentSol.getNextFreeVehicleId();
+			Route newRoute = new Route(newVehicleID);
+			RouteNode pickup = toInsert.pickup;
+			RouteNode dropoff = toInsert.dropoff;
+			pickup.setArrival(pickup.associatedNode.e); 
+			pickup.setStartOfS(pickup.getArrival(), false);
+			pickup.setNumPas(1);
+
+			dropoff.setArrival(pickup.getDeparture() + problem.distanceBetween(pickup.associatedNode, dropoff.associatedNode)); // set arrival to departure + travel time
+			dropoff.setStartOfS(Math.max(dropoff.associatedNode.e, dropoff.getArrival()), false); // set start of s as early as possible
+			dropoff.setNumPas(0);
+			
+			if (dropoff.getStartOfS() - pickup.getDeparture() > toInsert.associatedRequest.L) {
+				Logger.trace(
+						"Instance {000}: adjusting start of service of pickup time for request {000}. Current: {0.00}",
+						problem.index, toInsert.id, pickup.getStartOfS());
+				double newStart = pickup.getArrival() + (dropoff.getStartOfS() - dropoff.getArrival());
+				pickup.setArrival(newStart);
+				pickup.setStartOfS(newStart, true);
+				dropoff.setArrival(pickup.getDeparture() + problem.distanceBetween(dropoff.associatedNode, pickup.associatedNode));
+				dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.associatedNode.e), true);
+			}
+			newRoute.add(pickup);
+			newRoute.add(dropoff);
+			currentSol.routes.add(newRoute);
+			return newRoute;
+		}else{
+			return bestRoute;
+		}
 	}
 	protected boolean isFeasibleAndUpdateTimings(Route newRoute, SolutionRequest insertedSolution, Solution solutionWithoutRoute, int locationOfFirstInsertion){
 		// verify all nodes
