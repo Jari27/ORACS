@@ -56,7 +56,7 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 		double oldCost = oldRoute.getCost(problem);
 		
 		Solution costCalc = s.copy();
-		costCalc.calcTightWindows();
+		//costCalc.calcTightWindows();
 		
 		for (int i = 0; i < requestIdsToRepair.size(); i++) {
 			int reqId = requestIdsToRepair.get(i);
@@ -153,12 +153,12 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 					}
 					sr.pickup = null;
 					sr.dropoff = null;	
-					newRoute.remove(j);
+					newRoute.remove(k);
 				}
-				newRoute.remove(i);
+				newRoute.remove(j);
 			}
 		}
-		return new CostRouteNode(costs, routes, newNodes);
+		return new CostRouteNode(costs, routes);
 	}
 	
 	// data class
@@ -166,12 +166,10 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 		
 		double[] costs;
 		Route[] routes;
-		RouteNode[][] nodes;
 		
-		public CostRouteNode(double[] costs, Route[] routes, RouteNode[][] nodes) {
+		public CostRouteNode(double[] costs, Route[] routes) {
 			this.costs=costs;
 			this.routes=routes;
-			this.nodes=nodes;
 		}
 	}
 	

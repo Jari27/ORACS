@@ -31,12 +31,15 @@ public class Main {
 			Solution s = new Solution(p);
 			s.createInitialSolution();
 			s.logSolution();
-			//solutions.add(s);
 		}
 		
 		
+		Solution s = new Solution(problems.get(0));
+		s.createInitialSolution();
+		s.calcTightWindows();
+		
 //		 quick and dirty removal check
-		ALNS test = new ALNS(problems.get(5));
+		ALNS test = new ALNS(problems.get(0));
 		test.run();
 		
 		if (true) return;

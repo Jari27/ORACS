@@ -182,11 +182,6 @@ public class ALNS implements Runnable {
 			}
 			
 			Solution copy = currentSol.copy(); // never modify currentSol
-			if(i <7){
-				ShawRemoval Shaw = new ShawRemoval(this.p, this.rand);
-				List<Integer> destroyed432 = Shaw.destroy(copy,4);
-			}
-
 
 			List<Integer> destroyed = destroy.destroy(copy, 1); // this always works
 			Logger.debug("Finished destroying the solution.");

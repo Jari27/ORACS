@@ -1,5 +1,7 @@
 package solution;
 
+import java.util.List;
+
 import org.pmw.tinylog.Logger;
 
 import problem.Node;
@@ -36,6 +38,8 @@ public class RouteNode {
 	public RouteNode after;
 	public double negativeTightE; // this is temporary for during the algorithm
 	public double tightE; // this is the actual value
+	public List<RouteNode> set; // to which set does it belong
+	public RouteNode scannedFrom;
 
 	/**
 	 * Creates a node

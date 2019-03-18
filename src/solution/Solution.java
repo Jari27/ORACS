@@ -456,8 +456,7 @@ public class Solution {
 	
 	// TODO how in V2?
 	public boolean calcTightWindows() {
-		calcTightL();
-		if (calcTightL() && calcTightE()) {
+		if (npassL() && npassE()) {
 			tightWindowsToSolution();
 			return true;
 		}
@@ -465,323 +464,301 @@ public class Solution {
 	}
 	
 	private void tightWindowsToSolution() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	//http://www.cs.princeton.edu/courses/archive/spr11/cos423/Lectures/ShortestPaths.pdf
-	public boolean calcTightL() {
-		LinkedList<RouteNode> labeled = new LinkedList<>();
-		LinkedList<RouteNode> scanned = new LinkedList<>();
-		LinkedList<RouteNode> unreached = new LinkedList<>();
-		
 		for (Route r : routes) {
 			for (RouteNode rn : r) {
-				rn.tightL = ARBIT_HIGH;
-				rn.parent = null;
-				rn.before = null;
-				unreached.add(rn);
+				rn.setArrival(rn.tightE);
 			}
 		}
+	}
+	
+	public boolean npassL() {
+		//setup
+		int scansSinceLast = 0;
+		LinkedList<RouteNode> A = new LinkedList<>();
+		List<RouteNode> B = new ArrayList<>();
 		RouteNode zero = new RouteNode(null, null, 0, 0);
 		zero.parent = null;
 		zero.tightL = 0;
-		zero.before = zero;
-		zero.after = zero;
+		zero.set = B;
+		B.add(zero);
 		
-		labeled.add(zero);
-		
-		// at this moment, zero is labeled, all others are unscanned
-		// first we calculate all outgoing arcs of fakezero
-		RouteNode v = labeled.remove();
-		for (Route r : routes) {
-			for (RouteNode w : r) {
-				if (!w.isTransfer()) { // only non-transfer have time windows = arcs
-					double delta = w.tightL - v.tightL - w.associatedNode.l;
-					if (delta > 0) {
-						w.tightL = w.tightL - delta;
-						w.parent = v;
-						labeled.add(w);
-						if (hasNegativeCycleL(v, w, delta)) {
-							return false;
-						} else {
-							scanned.add(v);
-						}
-					}
-				}
-			}
-		}
-		// zero = scanned
-		// all others except transfers are labeled
-		// transfers are unreached
-		for (Route r : routes) {
-			RouteNode prev = null;
-			for (RouteNode v1 : r) {
-				// check all outgoing arcs of v
-				// max ride constraint
-				if (v1.type == RouteNodeType.PICKUP) {
-					SolutionRequest sr = requests.get(v1.requestId - 1);
-					RouteNode w = sr.dropoff;
-					double delta = w.tightL - v1.tightL - sr.L;
-					if (delta > 0) {
-						w.tightL = w.tightL - delta;
-						w.parent = v1; 
-						labeled.add(w);
-						if (hasNegativeCycleL(v1, w, delta)) {
-							return false;
-						} 
-					}
-				}
-				// transfer precedence constraint
-				if (v1.type == RouteNodeType.TRANSFER_PICKUP) {
-					SolutionRequest sr = requests.get(v1.requestId - 1);
-					RouteNode w = sr.transferDropoff;
-					double delta = w.tightL - v1.tightL - (-w.associatedNode.s);
-					if (delta > 0) {
-						w.tightL = w.tightL - delta;
-						w.parent = v1;
-						labeled.add(w);
-						if (hasNegativeCycleL(v1, w, delta)) {
-							return false;
-						}
-					}
-				}
-				// route precedence constraint
-				if (prev != null) {
-					RouteNode w = prev;
-					double delta = w.tightL - v1.tightL - (-p.distanceBetween(w.associatedNode, v.associatedNode) - prev.associatedNode.s);
-					if (delta > 0) {
-						w.tightL = w.tightL - delta;
-						w.parent = v1;
-						labeled.add(w);
-						if (hasNegativeCycleL(v1, w, delta)) {
-							return false;
-						}
-					}
-				}
-				scanned.add(v);
-			}
-		}
-		return true;
-	}
-
-
-	private boolean hasNegativeCycleL(RouteNode v, RouteNode w, double delta) {
-		if (v == v.before) {
-			v.after = w;
-			v.before = w;
-			w.after = v;
-			w.before = v;
-			return false; // if we only have one node it cannot have a negative cycle yet
-		}
-		RouteNode x = w.before;
-		w.before = null;
-		RouteNode y = w.after;
-		while (x != null && y.parent.before == null) {
-			if (y == v) {
-				return true;
-			} else {
-				y.tightL = y.tightL - delta + 0.00001;
-				y.before = null;
-				y = y.after;
-			}
-		}
-		if (x != null) {
-			x.after = y;
-			y.before = x;
-		}
-		w.after = v.after;
-		w.after.before = w;
-		w.before = v;
-		v.after = w;
-		return false;
-	}
-
-
-	// Tarjans algorithm with distance updates
-//	public boolean calcTightL() {
-//		RouteNode fakeZero = new RouteNode(null, null, 0, 0);
-//		fakeZero.tightL = 0;
-//		fakeZero.before = fakeZero;
-//		fakeZero.after = fakeZero;
-//		
-//		for (Route r : routes) {
-//			for (RouteNode rn : r) {
-//				rn.tightL = ARBIT_HIGH;//rn.associatedNode.l;
-//				rn.before = null;
-//				rn.parent = null;
-//				//rn.after = null;
-//			}
-//		}
-//		// calculate fakezero first since it has different arcs
-//		for (Route r : routes) {
-//			for (RouteNode w : r) { // these are all arcs out of fakeZero
-//				double delta = w.tightL - fakeZero.tightL - Math.min(w.associatedNode.l, ARBIT_HIGH); // prevent numbers so high the calcs are shit
-//				if (w.associatedNode.type == NodeType.TRANSFER) {
-//					// transfer have to time windows, so delta = inf - 0 - inf = 0
-//					delta = 0;
-//				}
-//				if (delta > 0) {
-//					if (!checkNegCycleL(fakeZero, w, delta)) {
-//						return false;
-//					}
-//				}
-//			}
-//		}
-//		
-//		// all routenodes are now part of labeled
-//		// so we can iterate over the routes instead of labeled
-//		for (Route route : routes) {
-//			int s = route.size();
-//			RouteNode prev = null;
-//			for (int i = 0; i < s; i++) {
-//				RouteNode v = route.get(i);
-//				// for each outgoing arc, do the inner loop
-//				// max ride time arc
-//				if (v.type == RouteNodeType.PICKUP) {
-//					// get associated node and update it
-//					SolutionRequest sr = requests.get(v.requestId - 1);
-//					double delta = sr.dropoff.tightL - v.tightL - sr.L; // length of arc is L
-//					if (delta > 0) {
-//						if (!checkNegCycleL(v, sr.dropoff, delta)) {
-//							return false;
-//						}
-//					}
-//				}
-//				// previous node arc
-//				if (prev != null) {
-//					double delta = prev.tightL - v.tightL - (-p.distanceBetween(v.associatedNode, prev.associatedNode) - prev.associatedNode.s);
-//					if (delta > 0) {
-//						if (!checkNegCycleL(v, prev, delta)) {
-//							return false;
-//						}
-//					}
-//				} 
-//				// transfer precedence arc
-//				if (v.type == RouteNodeType.TRANSFER_PICKUP) {
-//					SolutionRequest sr = requests.get(v.requestId - 1);
-//					double delta = sr.transferDropoff.tightL - v.tightL - (-sr.transferDropoff.associatedNode.s);
-//					if (delta > 0) {
-//						if (!checkNegCycleL(v, prev, delta)) {
-//							return false;
-//						}
-//					}
-//				}
-//				prev = v;
-//			}	
-//		}
-//		return true;
-//	}
-	
-	// source: http://www.cs.princeton.edu/courses/archive/spr11/cos423/Lectures/ShortestPaths.pdf, slide 44
-//	private boolean checkNegCycleL(RouteNode v, RouteNode w, double delta) {
-//		w.tightL -= delta;
-//		w.parent = v;
-//		RouteNode x = w.before;
-//		w.before = null;
-//		RouteNode y = w.after;
-//		while (y != null && y.parent != null && y.parent.before == null) { // modified
-//			if (y == v && y.after != y) {
-//				// found a negative cycle
-//				return false;
-//			} else {
-//				y.tightL = y.tightL - delta + 0.00001;
-//				y.before = null;
-//				y = y.after;
-//			}
-//		}
-//		if (x != null) { //modifed
-//			x.after = y;
-//		}
-//		if (y != null) { // modified
-//			y.before = x;
-//		}
-//		w.after = v.after;
-//		w.after.before = w;
-//		w.before = v;
-//		v.after = w;
-//		return true;
-//	}
-	
-	public boolean calcTightE() {
-		RouteNode fakeZero = new RouteNode(null, null, 0, 0);
-		fakeZero.negativeTightE = 0;
-		fakeZero.before = fakeZero;
-		fakeZero.after = fakeZero;
-		
-		
-		// for easy arc finding
 		for (Route r : routes) {
 			RouteNode prev = null;
 			for (RouteNode rn : r) {
+				rn.parent = null;
+				rn.tightL = ARBIT_HIGH;
+				rn.set = B;
+				B.add(rn);
 				rn.prev = prev;
 				prev = rn;
 			}
 		}
-		
-		for (Route route : routes) {
-			for (RouteNode s : route) {
-				LinkedList<RouteNode> labeled = new LinkedList<>();
-				LinkedList<RouteNode> scanned = new LinkedList<>();
-				LinkedList<RouteNode> unreached = new LinkedList<>();
-				fakeZero.negativeTightE = 0;
-				fakeZero.before = null;
-				fakeZero.after = null;
-				unreached.add(fakeZero);	
-				
-				for (Route r : routes) {
-					for (RouteNode rn : r) {
-						rn.negativeTightE = ARBIT_HIGH;
-						rn.before = null;
-						rn.parent = null;
-						unreached.add(rn);
+		do {
+			// asume a = empty
+			// move all of B to A
+			for (ListIterator<RouteNode> iter = B.listIterator(); iter.hasNext(); ) {
+				RouteNode next = iter.next();
+				A.add(next);
+				iter.remove();
+				next.set = A;
+			}
+			do {
+				RouteNode u = A.remove();
+				u.set = null;
+				scansSinceLast++;
+				// check all outgoing edges
+				if (u == zero) {
+					// edges of zero are l
+					for (Route r : routes) {
+						for (RouteNode v : r) {
+							if (!v.isTransfer()) {
+								double dist = u.tightL + v.associatedNode.l;
+								if (dist < v.tightL) {
+									updateNodeL(u, v, dist, B);
+								}
+							}
+						}
 					}
 				}
-				unreached.remove(s);
-				labeled.add(s);
-				s.after = s;
-				s.before = s;
-				s.negativeTightE = 0;
-				
-				while (labeled.size() > 0) {
-					RouteNode v = labeled.remove();
-					// for each arc out of v
-					// if v is fakezero it has tons of arcs
-					if (v == fakeZero) {
-						
+				// pickup has outgoing max ride time
+				if (u.type == RouteNodeType.PICKUP) {	
+					SolutionRequest sr = requests.get(u.requestId - 1);
+					RouteNode v = sr.dropoff;
+					double dist = u.tightL + sr.L + u.associatedNode.s;
+					if (dist < v.tightL) {
+						updateNodeL(u, v, dist, B);
 					}
 				}
-				
-		}
+				// transfer pickup may have associated transfer dropoff
+				if (u.type == RouteNodeType.TRANSFER_PICKUP) {
+					SolutionRequest sr = requests.get(u.requestId - 1);
+					RouteNode v = sr.transferDropoff;
+					if (v != null) {
+						double dist = u.tightL - v.associatedNode.s;
+						if (dist < v.tightL) {
+							updateNodeL(u, v, dist, B);
+						}
+					}
+				}
+				// precedence constraint
+				if (u.prev != null) {	
+					RouteNode v = u.prev;
+					double dist = u.tightL - p.distanceBetween(u.associatedNode, v.associatedNode) - v.associatedNode.s;
+					if (dist < v.tightL) {
+						updateNodeL(u, v, dist, B);
+					}
+				}
+				// earliest starting time constraint
+				if (!u.isTransfer() && u != zero) {
+					RouteNode v = zero;
+					double dist = u.tightL - u.associatedNode.e;
+					if (dist < v.tightL) {
+						// this implies a negative cycle
+						updateNodeL(u, v, dist, B);
+						return false;
+					}
+				}
+			} while (A.size() > 0);
+			// end of a pass, check cycle detection if long ago or last scan
+			if (scansSinceLast > routes.size() * 2 || B.size() == 0) {
+				if (checkNegativeL(zero)) {
+					return false;
+				} else {
+					scansSinceLast = 0;
+				}
+			}
+			
+		} while (B.size() > 0);
 		return true;
 	}
-
-
-	private boolean checkNegCycleE(RouteNode v, RouteNode w, double delta) {
-		RouteNode x = w.before;
-		w.before = null;
-		RouteNode y = w.after;
-		while (y != null && y.parent != null && y.parent.before == null) { // modified
-			if (y == v && y.after != y) {
-				// found a negative cycle
-				return false;
-			} else {
-				y.tightE = y.tightE - delta + 0.00001;
-				y.before = null;
-				y = y.after;
+	
+	private boolean checkNegativeL(RouteNode zero) {
+		// setup
+		for (Route r : routes) {
+			for (RouteNode v : r) {
+				v.scannedFrom = null;
 			}
 		}
-		if (x != null) { //modifed
-			x.after = y;
+		zero.scannedFrom = null;
+		// check zero separately
+		if (hasWalkToRootCycle(zero)) {
+			return true;
 		}
-		if (y != null) { // modified
-			y.before = x;
+		
+		for (Route r : routes) {
+			for (RouteNode v : r) {
+				if (hasWalkToRootCycle(v)) {
+					return true;
+				}
+			}
 		}
-		w.after = v.after;
-		w.after.before = w;
-		w.before = v;
-		v.after = w;
+		return false;
+	}
+		
+	private void updateNodeL(RouteNode u, RouteNode v, double dist, List<RouteNode> B) {
+		v.tightL = dist;
+		v.parent = u;
+		if (v.set == null) {
+			B.add(v);
+			v.set = B;
+		}
+	}
+	
+	private boolean hasWalkToRootCycle(RouteNode v) {
+		RouteNode p = v;
+		while (p != null) {
+			if (p.scannedFrom == null) {
+				p.scannedFrom = v;
+				p = p.parent;
+			} else if (p.scannedFrom == v && v.scannedFrom != v) {
+				return true;
+			} else {
+				break;
+			}
+		}
+		return false;
+	}
+	
+	public boolean npassE() {
+		for (Route r1 : routes) {
+			for (RouteNode s : r1) {
+				int scansSinceLast = 0;
+				LinkedList<RouteNode> A = new LinkedList<>();
+				List<RouteNode> B = new ArrayList<>();
+				
+				B.add(s);
+				
+				RouteNode zero = new RouteNode(null, null, 0, 0);
+				zero.parent = null;
+				zero.negativeTightE = 0;
+				zero.set = B;
+				B.add(zero);
+				
+				for (Route r : routes) {
+					RouteNode prev = null;
+					for (RouteNode rn : r) {
+						rn.parent = null;
+						rn.negativeTightE = ARBIT_HIGH;
+						rn.set = B;
+						if (rn != s) {
+							B.add(rn);
+						}
+						rn.prev = prev;
+						prev = rn;
+					}
+				}
+				s.negativeTightE = 0;
+				do {
+					// asume a = empty
+					// move all of B to A
+					for (ListIterator<RouteNode> iter = B.listIterator(); iter.hasNext(); ) {
+						RouteNode next = iter.next();
+						A.add(next);
+						iter.remove();
+						next.set = A;
+					}
+					do {
+						RouteNode u = A.remove();
+						u.set = null;
+						scansSinceLast++;
+						// check all outgoing edges
+						if (u == zero) {
+							// edges of zero are l
+							for (Route r : routes) {
+								for (RouteNode v : r) {
+									if (!v.isTransfer()) {
+										double dist = u.negativeTightE + v.associatedNode.l;
+										if (dist < v.negativeTightE) {
+											updateNodeE(u, v, dist, B);
+										}
+									}
+								}
+							}
+						}
+						// pickup has outgoing max ride time
+						if (u.type == RouteNodeType.PICKUP) {	
+							SolutionRequest sr = requests.get(u.requestId - 1);
+							RouteNode v = sr.dropoff;
+							double dist = u.negativeTightE + sr.L + u.associatedNode.s;
+							if (dist < v.negativeTightE) {
+								updateNodeE(u, v, dist, B);
+							}
+						}
+						// transfer pickup may have associated transfer dropoff
+						if (u.type == RouteNodeType.TRANSFER_PICKUP) {
+							SolutionRequest sr = requests.get(u.requestId - 1);
+							RouteNode v = sr.transferDropoff;
+							if (v != null) {
+								double dist = u.negativeTightE - v.associatedNode.s;
+								if (dist < v.negativeTightE) {
+									updateNodeE(u, v, dist, B);
+								}
+							}
+						}
+						// precedence constraint
+						if (u.prev != null) {	
+							RouteNode v = u.prev;
+							double dist = u.negativeTightE - p.distanceBetween(u.associatedNode, v.associatedNode) - v.associatedNode.s;
+							if (dist < v.negativeTightE) {
+								updateNodeE(u, v, dist, B);
+							}
+						}
+						// earliest starting time constraint
+						if (!u.isTransfer() && u != zero) {
+							RouteNode v = zero;
+							double dist = u.negativeTightE - u.associatedNode.e;
+							if (dist < v.negativeTightE) {
+								updateNodeE(u, v, dist, B);
+							}
+						}
+					} while (A.size() > 0);
+					// end of a pass, check cycle detection if long ago or last scan
+					if (scansSinceLast > routes.size() * 2 || B.size() == 0) {
+						if (checkNegativeE(zero)) {
+							return false;
+						} else {
+							scansSinceLast = 0;
+						}
+					}
+				} while (B.size() > 0);
+				s.tightE = -zero.negativeTightE;
+			}
+		}
 		return true;
 	}
+	
+	private void updateNodeE(RouteNode u, RouteNode v, double dist, List<RouteNode> B) {
+		v.negativeTightE = dist;
+		v.parent = u;
+		if (v.set == null) {
+			B.add(v);
+			v.set = B;
+		}
+	}
 
+
+	private boolean checkNegativeE(RouteNode zero) {
+		// setup
+		for (Route r : routes) {
+			for (RouteNode v : r) {
+				v.scannedFrom = null;
+			}
+		}
+		zero.scannedFrom = null;
+		// check zero separately
+		if (hasWalkToRootCycle(zero)) {
+			return true;
+		}
+
+		for (Route r : routes) {
+			for (RouteNode v : r) {
+				if (hasWalkToRootCycle(v)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	//http://www.cs.princeton.edu/courses/archive/spr11/cos423/Lectures/ShortestPaths.pdf
 }
