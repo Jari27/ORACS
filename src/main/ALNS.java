@@ -14,6 +14,7 @@ import org.pmw.tinylog.Logger;
 import heuristics2.destroy.DestroyHeuristic;
 import heuristics2.destroy.RandomDestroy;
 import heuristics2.destroy.ShawRemoval;
+import heuristics2.repair.GreedyNoTransferOneByOne;
 import heuristics2.repair.GreedyNoTransferRepair;
 import heuristics2.repair.RepairHeuristic;
 import problem.Problem;
