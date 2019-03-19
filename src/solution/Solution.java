@@ -13,10 +13,8 @@ import java.util.Set;
 import org.pmw.tinylog.Logger;
 
 import problem.Node;
-import problem.NodeType;
 import problem.Problem;
 import problem.Request;
-import sun.misc.Queue;
 
 public class Solution {
 	
@@ -24,7 +22,7 @@ public class Solution {
 
 	private int nextFreeVehicleId = -1;
 
-	Problem p;
+	public Problem p;
 
 	public List<Route> routes = new ArrayList<>();
 	public List<Node> openTransfers, closedTransfers;
@@ -98,6 +96,7 @@ public class Solution {
 			this.requests.add(solReq);
 			this.nextFreeVehicleId = r.id + 1;
 		}
+		calcTightWindows();
 		Logger.info("Found an initial solution for problem {000} with cost {0.00}", p.index, this.getCost());
 		logSolution();
 		try {
@@ -303,49 +302,60 @@ public class Solution {
 			next.requests.add(solReq);
 		}
 		
+		// transfers
+		next.openTransfers.clear();
+		next.closedTransfers.clear();
+		next.openTransfers.addAll(openTransfers);
+		next.closedTransfers.addAll(closedTransfers);
+		
 		// copy routes
-		for (Route origRoute : routes) {
-			Route copyRoute = new Route(origRoute.vehicleId); // forces recalculation of costs
-			copyRoute.setRouteUnchanged(); // prevents cost recalculation
-			copyRoute.setCost(origRoute.getCost(p)); // sets cost correctly
-			
-			for (RouteNode origRN : origRoute) {
-				// create a new RouteNode and set its associated node, type and request (if not a depot)
-				// note; the associated node does not have to be copied since it is the same
-				RouteNode copyRN = new RouteNode(origRN.associatedNode, origRN.getType(), origRN.requestId, origRN.vehicleId);
-				
-				// Set all relevant fields
-				// TODO ensure we update this as we update RouteNode (i.e. slack etc)
-				copyRN.setArrival(origRN.getArrival());
-				copyRN.setStartOfS(origRN.getStartOfS(), false); 
-				copyRN.setNumPas(origRN.getNumPas());
-				copyRN.tightE = origRN.tightE;
-				copyRN.tightL = origRN.tightL;
-				
-				// save the RouteNode in our new route
-				copyRoute.add(copyRN);
-				
-				// Add RouteNode to the SolutionRequest
-				int tmpRequestId = origRN.requestId;
-				switch (origRN.getType()) {
-				case PICKUP:
-					next.requests.get(tmpRequestId - 1).pickup = copyRN; // our requests are 1-indexed instead of 0
-					break;
-				case DROPOFF:
-					next.requests.get(tmpRequestId - 1).dropoff = copyRN;
-					break;
-				case TRANSFER_PICKUP:
-					next.requests.get(tmpRequestId - 1).transferPickup = copyRN;
-					break;
-				case TRANSFER_DROPOFF:
-					next.requests.get(tmpRequestId - 1).transferDropoff = copyRN;
-					break;
-				default:
-					break;
-				}
-			}
-			// save the route in our new solution
+		for (int routeIndex = 0; routeIndex < routes.size(); routeIndex++) {
+			Route origRoute = routes.get(routeIndex);
+			Route copyRoute = origRoute.copy();
 			next.routes.add(copyRoute);
+			next.updateReferencesOfRoute(routeIndex);
+//			
+//			Route copyRoute = new Route(origRoute.vehicleId); // forces recalculation of costs
+//			copyRoute.setRouteUnchanged(); // prevents cost recalculation
+//			copyRoute.setCost(origRoute.getCost(p)); // sets cost correctly
+//			
+//			for (RouteNode origRN : origRoute) {
+//				// create a new RouteNode and set its associated node, type and request (if not a depot)
+//				// note; the associated node does not have to be copied since it is the same
+//				RouteNode copyRN = new RouteNode(origRN.associatedNode, origRN.getType(), origRN.requestId, origRN.vehicleId);
+//				
+//				// Set all relevant fields
+//				// TODO ensure we update this as we update RouteNode (i.e. slack etc)
+//				copyRN.setArrival(origRN.getArrival());
+//				copyRN.setStartOfS(origRN.getStartOfS(), false); 
+//				copyRN.setNumPas(origRN.getNumPas());
+//				copyRN.tightE = origRN.tightE;
+//				copyRN.tightL = origRN.tightL;
+//				
+//				// save the RouteNode in our new route
+//				copyRoute.add(copyRN);
+//				
+//				// Add RouteNode to the SolutionRequest
+//				int tmpRequestId = origRN.requestId;
+//				switch (origRN.getType()) {
+//				case PICKUP:
+//					next.requests.get(tmpRequestId - 1).pickup = copyRN; // our requests are 1-indexed instead of 0
+//					break;
+//				case DROPOFF:
+//					next.requests.get(tmpRequestId - 1).dropoff = copyRN;
+//					break;
+//				case TRANSFER_PICKUP:
+//					next.requests.get(tmpRequestId - 1).transferPickup = copyRN;
+//					break;
+//				case TRANSFER_DROPOFF:
+//					next.requests.get(tmpRequestId - 1).transferDropoff = copyRN;
+//					break;
+//				default:
+//					break;
+//				}
+//			}
+//			// save the route in our new solution
+//			next.routes.add(copyRoute);
 		}
 		return next;
 	}
@@ -365,21 +375,29 @@ public class Solution {
 	}
 	
 	public boolean isFeasibleVerify(boolean canBePartial) {
-		// check timewindows
+		// check timewindows and capacity
 		for (Route r : routes) {
+			RouteNode prev = null;
 			for (RouteNode rn : r) {
 				if (!rn.isTransfer() && (rn.getStartOfS() > rn.associatedNode.l || rn.getStartOfS() < rn.associatedNode.e)) {
 					Logger.debug("Not feasible because of time windows of node {000}: s = {00.00}.", rn, rn.getStartOfS());
 					return false;
+				} 
+				if (prev == null && rn.getNumPas() != 1) {
+					Logger.warn("Invalid capacity in (first) node {}", rn);
+				} else if (prev != null && rn.getNumPas() - prev.getNumPas() != 1 && rn.getNumPas() - prev.getNumPas() != -1) {
+					Logger.warn("Invalid capacity in nodes {} and {}. Cap1: {}. Cap2: {}", prev, rn, prev.getNumPas(), rn.getNumPas());
 				}
+				prev = rn;
 			}
 			// check timings
+			prev = r.get(0);
 			for (int i = 1; i < r.size(); i++) {
-				RouteNode prev = r.get(i-1);
 				RouteNode cur = r.get(i);
 				if (cur.getArrival() < prev.getDeparture() + p.distanceBetween(cur.associatedNode, prev.associatedNode)) {
 					Logger.warn("Invalid arrival times of node {} and {} in route {}", cur, prev, r.vehicleId);
 				}
+				prev = cur;
 			}
 		}
 		// check max ride time && transfer precedence
@@ -444,12 +462,8 @@ public class Solution {
 		return !isCorrect;
 	}
 	
-	// TODO NC1, NC2
 	public boolean isFeasible() {
-		if (calcTightWindows()) {
-			return true;
-		}
-		return false;
+		return calcTightWindows();
 	}
 
 	
@@ -563,7 +577,7 @@ public class Solution {
 			} while (A.size() > 0);
 			// end of a pass, check cycle detection if long ago or last scan
 			if (scansSinceLast > routes.size() * 2 || B.size() == 0) {
-				if (checkNegativeL(zero)) {
+				if (hasNegativeCycle(zero)) {
 					return false;
 				} else {
 					scansSinceLast = 0;
@@ -573,29 +587,6 @@ public class Solution {
 		} while (B.size() > 0);
 		return true;
 	}
-	
-	private boolean checkNegativeL(RouteNode zero) {
-		// setup
-		for (Route r : routes) {
-			for (RouteNode v : r) {
-				v.scannedFrom = null;
-			}
-		}
-		zero.scannedFrom = null;
-		// check zero separately
-		if (hasWalkToRootCycle(zero)) {
-			return true;
-		}
-		
-		for (Route r : routes) {
-			for (RouteNode v : r) {
-				if (hasWalkToRootCycle(v)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 		
 	private void updateNodeL(RouteNode u, RouteNode v, double dist, List<RouteNode> B) {
 		v.tightL = dist;
@@ -604,21 +595,6 @@ public class Solution {
 			B.add(v);
 			v.set = B;
 		}
-	}
-	
-	private boolean hasWalkToRootCycle(RouteNode v) {
-		RouteNode p = v;
-		while (p != null) {
-			if (p.scannedFrom == null) {
-				p.scannedFrom = v;
-				p = p.parent;
-			} else if (p.scannedFrom == v && v.scannedFrom != v) {
-				return true;
-			} else {
-				break;
-			}
-		}
-		return false;
 	}
 	
 	public boolean npassE() {
@@ -716,7 +692,7 @@ public class Solution {
 					} while (A.size() > 0);
 					// end of a pass, check cycle detection if long ago or last scan
 					if (scansSinceLast > routes.size() * 2 || B.size() == 0) {
-						if (checkNegativeE(zero)) {
+						if (hasNegativeCycle(zero)) {
 							return false;
 						} else {
 							scansSinceLast = 0;
@@ -738,8 +714,7 @@ public class Solution {
 		}
 	}
 
-
-	private boolean checkNegativeE(RouteNode zero) {
+	private boolean hasNegativeCycle(RouteNode zero) {
 		// setup
 		for (Route r : routes) {
 			for (RouteNode v : r) {
@@ -760,6 +735,46 @@ public class Solution {
 			}
 		}
 		return false;
+	}
+	
+	private boolean hasWalkToRootCycle(RouteNode v) {
+		RouteNode p = v;
+		while (p != null) {
+			if (p.scannedFrom == null) {
+				p.scannedFrom = v;
+				p = p.parent;
+			} else if (p.scannedFrom == v && v.scannedFrom != v) {
+				return true;
+			} else {
+				break;
+			}
+		}
+		return false;
+	}
+	
+	public void setRoute(int routeIndex, Route route) {
+		routes.set(routeIndex, route);
+		updateReferencesOfRoute(routeIndex);
+	}
+
+	private void updateReferencesOfRoute(int routeIndex) {
+		for (RouteNode rn : routes.get(routeIndex)) {
+			SolutionRequest sr = requests.get(rn.requestId - 1);
+			switch (rn.type) {
+			case PICKUP:
+				sr.pickup = rn;
+				break;
+			case DROPOFF:
+				sr.dropoff = rn;
+				break;
+			case TRANSFER_PICKUP:
+				sr.transferPickup = rn;
+				break;
+			case TRANSFER_DROPOFF:
+				sr.transferDropoff = rn;
+				break;
+			}
+		}
 	}
 	
 	//http://www.cs.princeton.edu/courses/archive/spr11/cos423/Lectures/ShortestPaths.pdf

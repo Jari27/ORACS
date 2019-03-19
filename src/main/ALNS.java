@@ -82,7 +82,7 @@ public class ALNS implements Runnable {
 		// repair
 		//RepairHeuristic greedyNoTransfer = new GreedyNoTransferRepair(p);
 		//repairHeuristics[0] = greedyNoTransfer;
-		RepairHeuristic noTransferOnebyOne = new GreedyNoTransferOneByOne(p);
+		RepairHeuristic noTransferOnebyOne = new GreedyNoTransferRepair(p);
 		repairHeuristics[0] = noTransferOnebyOne;
 		
 		
@@ -192,7 +192,7 @@ public class ALNS implements Runnable {
 				List<Integer> destroyed432 = Shaw.destroy(copy,4);
 			}*/
 
-			List<Integer> destroyed = destroy.destroy(copy, 1); // this always works
+			List<Integer> destroyed = destroy.destroy(copy, 2); // this always works
 			Logger.debug("Finished destroying the solution.");
 
 			if (!repair.repair(copy, destroyed)) {

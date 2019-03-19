@@ -115,6 +115,8 @@ public class RouteNode {
 		copy.startOfS = this.startOfS;
 		copy.arrival = this.arrival;
 		copy.numPas = this.numPas;
+		copy.tightE = this.tightE;
+		copy.tightL = this.tightL;
 		return copy;
 	}
 	
