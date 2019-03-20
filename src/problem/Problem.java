@@ -162,7 +162,17 @@ public class Problem {
 	public double getDistanceToNearestDepot(Node a) {
 		return distanceBetween(a, getNearestDepot(a));
 	}
-
+	 public double getMaxDistance(){
+		double maxDist = -1;
+		for(int i = 0; i < distanceMatrix.length;i++){
+			for(int j = 0; j < distanceMatrix[0].length;j++){
+				if(distanceMatrix[i][j] > maxDist){
+					maxDist = distanceMatrix[i][j];
+				}
+			}
+		}
+		return maxDist;
+	 }
 	/*
 	 * should probably be a check on this stuff to prevent NPEs, but that will cost
 	 * computer time

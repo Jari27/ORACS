@@ -1,5 +1,7 @@
 package solution;
 
+import java.util.List;
+
 import org.pmw.tinylog.Logger;
 
 import problem.Node;
@@ -28,8 +30,8 @@ public class RouteNode {
 	private double arrival = -1;
 	private int numPas = 0;
 	
+	public double tightE; // this is the actual value
 	public double tightL;
-	public double tightE;
 	
 	// Tarjan's Algorithm Stuff
 	public RouteNode prev;
@@ -37,7 +39,8 @@ public class RouteNode {
 	public RouteNode parent;
 	public RouteNode after;
 	public double negativeTightE; // this is temporary for during the algorithm
-	public boolean isScanned;
+	public List<RouteNode> set; // to which set does it belong
+	public RouteNode scannedFrom;
 
 	/**
 	 * Creates a node
@@ -96,9 +99,14 @@ public class RouteNode {
 	
 	@Override
 	public String toString() {
+		if (isTransfer()) {
+			return String.format(
+					"%s %03d; [0, inf] -> [%.2f, %.2f]. h=%.2f",
+					type.toString(), associatedNode.id, tightE, tightL, startOfS);
+		}
 		return String.format(
-				"RouteNode associated with node %03d; type = %s, arrival = %.2f, start of service = %.2f",
-				this.associatedNode.id, this.type, this.arrival, this.startOfS);
+				"%s %03d; [%.0f, %.0f] -> [%.2f, %.2f]. h=%.2f",
+				type.toString(), associatedNode.id, associatedNode.e, associatedNode.l, tightE, tightL, startOfS);
 	}
 
 	
@@ -112,6 +120,8 @@ public class RouteNode {
 		copy.startOfS = this.startOfS;
 		copy.arrival = this.arrival;
 		copy.numPas = this.numPas;
+		copy.tightE = this.tightE;
+		copy.tightL = this.tightL;
 		return copy;
 	}
 	

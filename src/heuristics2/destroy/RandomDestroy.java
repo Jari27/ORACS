@@ -44,7 +44,7 @@ public class RandomDestroy extends DestroyHeuristic {
 			while (s.requests.get(index).pickup == null) {
 				index = rand.nextInt(s.requests.size());
 			}
-			
+					
 			Logger.debug("Destroying request {000}", index + 1);
 			
 			if (!destroySpecific(s, index + 1)) {

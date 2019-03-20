@@ -325,4 +325,26 @@ public class Route extends LinkedList<RouteNode>{
 		this.setRouteChanged();
 		return super.set(index, element);
 	}
+
+	public void updateCapacity() {
+		RouteNode prev = null;
+		for (RouteNode rn : this) {
+			if (prev == null) { // first node in route is always pickup
+				rn.setNumPas(1);
+				prev = rn;
+				continue;
+			} 
+			switch (rn.type) {
+			case PICKUP:
+			case TRANSFER_PICKUP:
+				rn.setNumPas(prev.getNumPas() + 1);
+				break;
+			case DROPOFF:
+			case TRANSFER_DROPOFF:
+				rn.setNumPas(prev.getNumPas() - 1);
+				break;
+			}
+			prev = rn;
+		}
+	}
 }

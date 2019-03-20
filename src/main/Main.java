@@ -19,7 +19,7 @@ import org.pmw.tinylog.Logger;
  */
 public class Main {
 	
-	final static String FILE_NAME = "example_instances.csv";
+	final static String FILE_NAME = "large_instances.csv";
 	static List<Problem> problems;
 	static List<Solution> solutions;
 
@@ -28,16 +28,13 @@ public class Main {
 		problems = createProblemInstances();
 		solutions = new ArrayList<>();
 		for (Problem p : problems) {
-			Solution s = new Solution(p);
-			s.createInitialSolution();
-			s.logSolution();
-			//solutions.add(s);
+			ALNS test = new ALNS(p);
+			test.run();
 		}
 		
-		
 //		 quick and dirty removal check
-		ALNS test = new ALNS(problems.get(5));
-		test.run();
+//		ALNS test = new ALNS(problems.get(5));
+//		test.run();
 		
 		if (true) return;
 		
@@ -81,7 +78,7 @@ public class Main {
 		try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				String[] stringData = line.split(", ");
+				String[] stringData = line.split(",");
 				int[] intData = new int[stringData.length];
 				for (int i = 0; i < stringData.length; i++) {
 					intData[i] = Integer.parseInt(stringData[i]);
@@ -89,6 +86,7 @@ public class Main {
 				problems.add(parseInstance(intData));
 				
 			}
+			br.close();
 		}
 		return problems;
 	}

@@ -12,7 +12,7 @@ import problem.Request;
 public class SolutionRequest {
 	
 	public Request associatedRequest;
-	int id;
+	public int id;
 	int L;
 	
 	public RouteNode pickup, dropoff, transferPickup, transferDropoff;

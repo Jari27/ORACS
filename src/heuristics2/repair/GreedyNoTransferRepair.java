@@ -4,6 +4,7 @@
 package heuristics2.repair;
 
 import java.util.List;
+
 import org.pmw.tinylog.Logger;
 
 import problem.Problem;
@@ -27,154 +28,256 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 	 */
 	@Override
 	public boolean repair(Solution s, List<Integer> requestIdsToRepair) {
-		CostRouteNode[] crns = calculateFullInsertionMatrix(s, requestIdsToRepair);
+		Logger.debug("Starting reparation using greedy no transfer insert. Trying to repair {} requests", requestIdsToRepair.size());
 		
-		for (int rIndex = 0; rIndex < requestIdsToRepair.size(); rIndex++) {
-			// insert into route
-			// update references
-			// recalculate
-		}
-		// TODO finish
-		return false;
-	}
-
-	private CostRouteNode[] calculateFullInsertionMatrix(Solution s, List<Integer> requestIdsToRepair) {
-		CostRouteNode[] result = new CostRouteNode[s.routes.size()];
-		for (int i = 0; i < s.routes.size(); i++) {
-			result[i] = calculateRouteInsertionCost(i, s, requestIdsToRepair);
-		}
-		return result;
-	}
-
-	// TODO use tight time windows to check insertion quickly
-	private CostRouteNode calculateRouteInsertionCost(int routeIndex, Solution s, List<Integer> requestIdsToRepair) {
-		double[] costs = new double[requestIdsToRepair.size()];
-		Route[] routes = new Route[requestIdsToRepair.size()];
-		RouteNode[][] newNodes = new RouteNode[requestIdsToRepair.size()][2];
-		
-		Route oldRoute = s.routes.get(routeIndex);
-		double oldCost = oldRoute.getCost(problem);
-		
-		Solution costCalc = s.copy();
-		//costCalc.calcTightWindows();
-		
-		for (int i = 0; i < requestIdsToRepair.size(); i++) {
-			int reqId = requestIdsToRepair.get(i);
-			Request assoc = problem.requests.get(reqId - 1);
-			RouteNode pickup = new RouteNode(assoc.pickupNode, RouteNodeType.PICKUP, reqId, oldRoute.vehicleId);
-			RouteNode dropoff = new RouteNode(assoc.dropoffNode, RouteNodeType.DROPOFF, reqId, oldRoute.vehicleId);
-			newNodes[i][0] = pickup;
-			newNodes[i][1] = dropoff;
+		while (requestIdsToRepair.size() > 0) {
 			
-			costs[i] = Double.POSITIVE_INFINITY;
-			Route newRoute = s.routes.get(routeIndex).copy();
-			for (int j = 0; j < oldRoute.size(); j++) {
-				newRoute.add(j, pickup);
+			RouteRequest rr = getBestInsertion(s, requestIdsToRepair);
+			
+			if (rr == null) {
+				// unable to insert next request
+				Logger.debug("Unable to insert more requests, aborting.");
+				return false;
+			}
+			requestIdsToRepair.remove(new Integer(rr.requestId)); // have to wrap it in an Integer, otherwise it will remove the thing at index == requestId
+			s.setRoute(rr.routeIndex, rr.route);
+			s.calcTightWindows(); // update windows
+		}
+		return true;
+	}
+		
+
+	private RouteRequest getBestInsertion(Solution s, List<Integer> requestIdsToRepair) {	
+		Logger.debug("Finding new best insertion.");
+		Solution costCalc = s.copy();
+		
+		double bestInsertionCost = Double.POSITIVE_INFINITY;
+		Route bestRoute = null;
+		int bestRequestId = -1;
+		int bestRouteIndex = -1;
+		
+		for (int reqId : requestIdsToRepair) {
+			for (int routeIndex = 0; routeIndex < s.routes.size(); routeIndex++) {
+				final Route oldRoute = costCalc.routes.get(routeIndex);
+				double oldCost = oldRoute.getCost(s.p);
 				
-				if (j == 0) {
-					pickup.setArrival(pickup.associatedNode.e);
-					pickup.setStartOfS(pickup.associatedNode.e);
-					pickup.setNumPas(1);
-				} else {
-					RouteNode prev = newRoute.get(j-1);
-					pickup.setArrival(prev.getDeparture() + problem.distanceBetween(prev.associatedNode, pickup.associatedNode));
-					pickup.setStartOfS(Math.max(pickup.associatedNode.e, pickup.getArrival()), false);
-					pickup.setNumPas(prev.getNumPas() + 1);
-				}
-				// very quick feasibility check (earliest window always satisfied, later insertion impossible, so check L and break).
-				if (!pickup.isLFeasible() || j != oldRoute.size() - 1 && pickup.getDeparture() + problem.distanceBetween(pickup.associatedNode, oldRoute.get(j + 1).associatedNode) < oldRoute.get(j + 1).tightL) {
-					Logger.trace("Insertion of pickup of request {000} at location {} in Route {} was infeasible due to time windows", reqId, j, routeIndex);
-					break;
-				} if (pickup.getNumPas() > problem.capacity) {
-					Logger.trace("Insertion of pickup of request {000} at location {} in Route {} was infeasible due to capacity constraints", reqId, j, routeIndex);
-					continue;
-				}
-				// successful pickup insertion
-				for (int k = j + 1; k < oldRoute.size() + 1; k++) {
-					//Route newRoute = insertP.copy();
-					newRoute.add(k, dropoff);
-					
-					RouteNode prev = newRoute.get(k - 1);
-					dropoff.setArrival(prev.getDeparture() + problem.distanceBetween(prev.associatedNode, dropoff.associatedNode));
-					dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.associatedNode.e), false);
-					dropoff.setNumPas(prev.getNumPas() - 1);
-					
-					if (!dropoff.isLFeasible()) {
-						Logger.trace("Insertion of pickup of request {000} at location {} in Route {} was infeasible due to time windows", reqId, j, routeIndex);
-						break;
+				Route newRoute = oldRoute.copy();
+				SolutionRequest sr = s.requests.get(reqId - 1);
+				RouteNode dropoff = new RouteNode(sr.associatedRequest.dropoffNode, RouteNodeType.DROPOFF, reqId, oldRoute.vehicleId);
+				RouteNode pickup = new RouteNode(sr.associatedRequest.pickupNode, RouteNodeType.PICKUP, reqId, oldRoute.vehicleId);
+				for (int i = 0; i < oldRoute.size() + 1; i++) {
+					// check timewindows of subsequent nodes
+					if (!feasibleInsertion(i, newRoute, pickup, s.p)) {
+						continue;
 					}
-					// maybe (?) feasible solution
-					double newCost = newRoute.getCost(problem) - oldCost;
-					costCalc.routes.set(routeIndex, newRoute);
-					for (RouteNode rn : newRoute) { // update references for feasib. checking
-						SolutionRequest sr = costCalc.requests.get(rn.requestId - 1);
-						switch (rn.type) {
-						case PICKUP:
-							sr.pickup = rn;
-							break;
-						case DROPOFF:
-							sr.dropoff = rn;
-							break;
-						case TRANSFER_PICKUP:
-							sr.transferPickup = rn;
-							break;
-						case TRANSFER_DROPOFF:
-							sr.transferDropoff = rn;
-							break;
+					newRoute.add(i, pickup);
+					for (int j = i + 1; j < newRoute.size() + 1; j++) {
+						// check timewindows of subsequent nodes
+						if (!feasibleInsertion(j, newRoute, dropoff, s.p)) {
+							continue;
 						}
-					}
-					SolutionRequest sr = costCalc.requests.get(reqId - 1);
-					sr.pickup = pickup;
-					sr.dropoff = dropoff;
-					if (newCost < costs[i]) { // check this first because it's cheaper
-						if (costCalc.isFeasible()) {
-							costs[i] = newCost;
-							routes[i] = newRoute;
+						// check capacity of subsequent nodes
+						if (!checkCapacity(i, j, newRoute, s.p.capacity)) {
+							break;
+						} 
+						newRoute.add(j, dropoff);
+						// we might have a feasible solution
+						// check cost, then SC1 and/or full feasibility check
+						
+						double newCost = newRoute.getCost(s.p);
+						double insertionCost = newCost - oldCost;
+						if (insertionCost < bestInsertionCost) {
+							if (SC1NoTransfer(i, j, pickup, dropoff, newRoute, s.p)) {
+								bestRoute = newRoute.copy();
+								bestRouteIndex = routeIndex;
+								bestInsertionCost = insertionCost;
+								bestRequestId = reqId;
+								Logger.debug("Found a new best insertion: request {000} into route with index {} at cost {00.00}.", reqId, routeIndex, insertionCost);
+							} else {
+								// full feasibility check
+								// insert route and update references for feasibility check
+								costCalc.setRoute(routeIndex, newRoute);
+								if (costCalc.isFeasible()) {
+									bestRoute = newRoute.copy();
+									bestRouteIndex = routeIndex;
+									bestInsertionCost = insertionCost;
+									bestRequestId = reqId;
+									Logger.debug("Found a new best insertion: request {000} into route with index {} at cost {00.00}.", reqId, routeIndex, insertionCost);
+								}
+								// reset costCalc
+								// this is to prevent recalculating the windows after feasibility checking
+								costCalc = s.copy();
+							}
 						}
+						newRoute.remove(j);
 					}
-					// reset costCalc
-					costCalc.routes.set(routeIndex, oldRoute); // set costCalc back to state before insertion so we can reuse without copying
-					for (RouteNode rn : newRoute) { // update references for feasib. checking
-						SolutionRequest srCur = costCalc.requests.get(rn.requestId - 1);
-						switch (rn.type) {
-						case PICKUP:
-							srCur.pickup = rn;
-							break;
-						case DROPOFF:
-							srCur.dropoff = rn;
-							break;
-						case TRANSFER_PICKUP:
-							srCur.transferPickup = rn;
-							break;
-						case TRANSFER_DROPOFF:
-							srCur.transferDropoff = rn;
-							break;
-						}
-					}
-					sr.pickup = null;
-					sr.dropoff = null;	
-					newRoute.remove(k);
+					newRoute.remove(i);
 				}
-				newRoute.remove(j);
 			}
 		}
-		return new CostRouteNode(costs, routes, newNodes);
+		// we now know what route to insert so update its capacity at the nodes, to make it ready for insertion
+		if (bestRoute != null) {
+			bestRoute.updateCapacity();
+			return new RouteRequest(bestRoute, bestRequestId, bestRouteIndex);
+		} 
+		return null;		
 	}
 	
-	// data class
-	private class CostRouteNode {
+	// this is different from the original SC1
+	// if the two insertions are next to eachother, we do not try to set the pickup as early as possible but just find any satisfying solution
+	// since the one next to it 
+	private boolean SC1NoTransfer(int pickupLoc, int dropoffLoc, RouteNode pickup, RouteNode dropoff, Route newRoute, Problem p) {
+		double pickupS, dropoffS;
+		if (pickupLoc + 1 < dropoffLoc) {
+			// they are not next to eachother so simply follow rules from Masson 14
+			// set pickupS and dropoffS
+			RouteNode prev = newRoute.get(dropoffLoc - 1);
+			dropoffS = Math.max(dropoff.associatedNode.e, prev.tightE + prev.associatedNode.s + p.distanceBetween(dropoff.associatedNode, prev.associatedNode));
+			Request req = p.requests.get(pickup.requestId - 1);
+			// disregard precedence constraint if it the first
+			if (pickupLoc > 0) {
+				prev = newRoute.get(pickupLoc - 1);
+				pickupS = Math.max(Math.max(pickup.associatedNode.e,  prev.tightE + prev.associatedNode.s + p.distanceBetween(prev.associatedNode, pickup.associatedNode)), dropoffS - req.L - pickup.associatedNode.s);
+			} else {
+				pickupS = Math.max(pickup.associatedNode.e, dropoffS - req.L - pickup.associatedNode.s);
+			}
+			if (pickupS > pickup.associatedNode.l || dropoffS > dropoff.associatedNode.l) { // this is the first time we adjust dropoff and pickup, so verify time windows
+				return false;
+			}
+			// check arrival time after pickup
+			RouteNode next = newRoute.get(pickupLoc + 1);
+			if (pickupS + pickup.associatedNode.s + p.distanceBetween(pickup.associatedNode, next.associatedNode) > next.tightE) {
+				return false;
+			}
+			// if there is a next node, check arrival time at next
+			if (dropoffLoc < newRoute.size() - 1) {
+				next = newRoute.get(dropoffLoc + 1);
+				if (dropoffS + dropoff.associatedNode.s + p.distanceBetween(dropoff.associatedNode, next.associatedNode) > next.tightE) {
+					return false;
+				}
+			}
+		} else {
+			// they are next to eachother so tightE of pickup is undefined
+			// however we know that it is satisfiable so we select earliest as possible pickup and dropoff and then adjust
+			// in this case we dont need to find the earliest solution for pickupS, but just any satisfying since only the second constraint on dropoffS is binding
+			// (from NC1 we already know its own time window is satisfied).
+			
+			// calculate earliest pickupS
+			if (pickupLoc == 0) {
+				pickupS = pickup.associatedNode.e;
+			} else {
+				RouteNode prev = newRoute.get(pickupLoc - 1);
+				pickupS = Math.max(pickup.associatedNode.e, prev.tightE + prev.associatedNode.s + p.distanceBetween(prev.associatedNode, pickup.associatedNode));
+			}
+			// calculate corresponding dropoffS
+			dropoffS = pickupS + pickup.associatedNode.s + p.distanceBetween(pickup.associatedNode, dropoff.associatedNode);
+			// if we start too early we adjust both the pickup and dropoff to a later point
+			if (dropoffS < dropoff.associatedNode.e) {
+				double dif = dropoff.associatedNode.e - dropoffS;
+				dropoffS += dif;
+				pickupS += dif;
+			}
+			
+			if (pickupS > pickup.associatedNode.l || dropoffS > dropoff.associatedNode.l) { // this is the first time we adjust dropoff and pickup, so verify time windows
+				return false;
+			}
+			
+			if (dropoffLoc < newRoute.size() - 1) {
+				// we have a subsequent node so we need to check the schedule
+				RouteNode next = newRoute.get(dropoffLoc + 1);
+				if (dropoffS + dropoff.associatedNode.s + p.distanceBetween(dropoff.associatedNode, next.associatedNode) > next.tightE) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	// check capacity after insertion of pickup and dropoff
+	private boolean checkCapacity(int start, int end, Route r, int Q) {
+		// first check newly inserted if necessary (i.e. not first)
+		if (start > 0) {
+			int prevCap = r.get(start - 1).getNumPas();
+			if (prevCap + 1 > Q) {
+				return false;
+			}
+		}
+		// then rest of nodes
+		for (int i = start + 1; i < end; i++) {
+			RouteNode cur = r.get(i);
+			if (cur.getNumPas() + 1 > Q) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Verifies whether the insertion of a node is feasible based on tight time windows of full route
+	 * i.e. NC1.
+	 * @param location
+	 * @param route
+	 * @param insert
+	 * @param p
+	 * @return
+	 */
+	// TODO: do own time window in seperate function so we can abort early?
+	private boolean feasibleInsertion(int location, Route route, RouteNode insert, Problem p) {
+		RouteNode prev = null;
+		double prevS = 0;
+		double thisS = 0;
+		if (location > 0) {
+			prev = route.get(location - 1);
+		}
+		// first we check the newly inserted
+		// if it's the first it always works so we ignore the case that prev == null
+		if (prev != null) {
+			prevS = prev.getStartOfS();
+			thisS = Math.max(insert.associatedNode.e, prevS + prev.associatedNode.s + p.distanceBetween(prev.associatedNode, insert.associatedNode));
+			if (thisS > insert.associatedNode.l) {
+				// cant make own time window
+				return false;
+			}
+		} else {
+			thisS = insert.associatedNode.e;
+		}
+		insert.setStartOfS(thisS);
+		prev = insert;
+		prevS = thisS;
 		
-		double[] costs;
-		Route[] routes;
-		RouteNode[][] nodes;
+		// note that this is called before insertion is done
+		// so 
+		for (int i = location; i < route.size(); i++) {
+			RouteNode cur = route.get(i);
+			double arrival = prevS + prev.associatedNode.s + p.distanceBetween(prev.associatedNode, cur.associatedNode);
+			thisS = Math.max(arrival, cur.getStartOfS()); // cannot start earlier than current starting due to tightE (which can only be higher after insertion)
+			if (thisS > cur.tightL) {
+				// start of S is too late
+				return false;
+			} else if (thisS <= cur.getStartOfS()) {
+				// this insertion has no influence on the rest of the route so skip checking the rest
+				return true;
+			}
+			// something changed in the route so keep track
+			prev = cur;
+			prevS = thisS;
+			
+		}
+		// own + all subseq. time windows managed
+		return true;
+	}
+	
+	// inner data class
+	private class RouteRequest {
 		
-		public CostRouteNode(double[] costs, Route[] routes, RouteNode[][] nodes) {
-			this.costs=costs;
-			this.routes=routes;
-			this.nodes=nodes;
+		public Route route;
+		public int requestId;
+		public int routeIndex;
+		
+		public RouteRequest(Route route, int requestId, int routeIndex) {
+			this.route = route;
+			this.requestId = requestId;
+			this.routeIndex = routeIndex;
 		}
 	}
-	
-//	private double 
-
 }
