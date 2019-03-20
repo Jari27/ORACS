@@ -1,7 +1,7 @@
 /**
  * 
  */
-package heuristics2.repair;
+package heuristics.repair;
 
 import java.util.List;
 

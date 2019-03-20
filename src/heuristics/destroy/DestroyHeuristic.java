@@ -1,7 +1,7 @@
 /**
  * 
  */
-package heuristics2.destroy;
+package heuristics.destroy;
 
 import java.util.List;
 import java.util.ListIterator;

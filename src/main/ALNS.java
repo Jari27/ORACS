@@ -11,17 +11,12 @@ import java.util.Random;
 
 import org.pmw.tinylog.Logger;
 
-import heuristics2.destroy.DestroyHeuristic;
-import heuristics2.destroy.RandomDestroy;
-import heuristics2.destroy.ShawRemoval;
-import heuristics2.repair.GreedyNoTransferOneByOne;
-import heuristics2.repair.GreedyNoTransferRepair;
-import heuristics2.repair.RepairHeuristic;
+import heuristics.destroy.DestroyHeuristic;
+import heuristics.destroy.RandomDestroy;
+import heuristics.repair.GreedyNoTransferRepair;
+import heuristics.repair.RepairHeuristic;
 import problem.Problem;
-import solution.Route;
-import solution.RouteNode;
 import solution.Solution;
-import solution.SolutionRequest;
 
 /**
  * @author Jari Meevis
