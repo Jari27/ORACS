@@ -104,8 +104,9 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 									bestRequestId = reqId;
 									Logger.debug("Found a new best insertion: request {000} into route with index {} at cost {00.00}.", reqId, routeIndex, insertionCost);
 								}
-								// reset costCalc (and references)
-								costCalc.setRoute(routeIndex, oldRoute); // this does not update the request
+								// reset costCalc
+								// this is to prevent recalculating the windows after feasibility checking
+								costCalc = s.copy();
 							}
 						}
 						newRoute.remove(j);
@@ -131,19 +132,26 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 			// they are not next to eachother so simply follow rules from Masson 14
 			// set pickupS and dropoffS
 			RouteNode prev = newRoute.get(dropoffLoc - 1);
-			dropoffS = Math.max(dropoff.associatedNode.e, prev.tightE + prev.associatedNode.e + p.distanceBetween(dropoff.associatedNode, prev.associatedNode));
-			prev = newRoute.get(pickupLoc - 1);
+			dropoffS = Math.max(dropoff.associatedNode.e, prev.tightE + prev.associatedNode.s + p.distanceBetween(dropoff.associatedNode, prev.associatedNode));
 			Request req = p.requests.get(pickup.requestId - 1);
-			pickupS = Math.max(Math.max(pickup.associatedNode.e,  prev.tightE + prev.associatedNode.s + p.distanceBetween(prev.associatedNode, pickup.associatedNode)), dropoffS - req.L - pickup.associatedNode.s);
-			
-			// check two inequalities
+			// disregard precedence constraint if it the first
+			if (pickupLoc > 0) {
+				prev = newRoute.get(pickupLoc - 1);
+				pickupS = Math.max(Math.max(pickup.associatedNode.e,  prev.tightE + prev.associatedNode.s + p.distanceBetween(prev.associatedNode, pickup.associatedNode)), dropoffS - req.L - pickup.associatedNode.s);
+			} else {
+				pickupS = Math.max(pickup.associatedNode.e, dropoffS - req.L - pickup.associatedNode.s);
+			}
+			// check arrival time after pickup
 			RouteNode next = newRoute.get(pickupLoc + 1);
 			if (pickupS + pickup.associatedNode.s + p.distanceBetween(pickup.associatedNode, next.associatedNode) > next.tightE) {
 				return false;
 			}
-			next = newRoute.get(dropoffLoc + 1);
-			if (dropoffS + dropoff.associatedNode.s + p.distanceBetween(dropoff.associatedNode, next.associatedNode) > next.tightE) {
-				return false;
+			// if there is a next node, check arrival time at next
+			if (dropoffLoc < newRoute.size() - 1) {
+				next = newRoute.get(dropoffLoc + 1);
+				if (dropoffS + dropoff.associatedNode.s + p.distanceBetween(dropoff.associatedNode, next.associatedNode) > next.tightE) {
+					return false;
+				}
 			}
 		} else {
 			// they are next to eachother so tightE of pickup is undefined

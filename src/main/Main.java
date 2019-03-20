@@ -27,11 +27,11 @@ public class Main {
 		Logger.info("Starting main program.");
 		problems = createProblemInstances();
 		solutions = new ArrayList<>();
-		for (Problem p : problems) {
-			Solution s = new Solution(p);
-			s.createInitialSolution();
-			s.logSolution();
-		}
+//		for (Problem p : problems) {
+//			Solution s = new Solution(p);
+//			s.createInitialSolution();
+//			s.logSolution();
+//		}
 		
 //		 quick and dirty removal check
 		ALNS test = new ALNS(problems.get(0));

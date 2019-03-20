@@ -481,8 +481,15 @@ public class Solution {
 	
 	private void tightWindowsToSolution() {
 		for (Route r : routes) {
+			RouteNode prev = null;
 			for (RouteNode rn : r) {
-				rn.setArrival(rn.tightE);
+				rn.setStartOfS(rn.tightE);
+				if (prev == null) {
+					rn.setArrival(rn.tightE);
+				} else {
+					rn.setArrival(prev.getDeparture() + p.distanceBetween(rn.associatedNode, prev.associatedNode));
+				}
+				prev = rn;
 			}
 		}
 	}

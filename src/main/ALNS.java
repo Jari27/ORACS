@@ -193,6 +193,7 @@ public class ALNS implements Runnable {
 			}*/
 
 			List<Integer> destroyed = destroy.destroy(copy, 2); // this always works
+			copy.calcTightWindows();
 			Logger.debug("Finished destroying the solution.");
 
 			if (!repair.repair(copy, destroyed)) {
