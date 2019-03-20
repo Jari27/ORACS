@@ -19,7 +19,7 @@ import org.pmw.tinylog.Logger;
  */
 public class Main {
 	
-	final static String FILE_NAME = "example_instances.csv";
+	final static String FILE_NAME = "large_instances.csv";
 	static List<Problem> problems;
 	static List<Solution> solutions;
 
@@ -79,7 +79,7 @@ public class Main {
 		try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				String[] stringData = line.split(", ");
+				String[] stringData = line.split(",");
 				int[] intData = new int[stringData.length];
 				for (int i = 0; i < stringData.length; i++) {
 					intData[i] = Integer.parseInt(stringData[i]);
