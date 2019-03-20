@@ -141,6 +141,9 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 			} else {
 				pickupS = Math.max(pickup.associatedNode.e, dropoffS - req.L - pickup.associatedNode.s);
 			}
+			if (pickupS > pickup.associatedNode.l || dropoffS > dropoff.associatedNode.l) { // this is the first time we adjust dropoff and pickup, so verify time windows
+				return false;
+			}
 			// check arrival time after pickup
 			RouteNode next = newRoute.get(pickupLoc + 1);
 			if (pickupS + pickup.associatedNode.s + p.distanceBetween(pickup.associatedNode, next.associatedNode) > next.tightE) {
@@ -174,6 +177,11 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 				dropoffS += dif;
 				pickupS += dif;
 			}
+			
+			if (pickupS > pickup.associatedNode.l || dropoffS > dropoff.associatedNode.l) { // this is the first time we adjust dropoff and pickup, so verify time windows
+				return false;
+			}
+			
 			if (dropoffLoc < newRoute.size() - 1) {
 				// we have a subsequent node so we need to check the schedule
 				RouteNode next = newRoute.get(dropoffLoc + 1);

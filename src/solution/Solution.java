@@ -19,7 +19,8 @@ import problem.Request;
 public class Solution {
 	
 	final static double ARBIT_HIGH = 100000;
-
+	final static double ROUND_ERR = 1e-10;
+	
 	private int nextFreeVehicleId = -1;
 
 	public Problem p;
@@ -174,7 +175,7 @@ public class Solution {
 				// order of nodes
 				// starting depot
 				Node startingDepot = p.getNearestDepot(r.getFirst().associatedNode);
-				writer.print(startingDepot.id);
+				writer.print(startingDepot.id + ",");
 				for (int i = 0; i < r.size(); i++) {
 					RouteNode rn = r.get(i);
 					if (rn.getType() == RouteNodeType.TRANSFER_DROPOFF) {
@@ -193,7 +194,7 @@ public class Solution {
 				writer.println();
 				// service time starts
 				// starting depot departure time
-				writer.print(r.getFirst().getArrival() - p.distanceBetween(r.getFirst().associatedNode, startingDepot));
+				writer.print(r.getFirst().getArrival() - p.distanceBetween(r.getFirst().associatedNode, startingDepot) + ",");
 				for (int i = 0; i < r.size(); i++) {
 					RouteNode rn = r.get(i);
 					writer.print(rn.getStartOfS());
@@ -379,7 +380,7 @@ public class Solution {
 		for (Route r : routes) {
 			RouteNode prev = null;
 			for (RouteNode rn : r) {
-				if (!rn.isTransfer() && (rn.getStartOfS() > rn.associatedNode.l || rn.getStartOfS() < rn.associatedNode.e)) {
+				if (!rn.isTransfer() && (rn.getStartOfS() - ROUND_ERR > rn.associatedNode.l || rn.getStartOfS() < rn.associatedNode.e - ROUND_ERR)) {
 					Logger.debug("Not feasible because of time windows of node {000}: s = {00.00}.", rn, rn.getStartOfS());
 					return false;
 				} 
@@ -394,7 +395,7 @@ public class Solution {
 			prev = r.get(0);
 			for (int i = 1; i < r.size(); i++) {
 				RouteNode cur = r.get(i);
-				if (cur.getArrival() < prev.getDeparture() + p.distanceBetween(cur.associatedNode, prev.associatedNode)) {
+				if (cur.getArrival() < prev.getDeparture() + p.distanceBetween(cur.associatedNode, prev.associatedNode) - ROUND_ERR) {
 					Logger.warn("Invalid arrival times of node {} and {} in route {}", cur, prev, r.vehicleId);
 				}
 				prev = cur;
@@ -408,12 +409,13 @@ public class Solution {
 				}
 				continue;
 			}
-			if (sr.dropoff.getStartOfS() - (sr.pickup.getStartOfS() + sr.pickup.associatedNode.s) > sr.L) {
+			if (sr.dropoff.getStartOfS() - (sr.pickup.getStartOfS() + sr.pickup.associatedNode.s) - ROUND_ERR > sr.L) { // rounding introduces an error of 1e-15 -> sometimes says this is wrong
+				// so we adjust
 				Logger.debug("Not feasible because request {000} does not satisfy max ride time", sr.id);
 				return false;
 			}
 			if (sr.hasTransfer()) {
-				if (sr.transferDropoff.getStartOfS() + sr.transferDropoff.associatedNode.s < sr.transferPickup.getStartOfS()) {
+				if (sr.transferDropoff.getStartOfS() + sr.transferDropoff.associatedNode.s < sr.transferPickup.getStartOfS() - ROUND_ERR) {
 					Logger.warn("Pickup before dropoff! Impossible. Request: {000}", sr.id);
 				}
 				if (sr.transferDropoff.associatedNode != sr.transferPickup.associatedNode) {

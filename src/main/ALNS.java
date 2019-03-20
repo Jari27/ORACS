@@ -18,6 +18,8 @@ import heuristics2.repair.GreedyNoTransferOneByOne;
 import heuristics2.repair.GreedyNoTransferRepair;
 import heuristics2.repair.RepairHeuristic;
 import problem.Problem;
+import solution.Route;
+import solution.RouteNode;
 import solution.Solution;
 import solution.SolutionRequest;
 
@@ -28,7 +30,7 @@ import solution.SolutionRequest;
 public class ALNS implements Runnable {
 	
 	// ALNS settings
-	private static final int MAX_IT = 1000;
+	private static final int MAX_IT = 200;
 	private static final double T_START = 10;
 	private double temp = T_START;
 	

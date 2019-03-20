@@ -27,15 +27,14 @@ public class Main {
 		Logger.info("Starting main program.");
 		problems = createProblemInstances();
 		solutions = new ArrayList<>();
-//		for (Problem p : problems) {
-//			Solution s = new Solution(p);
-//			s.createInitialSolution();
-//			s.logSolution();
-//		}
+		for (Problem p : problems) {
+			ALNS test = new ALNS(p);
+			test.run();
+		}
 		
 //		 quick and dirty removal check
-		ALNS test = new ALNS(problems.get(0));
-		test.run();
+//		ALNS test = new ALNS(problems.get(5));
+//		test.run();
 		
 		if (true) return;
 		
@@ -87,6 +86,7 @@ public class Main {
 				problems.add(parseInstance(intData));
 				
 			}
+			br.close();
 		}
 		return problems;
 	}
