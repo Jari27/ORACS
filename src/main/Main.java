@@ -27,10 +27,25 @@ public class Main {
 		Logger.info("Starting main program.");
 		problems = createProblemInstances();
 		solutions = new ArrayList<>();
-		for (Problem p : problems) {
-			ALNS test = new ALNS(p);
-			test.run();
+//		for (Problem p : problems) {
+//			ALNS test = new ALNS(p);
+//			test.run();
+//		}
+		
+		int numThreads = Runtime.getRuntime().availableProcessors();
+		
+		ALNSRunner[] runners = new ALNSRunner[numThreads];
+		
+		for (int i = 0; i < numThreads; i++) {
+			int index = i;
+			runners[i] = new ALNSRunner();
+			while (index < problems.size()) {
+				runners[i].assignProblem(problems.get(index));
+				index += numThreads;
+			}
+			runners[i].start();
 		}
+		
 		
 //		 quick and dirty removal check
 //		ALNS test = new ALNS(problems.get(5));

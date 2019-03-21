@@ -25,7 +25,7 @@ import solution.Solution;
 public class ALNS implements Runnable {
 	
 	// ALNS settings
-	private static final int MAX_IT = 200;
+	private static final int MAX_IT = 500;
 	private static final double T_START = 10;
 	private double temp = T_START;
 	
@@ -156,8 +156,8 @@ public class ALNS implements Runnable {
 
 	@Override
 	public void run() {
-		Logger.info("SEED: {}", this.seed);
-		Logger.info("Initial cost: {00.00}", currentSol.getCost());
+		Logger.info("Problem instance {}: SEED: {}", p.index, this.seed);
+		Logger.info("Problem instance {}: Initial cost: {00.00}", p.index, currentSol.getCost());
 		
 		double currentCost = Double.POSITIVE_INFINITY;
 		double bestCost = Double.POSITIVE_INFINITY;
@@ -165,7 +165,7 @@ public class ALNS implements Runnable {
 		int iterationsWithoutImprovement = 0;
 		
 		for (int i = 1; i <= MAX_IT; i++) {
-			Logger.debug("ITERATION {}", i);
+			Logger.debug("Problem instance {}: ITERATION {}", p.index, i);
 			if (i % 100 == 0) {
 				updateWeights();
 			}
@@ -191,17 +191,17 @@ public class ALNS implements Runnable {
 
 			List<Integer> destroyed = destroy.destroy(copy, 2); // this always works
 			copy.calcTightWindows();
-			Logger.debug("Finished destroying the solution.");
+			Logger.debug("Problem instance {}: Finished destroying the solution.", p.index);
 
 			if (!repair.repair(copy, destroyed)) {
 				// could not repair
-				Logger.debug("{} yielded no valid solution. Going to next iteration.", repair);
-				Logger.debug("Current cost: {00.00}. Best cost: {00.00}", currentCost, bestCost);
+				Logger.debug("Problem instance {}: {} yielded no valid solution. Going to next iteration.", p.index, repair);
+				Logger.debug("Problem instance {}: Current cost: {00.00}. Best cost: {00.00}", p.index, currentCost, bestCost);
 				continue;
 			}
 			
 			if (!copy.isFeasibleVerify(false) || copy.hasOrphanRouteNodes()) {
-				Logger.warn("Found an invalid solution!");
+				Logger.warn("Problem instance {}: Found an invalid solution!", p.index);
 				break;
 			}
 			
@@ -210,7 +210,7 @@ public class ALNS implements Runnable {
 			double newCost = copy.getCost();
 			
 			if (newCost < currentCost  || accept(currentCost, newCost, nextTemp())) {
-				Logger.debug("Accepted new solution {}", (newCost < currentCost ? "" : "(simulated annealing)"));
+				Logger.debug("Problem instance {}: Accepted new solution {}", p.index, (newCost < currentCost ? "" : "(simulated annealing)"));
 				// update segment weights
 				segmentPointsDestroy[destroyId] += 15; // total: +15
 				segmentPointsRepair[repairId] += 15;
@@ -231,15 +231,15 @@ public class ALNS implements Runnable {
 					bestCost = newCost;
 					segmentPointsDestroy[destroyId] += 13; //total: +33
 					segmentPointsRepair[repairId] += 13;
-					Logger.info("New best solution. Cost: {00.00}", bestCost);
+					Logger.debug("Problem instance {}: New best solution. Cost: {00.00}", p.index, bestCost);
 				}
 			} else {
-				Logger.debug("Repaired solution was not accepted.");
-				Logger.debug("New cost: {00.00}. Current cost: {00.00}. Best cost: {00.00}", newCost, currentCost, bestCost);
+				Logger.debug("Problem instance {}: Repaired solution was not accepted.", p.index);
+				Logger.debug("Problem instance {}: New cost: {00.00}. Current cost: {00.00}. Best cost: {00.00}", p.index, newCost, currentCost, bestCost);
 				iterationsWithoutImprovement++;
 			}
 		}
-		Logger.info("Best solution cost: {00.00}", bestCost);
+		Logger.info("Problem instance {}. Best solution cost: {00.00}", this.p.index, bestCost);
 		try {
 			bestSol.exportSolution(false);
 		} catch (FileNotFoundException e) {
@@ -257,7 +257,7 @@ public class ALNS implements Runnable {
 			smoothedWeightDestroy[i] = (int) Math.round(SMOOTHING_FACTOR * segmentPointsDestroy[i] + (1 - SMOOTHING_FACTOR) * smoothedWeightDestroy[i]); 
 			segmentPointsDestroy[i] = 1;
 		}
-		Logger.info("Updated weights. Repair {}. Destroy {}", smoothedWeightRepair, smoothedWeightDestroy);
+		Logger.debug("Problem instance {}: Updated weights. Repair {}. Destroy {}", smoothedWeightRepair, smoothedWeightDestroy);
 	}
 
 	
