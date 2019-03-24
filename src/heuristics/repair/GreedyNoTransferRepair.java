@@ -57,12 +57,12 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 		int bestRouteIndex = -1;
 		
 		for (int reqId : requestIdsToRepair) {
+			SolutionRequest sr = s.requests.get(reqId - 1);
 			for (int routeIndex = 0; routeIndex < s.routes.size(); routeIndex++) {
 				final Route oldRoute = costCalc.routes.get(routeIndex);
 				double oldCost = oldRoute.getCost(s.p);
 				
 				Route newRoute = oldRoute.copy();
-				SolutionRequest sr = s.requests.get(reqId - 1);
 				RouteNode dropoff = new RouteNode(sr.associatedRequest.dropoffNode, RouteNodeType.DROPOFF, reqId, oldRoute.vehicleId);
 				RouteNode pickup = new RouteNode(sr.associatedRequest.pickupNode, RouteNodeType.PICKUP, reqId, oldRoute.vehicleId);
 				for (int i = 0; i < oldRoute.size() + 1; i++) {
