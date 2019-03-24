@@ -32,6 +32,11 @@ public class Main {
 //			test.run();
 //		}
 		
+//		ALNS test = new ALNS(problems.get(0));
+//		test.run();
+//		
+//		if (true) return;
+		
 		int numThreads = Runtime.getRuntime().availableProcessors();
 		
 		ALNSRunner[] runners = new ALNSRunner[numThreads];
@@ -39,47 +44,12 @@ public class Main {
 		for (int i = 0; i < numThreads; i++) {
 			int index = i;
 			runners[i] = new ALNSRunner();
-			while (index < problems.size()) {
+			while (index < problems.size() / 10) {
 				runners[i].assignProblem(problems.get(index));
 				index += numThreads;
 			}
 			runners[i].start();
 		}
-		
-		
-//		 quick and dirty removal check
-//		ALNS test = new ALNS(problems.get(5));
-//		test.run();
-		
-		if (true) return;
-		
-		// Quick and dirty copying check
-		
-		@SuppressWarnings("unused")
-		Solution sol = solutions.get(0);
-		Solution copy = sol.copy();
-		
-		sol.logSolution();
-		Logger.debug("-----------");
-		copy.logSolution();
-		
-		Logger.debug("=============");
-		Logger.debug("=============");
-		
-		copy.routes.get(1).get(1).setStartOfS(copy.routes.get(1).get(1).getStartOfS() + 10); // might warn for infeasibility
-		
-		sol.logSolution();
-		Logger.debug("-----------");
-		copy.logSolution();
-		
-		Logger.debug("=============");
-		Logger.debug("=============");
-		
-		Solution copy2 = copy.copy();
-		copy2.logSolution();
-		
-//		Solution s = new Solution(problems.get(0));
-
 	}
 	
 	/**

@@ -691,7 +691,7 @@ public class Solution {
 							}
 						}
 						// earliest starting time constraint
-						if (!u.isTransfer() && u != zero) {
+						if (! u.isTransfer() && u != zero) {
 							RouteNode v = zero;
 							double dist = u.negativeTightE - u.associatedNode.e;
 							if (dist < v.negativeTightE) {
