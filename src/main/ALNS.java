@@ -15,6 +15,7 @@ import heuristics.destroy.DestroyHeuristic;
 import heuristics.destroy.RandomDestroy;
 import heuristics.repair.GreedyNoTransferRepair;
 import heuristics.repair.RepairHeuristic;
+import heuristics.repair.TransferFirst;
 import problem.Problem;
 import solution.Solution;
 
@@ -25,8 +26,8 @@ import solution.Solution;
 public class ALNS implements Runnable {
 	
 	// ALNS settings
-	private static final int MAX_IT = 500;
-	private static final double COOLING_RATE = 0.99975;
+	private static final int MAX_IT = 100;
+	private double coolingRate = 0.99975;
 	private static final double W = 0.05; // a new solution will initially be accepted with probability 50% if it is this much worse than the old 
 	private double temp;
 	
@@ -72,7 +73,7 @@ public class ALNS implements Runnable {
 		
 		double old = currentSol.getCost();
 		this.temp = - W * old / Math.log(0.5);
-		Logger.info("OLD = {}, W = {}, T = {}", old, W, temp);
+		this.coolingRate = Math.pow(0.1, 1.0/MAX_IT);
 		
 		this.initHeuristics();
 	}
@@ -83,10 +84,10 @@ public class ALNS implements Runnable {
 		destroyHeuristics[0] = random;
 		
 		// repair
-		//RepairHeuristic greedyNoTransfer = new GreedyNoTransferRepair(p);
-		//repairHeuristics[0] = greedyNoTransfer;
-		RepairHeuristic noTransferOnebyOne = new GreedyNoTransferRepair(p);
-		repairHeuristics[0] = noTransferOnebyOne;
+//		RepairHeuristic greedyNoTransferRepair = new GreedyNoTransferRepair(p);
+//		repairHeuristics[0] = greedyNoTransferRepair;
+		RepairHeuristic transferFirst = new TransferFirst(p, rand);
+		repairHeuristics[0] = transferFirst;
 		
 		
 		// weights
@@ -156,7 +157,7 @@ public class ALNS implements Runnable {
 	}
 	
 	private double nextTemp() {
-		temp = COOLING_RATE * temp;
+		temp = coolingRate * temp;
 		return temp;
 	}
 
@@ -195,7 +196,7 @@ public class ALNS implements Runnable {
 				List<Integer> destroyed432 = Shaw.destroy(copy,4);
 			}*/
 
-			List<Integer> destroyed = destroy.destroy(copy, 2); // this always works
+			List<Integer> destroyed = destroy.destroy(copy, 1); // this always works
 			copy.calcTightWindows();
 			Logger.debug("Problem instance {}: Finished destroying the solution.", p.index);
 

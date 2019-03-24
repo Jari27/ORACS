@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.pmw.tinylog.Logger;
 
+import problem.Node;
 import problem.Problem;
 import problem.Request;
 import solution.Route;
@@ -48,10 +49,7 @@ public abstract class RepairHeuristic {
 				RouteNode prevNode = onlyPickupInsert.get(i - 1);
 				pickup.setArrival(prevNode.getDeparture()
 						+ problem.distanceBetween(prevNode.associatedNode, pickup.associatedNode)); // set arrival
-				pickup.setStartOfS(Math.max(pickup.getArrival(), pickup.associatedNode.e), false); // max of arrival and
-																									// time window (dont
-																									// check errors, we
-																									// do that manually)
+				pickup.setStartOfS(Math.max(pickup.getArrival(), pickup.associatedNode.e), false); // max of arrival and time window (dont check errors, we do that manually)
 				pickup.setNumPas(prevNode.getNumPas() + 1);
 				if (pickup.getStartOfS() > pickup.associatedNode.l) { // infeasible insertion, we cannot insert here or
 																		// later so break
@@ -67,8 +65,7 @@ public abstract class RepairHeuristic {
 				Logger.debug("Pickup insertion succesful at location {000}", i);
 				// we have now inserted a new pickup (it could still be infeasible, depending on
 				// L)
-				for (int j = i + 1; j < onlyPickupInsert.size(); j++) { // insertion at last spot and second last is
-																		// same, so we dont need to check last
+				for (int j = i + 1; j < onlyPickupInsert.size(); j++) { // insertion at last spot and second last is same, so we dont need to check last
 					Logger.debug("Inserting dropoff of request {000} in route {000} at location {000}",
 							toInsert.associatedRequest.id, oldR.vehicleId, j);
 
@@ -80,17 +77,8 @@ public abstract class RepairHeuristic {
 					insertBoth.add(j, dropoff);
 					// calculate timings
 					RouteNode prevNode1 = insertBoth.get(j - 1);
-					dropoff.setArrival(prevNode1.getDeparture()
-							+ problem.distanceBetween(prevNode1.associatedNode, dropoff.associatedNode)); // set arrival
-																											// time
-					dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.associatedNode.e), false); // set
-																											// starting
-																											// time as
-																											// max of
-																											// arrival,
-																											// e (don't
-																											// check
-																											// errors)
+					dropoff.setArrival(prevNode1.getDeparture() + problem.distanceBetween(prevNode1.associatedNode, dropoff.associatedNode));
+					dropoff.setStartOfS(Math.max(dropoff.getArrival(), dropoff.associatedNode.e), false); 
 					if (dropoff.getStartOfS() > dropoff.associatedNode.l) { // infeasible insertion, we cannot insert
 																			// here or later so break
 						Logger.debug("Insertion was infeasible due to time window {00.00} <= {00.00} <= {00.00}",
@@ -169,8 +157,6 @@ public abstract class RepairHeuristic {
 			// update all timings
 			cur.setArrival(prev.getDeparture() + problem.distanceBetween(prev.associatedNode, cur.associatedNode));
 			cur.setStartOfS(Math.max(cur.getArrival(), cur.associatedNode.e), false); // dont report on errors, we check
-																						// those manually
-
 			// these nodes haven't changed in feasibility (they're before the insertion or a
 			// depot)
 			if (k < locationOfFirstInsertion || k == newRoute.size() - 1) {
@@ -398,17 +384,49 @@ public abstract class RepairHeuristic {
 		return false;
 	}
 
+	protected double insertAsNew(Solution s, int requestId) {
+		SolutionRequest sr = s.requests.get(requestId - 1);
+		int vehicleId = s.getNextFreeVehicleId();
+		Route newRoute = new Route(vehicleId);
+		RouteNode pickup = new RouteNode(sr.associatedRequest.pickupNode, RouteNodeType.PICKUP, requestId, vehicleId);
+		RouteNode dropoff = new RouteNode(sr.associatedRequest.dropoffNode, RouteNodeType.DROPOFF,  requestId, vehicleId);
+		newRoute.add(pickup);
+		newRoute.add(dropoff);
+		s.addRoute(newRoute);
+		return(newRoute.getCost(s.p));
+	}
+	
+	protected double costOfNewRoute(Solution s, int requestId) {
+		SolutionRequest sr = s.requests.get(requestId - 1);
+		int vehicleId = s.getNextFreeVehicleId();
+		Route newRoute = new Route(vehicleId);
+		RouteNode pickup = new RouteNode(sr.associatedRequest.pickupNode, RouteNodeType.PICKUP, requestId, vehicleId);
+		RouteNode dropoff = new RouteNode(sr.associatedRequest.dropoffNode, RouteNodeType.DROPOFF,  requestId, vehicleId);
+		newRoute.add(pickup);
+		newRoute.add(dropoff);
+		return(newRoute.getCost(s.p));
+	}
+
 	// inner data class
 	protected class RouteRequest {
 
+		public RouteRequestType type;
 		public Route route;
 		public int requestId;
 		public int routeIndex;
+		public Node transfer;
+		public double insertionCost;
 
-		public RouteRequest(Route route, int requestId, int routeIndex) {
+		public RouteRequest(Route route, int requestId, int routeIndex, RouteRequestType type) {
 			this.route = route;
 			this.requestId = requestId;
 			this.routeIndex = routeIndex;
+			this.type = type;
 		}
 	}
+	
+	public enum RouteRequestType {
+		PICKUP_AND_TRANSFER, TRANSFER_AND_DROPOFF, NO_TRANSFER
+	}
+
 }

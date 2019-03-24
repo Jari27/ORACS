@@ -8,7 +8,6 @@ import java.util.List;
 import org.pmw.tinylog.Logger;
 
 import problem.Problem;
-import problem.Request;
 import solution.Route;
 import solution.RouteNode;
 import solution.RouteNodeType;
@@ -122,13 +121,25 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 					newRoute.remove(i);
 				}
 			}
+			// create a route with only this and check its cost (since it is always feasible)
+			int vehicleId = s.getNextFreeVehicleId();
+			RouteNode pickup = new RouteNode(sr.associatedRequest.pickupNode, RouteNodeType.PICKUP, reqId, vehicleId);
+			RouteNode dropoff = new RouteNode(sr.associatedRequest.dropoffNode, RouteNodeType.DROPOFF, reqId, vehicleId);
+			Route tempRoute = new Route(vehicleId);
+			tempRoute.add(pickup);
+			tempRoute.add(dropoff);
+			if (tempRoute.getCost(s.p) < bestInsertionCost) {
+				bestRoute = tempRoute;
+				bestRouteIndex = -1;
+				bestInsertionCost = tempRoute.getCost(s.p);
+				bestRequestId = reqId;
+				Logger.debug("Current best: add request {000} as new Route (cost: {00.00}).", reqId, tempRoute.getCost(s.p));
+			}
 		}
 		// we now know what route to insert so update its capacity at the nodes, to make it ready for insertion
-		if (bestRoute != null) {
-			bestRoute.updateCapacity();
-			return new RouteRequest(bestRoute, bestRequestId, bestRouteIndex);
-		} 
-		return null;		
+		// note that we always have a route, because we can always generate a new route that is feasible.
+		bestRoute.updateCapacity();
+		return new RouteRequest(bestRoute, bestRequestId, bestRouteIndex, RouteRequestType.NO_TRANSFER);	
 	}
 	
 	

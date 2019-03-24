@@ -415,7 +415,7 @@ public class Solution {
 				return false;
 			}
 			if (sr.hasTransfer()) {
-				if (sr.transferDropoff.getStartOfS() + sr.transferDropoff.associatedNode.s < sr.transferPickup.getStartOfS() - ROUND_ERR) {
+				if (sr.transferDropoff.getStartOfS() + sr.transferDropoff.associatedNode.s - ROUND_ERR > sr.transferPickup.getStartOfS()) {
 					Logger.warn("Pickup before dropoff! Impossible. Request: {000}", sr.id);
 				}
 				if (sr.transferDropoff.associatedNode != sr.transferPickup.associatedNode) {
@@ -549,9 +549,12 @@ public class Solution {
 				if (u.type == RouteNodeType.PICKUP) {	
 					SolutionRequest sr = requests.get(u.requestId - 1);
 					RouteNode v = sr.dropoff;
-					double dist = u.tightL + sr.L + u.associatedNode.s;
-					if (dist < v.tightL) {
-						updateNodeL(u, v, dist, B);
+					if (v != null) {
+						double dist = u.tightL + sr.L + u.associatedNode.s;
+						if (dist < v.tightL) {
+						
+							updateNodeL(u, v, dist, B);
+						}
 					}
 				}
 				// transfer pickup may have associated transfer dropoff
@@ -666,9 +669,11 @@ public class Solution {
 						if (u.type == RouteNodeType.PICKUP) {	
 							SolutionRequest sr = requests.get(u.requestId - 1);
 							RouteNode v = sr.dropoff;
-							double dist = u.negativeTightE + sr.L + u.associatedNode.s;
-							if (dist < v.negativeTightE) {
-								updateNodeE(u, v, dist, B);
+							if (v != null) { // solutions can be partial, so might not be a dropoff yet
+								double dist = u.negativeTightE + sr.L + u.associatedNode.s;
+								if (dist < v.negativeTightE) {
+									updateNodeE(u, v, dist, B);
+								}
 							}
 						}
 						// transfer pickup may have associated transfer dropoff
@@ -762,8 +767,17 @@ public class Solution {
 	}
 	
 	public void setRoute(int routeIndex, Route route) {
-		routes.set(routeIndex, route);
+		if (routeIndex == -1) {
+			routes.add(route);
+			routeIndex = routes.size() - 1;
+		} else {
+			routes.set(routeIndex, route);
+		}
 		updateReferencesOfRoute(routeIndex);
+	}
+	
+	public void addRoute(Route route) {
+		setRoute(-1, route);
 	}
 
 	private void updateReferencesOfRoute(int routeIndex) {
