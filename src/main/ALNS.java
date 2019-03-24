@@ -26,8 +26,10 @@ public class ALNS implements Runnable {
 	
 	// ALNS settings
 	private static final int MAX_IT = 500;
-	private static final double T_START = 10;
-	private double temp = T_START;
+	private static final double COOLING_RATE = 0.99975;
+	private static final double W = 0.05; // a new solution will initially be accepted with probability 50% if it is this much worse than the old 
+	private double temp;
+	
 	
 	// Config settings
 	private static final int NUM_DESTROY_HEURISTICS = 1;
@@ -67,6 +69,10 @@ public class ALNS implements Runnable {
 //		this.seed = System.currentTimeMillis(); // to allow printing
 		this.seed = 1552596372812L;
 		this.rand = new Random(this.seed);
+		
+		double old = currentSol.getCost();
+		this.temp = - W * old / Math.log(0.5);
+		Logger.info("OLD = {}, W = {}, T = {}", old, W, temp);
 		
 		this.initHeuristics();
 	}
@@ -150,7 +156,7 @@ public class ALNS implements Runnable {
 	}
 	
 	private double nextTemp() {
-		temp = Math.max(temp - T_START/MAX_IT, 0);
+		temp = COOLING_RATE * temp;
 		return temp;
 	}
 
