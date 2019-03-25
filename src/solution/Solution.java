@@ -161,8 +161,8 @@ public class Solution {
 	 */
 	public void exportSolution(boolean isInitial) throws FileNotFoundException {
 		// TODO handle transfers
-		String file = isInitial ? String.format("solutions/initial_oracs_%d.csv", p.index)
-				: String.format("solutions/oracs_%d.csv", p.index);
+		String file = isInitial ? String.format("solutions/initial/oracs_%d.csv", p.index)
+				: String.format("solutions/finished/oracs_%d.csv", p.index);
 		try (PrintWriter writer = new PrintWriter(new File(file))) {
 			writer.println("Group 6");
 			writer.println(p.index);
