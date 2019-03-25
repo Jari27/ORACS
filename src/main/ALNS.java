@@ -11,6 +11,7 @@ import java.util.Random;
 
 import org.pmw.tinylog.Logger;
 
+import heuristics.destroy.CloseRandomTransfer;
 import heuristics.destroy.DestroyHeuristic;
 import heuristics.destroy.RandomDestroy;
 import heuristics.repair.GreedyNoTransferRepair;
@@ -27,14 +28,14 @@ public class ALNS implements Runnable {
 	
 	// ALNS settings
 	private static final double ETA = 0.025; // noise in objec. function multiplier
-	private static final int MAX_IT = 500;
+	private static final int MAX_IT = 1000;
 	private double coolingRate = 0.99975;
 	private static final double W = 0.05; // a new solution will initially be accepted with probability 50% if it is this much worse than the old 
 	private double temp;
 	
 	
 	// Config settings
-	private static final int NUM_DESTROY_HEURISTICS = 1;
+	private static final int NUM_DESTROY_HEURISTICS = 2;
 	private static final int NUM_REPAIR_HEURISTICS = 2;
 	
 	private static final double SMOOTHING_FACTOR = 0.1;
@@ -72,8 +73,8 @@ public class ALNS implements Runnable {
 		this.currentSol.createInitialSolution();
 		this.bestSol = this.currentSol;
 		this.acceptedSolutions.add(currentSol);
-		this.seed = 1552596372812L;
-		this.seed = System.currentTimeMillis(); // to allow printing
+		this.seed = 1553532450933L;
+//		this.seed = System.currentTimeMillis(); // to allow printing
 		
 		this.rand = new Random(this.seed);
 		
@@ -88,12 +89,14 @@ public class ALNS implements Runnable {
 		// destroy
 		DestroyHeuristic random = new RandomDestroy(p, rand);
 		destroyHeuristics[0] = random;
+		DestroyHeuristic closeRandomTransfer = new CloseRandomTransfer(p, rand);
+		destroyHeuristics[1] = closeRandomTransfer;
 		
 		// repair
 		RepairHeuristic greedyNoTransferRepair = new GreedyNoTransferRepair(p);
 		repairHeuristics[0] = greedyNoTransferRepair;
-		RepairHeuristic transferFirst = new BestInsertionWithTransfer(p, rand);
-		repairHeuristics[1] = transferFirst;
+		RepairHeuristic bestInsertionWithTransfer = new BestInsertionWithTransfer(p, rand);
+		repairHeuristics[1] = bestInsertionWithTransfer;
 		
 		
 		// weights
@@ -208,18 +211,16 @@ public class ALNS implements Runnable {
 			int objectiveNoiseId = selectObjectiveNoise();
 			segmentNumUsedObjectiveNoise[objectiveNoiseId]++;
 			
+			Solution copy = currentSol.copy(); // never modify currentSol
+			
+			List<Integer> destroyed = null;
 			if (iterationsWithoutImprovement > ITERATIONS_BEFORE_FORCED_CHANGE) {
-				// TODO force a big change
+				Logger.info("Doing big destruction");
+				destroy.destroy(copy, rand.nextInt(2 *(int) Math.round(p.numRequests * 0.05 + 1)));
+			} else {
+				destroyed = destroy.destroy(copy, rand.nextInt((int)Math.round(p.numRequests * 0.05 + 1))); // this always works
 			}
 			
-			Solution copy = currentSol.copy(); // never modify currentSol
-
-/*			if(i <7){
-				ShawRemoval Shaw = new ShawRemoval(this.p, this.rand);
-				List<Integer> destroyed432 = Shaw.destroy(copy,4);
-			}*/
-
-			List<Integer> destroyed = destroy.destroy(copy, rand.nextInt((int)Math.round(p.numRequests * 0.05 + 1))); // this always works
 			copy.calcTightWindows();
 			Logger.debug("Problem instance {}: Finished destroying the solution.", p.index);
 
@@ -276,6 +277,8 @@ public class ALNS implements Runnable {
 				iterationsWithoutImprovement++;
 			}
 		}
+		new CloseRandomTransfer(p, rand);
+//		Logger.info("CloseRandom had {} tries where transfers were open.", CloseRandomTransfer.successes);
 		Logger.info("Problem instance {}. Best solution cost: {00.00}", this.p.index, bestCost);
 		try {
 			bestSol.exportSolution(false);

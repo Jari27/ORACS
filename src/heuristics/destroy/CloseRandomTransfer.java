@@ -12,6 +12,8 @@ import solution.SolutionRequest;
 public class CloseRandomTransfer extends DestroyHeuristic {
 	
 	private Random rand;
+	
+	public static int successes = 0;
 
 	public CloseRandomTransfer(Problem problem, Random rand) {
 		super(problem);
@@ -24,13 +26,14 @@ public class CloseRandomTransfer extends DestroyHeuristic {
 		if (s.openTransfers.size() == 0) {
 			return destroyIds;
 		}
+		successes++;
 		
 		// select random transfer
 		int index = rand.nextInt(s.openTransfers.size());
 		Node transfer = s.openTransfers.get(index);
 		
 		for (SolutionRequest r : s.requests) {
-			if (r.transferDropoff.associatedNode == transfer) {
+			if (r.hasTransfer() && r.transferDropoff.associatedNode == transfer) {
 				destroyIds.add(r.associatedRequest.id);
 				destroySpecific(s, r.associatedRequest.id);
 			}

@@ -189,6 +189,9 @@ public abstract class RepairHeuristic {
 		if (type != RouteRequestType.NO_TRANSFER) {
 			// find the best partial transfer
 			partialInsertion = getBestPartialInsertion(s, requestId, type);
+			if (partialInsertion == null) {
+				return null;
+			}
 			// and insert it
 			transfer = partialInsertion.transfer;
 			workingCopy.setRoute(partialInsertion.routeIndex, partialInsertion.route);
@@ -418,6 +421,7 @@ public abstract class RepairHeuristic {
 				costCalc.setRoute(-1, tempRoute);
 				if (costCalc.isFeasible()) {
 					bestRoute = tempRoute.copy();
+					bestTransfer = t;
 					bestRouteIndex = -1;
 					bestInsertionCost = cost;
 					Logger.debug("Current best: add partial request {000} ({}) as new Route (cost: {00.00}).", sr.id, type, cost);

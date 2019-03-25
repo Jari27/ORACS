@@ -21,7 +21,7 @@ public class ShawRemoval extends DestroyHeuristic{
 		this.rand = rand;
 	}
 	
-	public double CalculateRelatedness(SolutionRequest x, SolutionRequest y, Solution s){
+	public double calcRelatedness(SolutionRequest x, SolutionRequest y, Solution s){
 		if(problem.distanceBetween(x.pickup.associatedNode, y.pickup.associatedNode) > 0){
 			double relatedness = -1;
 			double distance = problem.distanceBetween(x.pickup.associatedNode, y.pickup.associatedNode)+ problem.distanceBetween(x.dropoff.associatedNode, y.dropoff.associatedNode);
@@ -30,7 +30,7 @@ public class ShawRemoval extends DestroyHeuristic{
 			//Logger.debug("Relatedness of requests {} and {}", x.id, y.id);
 			//Logger.debug("Distance: {} time: {}  and passenger: {}", distance, timeDiff, y.pickup.getNumPas());
 			//Logger.debug("Compared to max dist, time diff and capacity of:{} {} {}", problem.getMaxDistance(), s.latestService(), problem.capacity);
-			relatedness = DIST_WEIGHT * distance/problem.getMaxDistance() + TIME_WEIGHT * timeDiff/s.latestService() + LOAD_WEIGHT * loadDiff/problem.capacity;
+			relatedness = DIST_WEIGHT * problem.travelCost * distance/problem.maxCost + TIME_WEIGHT * timeDiff/s.latestService() + LOAD_WEIGHT * loadDiff/problem.capacity;
 			//Logger.debug("Relatedness: {}. Contribution of distance, time and load: {} and {} and {} ", relatedness, distance/problem.getMaxDistance(), timeDiff/s.latestService(), loadDiff/problem.capacity);
 			return relatedness;
 		}else{
@@ -54,7 +54,7 @@ public class ShawRemoval extends DestroyHeuristic{
 		double lowestRelatedness = 0; 
 		int lowestRelatednessIndex = 0;
 		for(SolutionRequest sr : s.requests){
-			double relatedness = CalculateRelatedness(s.requests.get(index), sr, s);
+			double relatedness = calcRelatedness(s.requests.get(index), sr, s);
 			Logger.debug("This is request {}, it has relatedness {}", sr.id, relatedness);
 			//double requestIDLowestRelatedness = highlyRelated[0][lowestRelatednessIndex];
 			lowestRelatedness = 10;
