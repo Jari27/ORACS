@@ -103,7 +103,7 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 							} else {
 								// full feasibility check
 								// insert route and update references for feasibility check
-								costCalc.setRoute(routeIndex, newRoute);
+								costCalc.setRoute(routeIndex, newRoute.copy());
 								if (costCalc.isFeasible()) {
 									bestRoute = newRoute.copy();
 									bestRouteIndex = routeIndex;

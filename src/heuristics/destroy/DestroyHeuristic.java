@@ -78,6 +78,7 @@ public abstract class DestroyHeuristic {
 							cur.setNumPas(cur.getNumPas() - 1);
 						}
 					}
+					prev = cur;
 				}
 				
 			}
