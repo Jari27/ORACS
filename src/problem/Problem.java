@@ -19,6 +19,8 @@ public class Problem {
 
 	public double[][] distanceMatrix;
 	public double[][] costMatrix;
+	
+	public double maxCost;
 
 	public List<Request> requests = new ArrayList<>();
 	public List<Node> transfers = new ArrayList<>();
@@ -34,6 +36,7 @@ public class Problem {
 
 		this.preCalcDistances(allNodes);
 		this.calculateNearestDepots(allNodes);
+		this.maxCost = this.getMaxDistance() * travelCost;;
 		this.adjustTimeWindows();
 		this.isFeasible();
 	}

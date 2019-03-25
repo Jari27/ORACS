@@ -15,7 +15,7 @@ import heuristics.destroy.DestroyHeuristic;
 import heuristics.destroy.RandomDestroy;
 import heuristics.repair.GreedyNoTransferRepair;
 import heuristics.repair.RepairHeuristic;
-import heuristics.repair.TransferFirst;
+import heuristics.repair.BestInsertionWithTransfer;
 import problem.Problem;
 import solution.Solution;
 
@@ -26,7 +26,8 @@ import solution.Solution;
 public class ALNS implements Runnable {
 	
 	// ALNS settings
-	private static final int MAX_IT = 100;
+	private static final double ETA = 0.025; // noise in objec. function multiplier
+	private static final int MAX_IT = 500;
 	private double coolingRate = 0.99975;
 	private static final double W = 0.05; // a new solution will initially be accepted with probability 50% if it is this much worse than the old 
 	private double temp;
@@ -34,7 +35,7 @@ public class ALNS implements Runnable {
 	
 	// Config settings
 	private static final int NUM_DESTROY_HEURISTICS = 1;
-	private static final int NUM_REPAIR_HEURISTICS = 1;
+	private static final int NUM_REPAIR_HEURISTICS = 2;
 	
 	private static final double SMOOTHING_FACTOR = 0.1;
 	
@@ -58,8 +59,12 @@ public class ALNS implements Runnable {
 	int[] segmentNumUsedDestroy = new int[NUM_DESTROY_HEURISTICS];
 	int[] segmentNumUsedRepair = new int[NUM_REPAIR_HEURISTICS];
 	
-	int[] smoothedWeightDestroy = new int[NUM_DESTROY_HEURISTICS];
-	int[] smoothedWeightRepair = new int[NUM_REPAIR_HEURISTICS];
+	double[] smoothedWeightDestroy = new double[NUM_DESTROY_HEURISTICS];
+	double[] smoothedWeightRepair = new double[NUM_REPAIR_HEURISTICS];
+	
+	int[] segmentPointsObjectiveNoise = new int[2];
+	int[] segmentNumUsedObjectiveNoise = new int[2];
+	double[] smoothedWeightObjectiveNoise = new double[2];
 	
 	public ALNS(Problem p) {
 		this.p = p;
@@ -67,8 +72,9 @@ public class ALNS implements Runnable {
 		this.currentSol.createInitialSolution();
 		this.bestSol = this.currentSol;
 		this.acceptedSolutions.add(currentSol);
-//		this.seed = System.currentTimeMillis(); // to allow printing
 		this.seed = 1552596372812L;
+		this.seed = System.currentTimeMillis(); // to allow printing
+		
 		this.rand = new Random(this.seed);
 		
 		double old = currentSol.getCost();
@@ -84,22 +90,28 @@ public class ALNS implements Runnable {
 		destroyHeuristics[0] = random;
 		
 		// repair
-//		RepairHeuristic greedyNoTransferRepair = new GreedyNoTransferRepair(p);
-//		repairHeuristics[0] = greedyNoTransferRepair;
-		RepairHeuristic transferFirst = new TransferFirst(p, rand);
-		repairHeuristics[0] = transferFirst;
+		RepairHeuristic greedyNoTransferRepair = new GreedyNoTransferRepair(p);
+		repairHeuristics[0] = greedyNoTransferRepair;
+		RepairHeuristic transferFirst = new BestInsertionWithTransfer(p, rand);
+		repairHeuristics[1] = transferFirst;
 		
 		
 		// weights
 		for (int i = 0; i < NUM_DESTROY_HEURISTICS; i++) {
-			smoothedWeightDestroy[i] = 0;
+			smoothedWeightDestroy[i] = 1;
 			segmentPointsDestroy[i] = 0;
-			segmentNumUsedDestroy[i] = 0;
+			segmentNumUsedDestroy[i] = 1;
 		}
 		for (int i = 0; i < NUM_REPAIR_HEURISTICS; i++) {
-			smoothedWeightRepair[i] = 0;
+			smoothedWeightRepair[i] = 1;
 			segmentPointsRepair[i] = 0;
-			segmentNumUsedRepair[i] = 0;
+			segmentNumUsedRepair[i] = 1;
+		}
+		
+		for (int i = 0; i < 2; i++) {
+			smoothedWeightObjectiveNoise[i] = 1;
+			segmentPointsObjectiveNoise[i] = 0;
+			segmentNumUsedObjectiveNoise[i] = 1;
 		}
 	}
 	
@@ -156,6 +168,14 @@ public class ALNS implements Runnable {
         return index;
 	}
 	
+	private int selectObjectiveNoise() {
+		double total = smoothedWeightObjectiveNoise[0] + smoothedWeightObjectiveNoise[1];
+		if (rand.nextDouble() * total <= smoothedWeightObjectiveNoise[0]) {
+			return 0;
+		}
+		return 1;
+	}
+
 	private double nextTemp() {
 		temp = coolingRate * temp;
 		return temp;
@@ -185,6 +205,9 @@ public class ALNS implements Runnable {
 			DestroyHeuristic destroy = destroyHeuristics[destroyId];
 			RepairHeuristic repair = repairHeuristics[repairId];
 			
+			int objectiveNoiseId = selectObjectiveNoise();
+			segmentNumUsedObjectiveNoise[objectiveNoiseId]++;
+			
 			if (iterationsWithoutImprovement > ITERATIONS_BEFORE_FORCED_CHANGE) {
 				// TODO force a big change
 			}
@@ -196,7 +219,7 @@ public class ALNS implements Runnable {
 				List<Integer> destroyed432 = Shaw.destroy(copy,4);
 			}*/
 
-			List<Integer> destroyed = destroy.destroy(copy, 2); // this always works
+			List<Integer> destroyed = destroy.destroy(copy, rand.nextInt((int)Math.round(p.numRequests * 0.05 + 1))); // this always works
 			copy.calcTightWindows();
 			Logger.debug("Problem instance {}: Finished destroying the solution.", p.index);
 
@@ -213,17 +236,23 @@ public class ALNS implements Runnable {
 			}
 			
 			// we have a repaired solution
-			// TODO problems: destroy and insert in same route always accepts (is this a problem?)
 			double newCost = copy.getCost();
+			double adjustedCost = newCost;
 			
-			if (newCost < currentCost  || accept(currentCost, newCost, nextTemp())) {
-				Logger.debug("Problem instance {}: Accepted new solution {}", p.index, (newCost < currentCost ? "" : "(simulated annealing)"));
+			if (objectiveNoiseId == 1) {
+				adjustedCost = applyNoise(adjustedCost);
+			}
+			
+			if (newCost < currentCost  || accept(currentCost, adjustedCost, nextTemp())) {
+				Logger.debug("Problem instance {}: Accepted new solution {}", p.index, (adjustedCost < currentCost ? "" : "(simulated annealing)"));
 				// update segment weights
 				segmentPointsDestroy[destroyId] += 15; // total: +15
 				segmentPointsRepair[repairId] += 15;
+				segmentPointsObjectiveNoise[objectiveNoiseId] += 15;
 				if (newCost < currentCost) {
 					segmentPointsDestroy[destroyId] += 5; //total: +20
 					segmentPointsRepair[repairId] += 5;
+					segmentPointsObjectiveNoise[objectiveNoiseId] += 5;
 				}
 				// update new solution
 				currentCost = newCost;
@@ -238,6 +267,7 @@ public class ALNS implements Runnable {
 					bestCost = newCost;
 					segmentPointsDestroy[destroyId] += 13; //total: +33
 					segmentPointsRepair[repairId] += 13;
+					segmentPointsObjectiveNoise[objectiveNoiseId] += 13;
 					Logger.debug("Problem instance {}: New best solution. Cost: {00.00}", p.index, bestCost);
 				}
 			} else {
@@ -255,16 +285,28 @@ public class ALNS implements Runnable {
 		}
 	}
 
+	private double applyNoise(double newCost) {
+		double n = ETA * (rand.nextDouble() - 0.5) * p.maxCost;
+		return Math.max(0, newCost + n);
+	}
+
 	private void updateWeights() {
 		for (int i = 0; i < NUM_REPAIR_HEURISTICS; i++) {
-			smoothedWeightRepair[i] = (int) Math.round(SMOOTHING_FACTOR * segmentPointsRepair[i] + (1 - SMOOTHING_FACTOR) * smoothedWeightRepair[i]); 
-			segmentPointsRepair[i] = 1;
+			smoothedWeightRepair[i] = (double) (SMOOTHING_FACTOR * (double) segmentPointsRepair[i] / (double) segmentNumUsedRepair[i] + (1 - SMOOTHING_FACTOR) * smoothedWeightRepair[i]); 
+			segmentPointsRepair[i] = 0;
+			segmentNumUsedRepair[i] = 1;
 		}
 		for (int i = 0; i < NUM_DESTROY_HEURISTICS; i++) {
-			smoothedWeightDestroy[i] = (int) Math.round(SMOOTHING_FACTOR * segmentPointsDestroy[i] + (1 - SMOOTHING_FACTOR) * smoothedWeightDestroy[i]); 
-			segmentPointsDestroy[i] = 1;
+			smoothedWeightDestroy[i] = (double) (SMOOTHING_FACTOR * (double) segmentPointsDestroy[i] / (double) segmentNumUsedDestroy[i] + (1 - SMOOTHING_FACTOR) * smoothedWeightDestroy[i]); 
+			segmentPointsDestroy[i] = 0;
+			segmentNumUsedDestroy[i] = 1;
 		}
-		Logger.debug("Problem instance {}: Updated weights. Repair {}. Destroy {}", smoothedWeightRepair, smoothedWeightDestroy);
+		for (int i = 0; i < 2; i++) {
+			smoothedWeightObjectiveNoise[i] = (double) (SMOOTHING_FACTOR * (double) segmentPointsObjectiveNoise[i] / (double) segmentNumUsedObjectiveNoise[i] + (1 - SMOOTHING_FACTOR) * smoothedWeightObjectiveNoise[i]); 
+			segmentPointsObjectiveNoise[i] = 0;
+			segmentNumUsedObjectiveNoise[i] = 1;
+		}
+		Logger.info("Problem instance {}: Updated weights. \nRepair {} (). \nDestroy {} (). \nObjective Noise: {} ()", p.index, Arrays.toString(smoothedWeightRepair), Arrays.toString(smoothedWeightDestroy), Arrays.toString(smoothedWeightObjectiveNoise));
 	}
 
 	
