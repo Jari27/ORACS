@@ -101,12 +101,12 @@ public class RouteNode {
 	public String toString() {
 		if (isTransfer()) {
 			return String.format(
-					"%s %03d; [0, inf] -> [%.2f, %.2f]. h=%.2f",
-					type.toString(), associatedNode.id, tightE, tightL, startOfS);
+					"%s %03d-%03d (%d, %d) [%.2f, %.2f]. h=%.2f",
+					type.toString(), associatedNode.id, requestId, associatedNode.x, associatedNode.y, tightE, tightL, startOfS);
 		}
 		return String.format(
-				"%s %03d; [%.0f, %.0f] -> [%.2f, %.2f]. h=%.2f",
-				type.toString(), associatedNode.id, associatedNode.e, associatedNode.l, tightE, tightL, startOfS);
+				"%s %03d; (%d, %d) -> [%.2f, %.2f]. h=%.2f",
+				type.toString(), associatedNode.id, associatedNode.x, associatedNode.y, tightE, tightL, startOfS);
 	}
 
 	
