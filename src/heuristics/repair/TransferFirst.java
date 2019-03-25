@@ -187,7 +187,7 @@ public class TransferFirst extends RepairHeuristic {
 							bestInsertionCost = insertionCost;
 							Logger.debug("Found a new best insertion: request {000} into route with index {} at cost {00.00}.", requestId, routeIndex, insertionCost);
 						} else {
-							costCalc.setRoute(routeIndex, newRoute);
+							costCalc.setRoute(routeIndex, newRoute.copy());
 							if (costCalc.isFeasible()) {
 								bestRoute = newRoute.copy();
 								bestRouteIndex = routeIndex;

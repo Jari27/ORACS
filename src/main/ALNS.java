@@ -196,7 +196,7 @@ public class ALNS implements Runnable {
 				List<Integer> destroyed432 = Shaw.destroy(copy,4);
 			}*/
 
-			List<Integer> destroyed = destroy.destroy(copy, 1); // this always works
+			List<Integer> destroyed = destroy.destroy(copy, 2); // this always works
 			copy.calcTightWindows();
 			Logger.debug("Problem instance {}: Finished destroying the solution.", p.index);
 
