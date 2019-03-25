@@ -54,7 +54,7 @@ public class TransferFirst extends RepairHeuristic {
 			int lowIndex = 0;
 			double lowCost = cost[0];
 			for (int i = 1; i < cost.length; i++) {
-				if (cost[i] < lowCost) {
+				if (cost[i] <= lowCost) { // use <= to ensure we use no transfer if it's cheaper
 					lowCost = cost[i];
 					lowIndex = i;
 				}
