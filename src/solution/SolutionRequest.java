@@ -34,5 +34,12 @@ public class SolutionRequest {
 	public boolean hasTransfer() {
 		return transferPickup != null;
 	}
+
+	public void destroy() {
+		pickup = null;
+		dropoff = null;
+		transferPickup = null;
+		transferDropoff = null;
+	}
 	
 }

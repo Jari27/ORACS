@@ -52,10 +52,13 @@ public abstract class RepairHeuristic {
 		}
 		return true;
 	}
-
+	
+	protected boolean SC1NoTransfer(int pickupLoc, int dropoffLoc, RouteNode pickup, RouteNode dropoff, Route newRoute, Problem p) {
+		return SC1(pickupLoc, dropoffLoc, pickup, dropoff, newRoute, p);
+	}
 	// this is different from the original SC1
 	// if the two insertions are next to eachother, we do not try to set the pickup as early as possible but just find any satisfying solution
-	protected boolean SC1NoTransfer(int pickupLoc, int dropoffLoc, RouteNode pickup, RouteNode dropoff, Route newRoute, Problem p) {
+	private boolean SC1(int pickupLoc, int dropoffLoc, RouteNode pickup, RouteNode dropoff, Route newRoute, Problem p) {
 		double pickupS, dropoffS;
 		if (pickupLoc + 1 < dropoffLoc) {
 			// they are not next to eachother so simply follow rules from Masson 14
@@ -109,8 +112,8 @@ public abstract class RepairHeuristic {
 			
 			if (pickupS > pickup.associatedNode.l || dropoffS > dropoff.associatedNode.l) { // this is the first time we adjust dropoff and pickup, so verify time windows
 				return false;
-			}
-			
+			}		
+					
 			if (dropoffLoc < newRoute.size() - 1) {
 				// we have a subsequent node so we need to check the schedule
 				RouteNode next = newRoute.get(dropoffLoc + 1);
@@ -260,7 +263,11 @@ public abstract class RepairHeuristic {
 					double newCost = newRoute.getCost(s.p);
 					double insertionCost = newCost - oldCost;
 					if (insertionCost < bestInsertionCost) {
-						if (type == RouteRequestType.NO_TRANSFER && SC1NoTransfer(i, j, pickup, dropoff, newRoute, s.p)) {
+						boolean isFeasible = false;
+						if (type == RouteRequestType.NO_TRANSFER) {
+							isFeasible = SC1NoTransfer(i, j, pickup, dropoff, newRoute, s.p);
+						}
+						if (isFeasible) {
 							bestRoute = newRoute.copy();
 							bestRouteIndex = routeIndex;
 							bestInsertionCost = insertionCost;
@@ -273,6 +280,7 @@ public abstract class RepairHeuristic {
 								bestInsertionCost = insertionCost;
 								Logger.debug("Found a new best insertion: request {000} into route with index {} at cost {00.00}.", requestId, routeIndex, insertionCost);
 							}
+							costCalc.destroy();
 							costCalc = workingCopy.copy();
 						}
 					}
@@ -299,9 +307,9 @@ public abstract class RepairHeuristic {
 		tempRoute.add(pickup);
 		tempRoute.add(dropoff);
 		double cost = tempRoute.getCost(s.p);
-		if (cost < bestInsertionCost) {
+		if (cost < bestInsertionCost) { 
 			costCalc.setRoute(-1, tempRoute);
-			if (costCalc.isFeasible()) {
+			if (costCalc.isFeasible()) { // not always feasible because we might miss own time window etc
 				bestRoute = tempRoute.copy();
 				bestRouteIndex = -1;
 				bestInsertionCost = cost;
@@ -387,15 +395,22 @@ public abstract class RepairHeuristic {
 						double newCost = newRoute.getCost(s.p);
 						double insertionCost = newCost - oldCost;
 						if (insertionCost < bestInsertionCost) {
-							costCalc.setRoute(routeIndex, newRoute);
-							if (costCalc.isFeasible()) {
+							if (type == RouteRequestType.NO_TRANSFER && SC1NoTransfer(i, j, pickup, dropoff, newRoute, s.p)) {
 								bestRoute = newRoute.copy();
 								bestRouteIndex = routeIndex;
 								bestInsertionCost = insertionCost;
-								bestTransfer = t;
-								Logger.debug("Found a new best partial insertion: request {000} into route with index {} at cost {00.00}.", requestId, routeIndex, insertionCost);
+								Logger.debug("Found a new best insertion: request {000} into route with index {} at cost {00.00}.", requestId, routeIndex, insertionCost);
+							} else {
+								costCalc.setRoute(routeIndex, newRoute);
+								if (costCalc.isFeasible()) {
+									bestRoute = newRoute.copy();
+									bestRouteIndex = routeIndex;
+									bestInsertionCost = insertionCost;
+									bestTransfer = t;
+									Logger.debug("Found a new best partial insertion: request {000} into route with index {} at cost {00.00}.", requestId, routeIndex, insertionCost);
+								}
+								costCalc = s.copy();
 							}
-							costCalc = s.copy();
 						}
 						newRoute.remove(j);
 					}
@@ -418,15 +433,11 @@ public abstract class RepairHeuristic {
 			tempRoute.add(dropoff);
 			double cost = tempRoute.getCost(s.p);
 			if (cost < bestInsertionCost) {
-				costCalc.setRoute(-1, tempRoute);
-				if (costCalc.isFeasible()) {
-					bestRoute = tempRoute.copy();
-					bestTransfer = t;
-					bestRouteIndex = -1;
-					bestInsertionCost = cost;
-					Logger.debug("Current best: add partial request {000} ({}) as new Route (cost: {00.00}).", sr.id, type, cost);
-				}
-				costCalc = s.copy();
+				bestRoute = tempRoute.copy();
+				bestTransfer = t;
+				bestRouteIndex = -1;
+				bestInsertionCost = cost;
+				Logger.debug("Current best: add partial request {000} ({}) as new Route (cost: {00.00}).", sr.id, type, cost);
 			}
 		}
 		// we have inserted

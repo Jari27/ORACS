@@ -18,7 +18,6 @@ public class Problem {
 	public int travelCost; // per unit distance
 
 	public double[][] distanceMatrix;
-	public double[][] costMatrix;
 	
 	public double maxCost;
 
@@ -121,7 +120,6 @@ public class Problem {
 	private void preCalcDistances(List<Node> allNodes) {
 		Logger.debug("Instance {000}: calculating distance and cost matrices", this.index);
 		distanceMatrix = new double[allNodes.size()][allNodes.size()];
-		costMatrix = new double[allNodes.size()][allNodes.size()];
 
 		// iterate over all node to calculate distances/costs
 		for (Node a : allNodes) {
@@ -132,7 +130,6 @@ public class Problem {
 					distanceMatrix[a.id - 1][b.id - 1] = Math
 							.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 				}
-				costMatrix[a.id - 1][b.id - 1] = travelCost * distanceMatrix[a.id - 1][b.id - 1];
 			}
 		}
 	}
@@ -193,7 +190,7 @@ public class Problem {
 	}
 
 	private double costBetween(int id1, int id2) {
-		return costMatrix[id1 - 1][id2 - 1];
+		return travelCost * distanceMatrix[id1 - 1][id2 - 1];
 	}
 
 }

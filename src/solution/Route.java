@@ -347,4 +347,10 @@ public class Route extends LinkedList<RouteNode>{
 			prev = rn;
 		}
 	}
+	
+	public void destroy() {
+		for (RouteNode rn : this) {
+			rn.destroy();
+		}
+	}
 }

@@ -32,24 +32,24 @@ public class Main {
 //			test.run();
 //		}
 		
-//		ALNS test = new ALNS(problems.get(6));
-//		test.run();
+		ALNS test = new ALNS(problems.get(85));
+		test.run();
 //		
 //		if (true) return;
 		
-		int numThreads = Runtime.getRuntime().availableProcessors();
-		
-		ALNSRunner[] runners = new ALNSRunner[numThreads];
-		
-		for (int i = 0; i < numThreads; i++) {
-			int index = i;
-			runners[i] = new ALNSRunner();
-			while (index < problems.size()) {
-				runners[i].assignProblem(problems.get(index));
-				index += numThreads;
-			}
-			runners[i].start();
-		}
+//		int numThreads = Runtime.getRuntime().availableProcessors();
+//		
+//		ALNSRunner[] runners = new ALNSRunner[numThreads];
+//		
+//		for (int i = 0; i < numThreads; i++) {
+//			int index = i;
+//			runners[i] = new ALNSRunner();
+//			while (index < problems.size()) {
+//				runners[i].assignProblem(problems.get(index));
+//				index += numThreads;
+//			}
+//			runners[i].start();
+//		}
 	}
 	
 	/**

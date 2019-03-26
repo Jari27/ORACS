@@ -68,8 +68,10 @@ public class BestInsertionWithTransfer extends RepairHeuristic {
 			case 2:
 				s.setRoute(noTransfer[1].routeIndex, noTransfer[1].route);
 			}
-			s.calcTightWindows(); // update windows
-			iter.remove();
+			if(!s.calcTightWindows()) { // update windows
+				Logger.warn("Apparent accepted solutions is unfeasible");
+			}
+			iter.remove(); 
 		}
 		removeUselessTransfers(s);
 		return true;
