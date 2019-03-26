@@ -32,10 +32,10 @@ public class Main {
 //			test.run();
 //		}
 		
-		ALNS test = new ALNS(problems.get(6));
-		test.run();
+//		ALNS test = new ALNS(problems.get(6));
+//		test.run();
 //		
-		if (true) return;
+//		if (true) return;
 		
 		int numThreads = Runtime.getRuntime().availableProcessors();
 		
@@ -44,7 +44,7 @@ public class Main {
 		for (int i = 0; i < numThreads; i++) {
 			int index = i;
 			runners[i] = new ALNSRunner();
-			while (index < problems.size() / 10) {
+			while (index < problems.size()) {
 				runners[i].assignProblem(problems.get(index));
 				index += numThreads;
 			}

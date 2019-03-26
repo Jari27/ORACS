@@ -28,7 +28,7 @@ public class ALNS implements Runnable {
 	
 	// ALNS settings
 	private static final double ETA = 0.025; // noise in objec. function multiplier
-	private static final int MAX_IT = 1000;
+	private static final int MAX_IT = 10000;
 	private double coolingRate = 0.99975;
 	private static final double W = 0.05; // a new solution will initially be accepted with probability 50% if it is this much worse than the old 
 	private double temp;
@@ -193,8 +193,8 @@ public class ALNS implements Runnable {
 		double bestCost = Double.POSITIVE_INFINITY;
 		
 		int iterationsWithoutImprovement = 0;
-		
-		for (int i = 1; i <= MAX_IT; i++) {
+		int i = 1;
+		for (; i <= MAX_IT; i++) {
 			Logger.debug("Problem instance {}: ITERATION {}", p.index, i);
 			if (i % 100 == 0) {
 				updateWeights();
@@ -217,6 +217,8 @@ public class ALNS implements Runnable {
 			if (iterationsWithoutImprovement > ITERATIONS_BEFORE_FORCED_CHANGE) {
 				Logger.info("Doing big destruction");
 				destroy.destroy(copy, rand.nextInt(2 *(int) Math.round(p.numRequests * 0.05 + 1)));
+			} else if (iterationsWithoutImprovement > 100) {
+				break;
 			} else {
 				destroyed = destroy.destroy(copy, rand.nextInt((int)Math.round(p.numRequests * 0.05 + 1))); // this always works
 			}
@@ -277,9 +279,8 @@ public class ALNS implements Runnable {
 				iterationsWithoutImprovement++;
 			}
 		}
-		new CloseRandomTransfer(p, rand);
 //		Logger.info("CloseRandom had {} tries where transfers were open.", CloseRandomTransfer.successes);
-		Logger.info("Problem instance {}. Best solution cost: {00.00}", this.p.index, bestCost);
+		Logger.info("Problem instance {}. Best solution cost: {00.00} in {} iterations", this.p.index, bestCost, i);
 		try {
 			bestSol.exportSolution(false);
 		} catch (FileNotFoundException e) {
@@ -309,7 +310,7 @@ public class ALNS implements Runnable {
 			segmentPointsObjectiveNoise[i] = 0;
 			segmentNumUsedObjectiveNoise[i] = 1;
 		}
-		Logger.info("Problem instance {}: Updated weights. \nRepair {} (). \nDestroy {} (). \nObjective Noise: {} ()", p.index, Arrays.toString(smoothedWeightRepair), Arrays.toString(smoothedWeightDestroy), Arrays.toString(smoothedWeightObjectiveNoise));
+		Logger.debug("Problem instance {}: Updated weights. \nRepair {} (). \nDestroy {} (). \nObjective Noise: {} ()", p.index, Arrays.toString(smoothedWeightRepair), Arrays.toString(smoothedWeightDestroy), Arrays.toString(smoothedWeightObjectiveNoise));
 	}
 
 	
