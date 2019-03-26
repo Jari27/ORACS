@@ -315,48 +315,6 @@ public class Solution {
 			Route copyRoute = origRoute.copy();
 			next.routes.add(copyRoute);
 			next.updateReferencesOfRoute(routeIndex);
-//			
-//			Route copyRoute = new Route(origRoute.vehicleId); // forces recalculation of costs
-//			copyRoute.setRouteUnchanged(); // prevents cost recalculation
-//			copyRoute.setCost(origRoute.getCost(p)); // sets cost correctly
-//			
-//			for (RouteNode origRN : origRoute) {
-//				// create a new RouteNode and set its associated node, type and request (if not a depot)
-//				// note; the associated node does not have to be copied since it is the same
-//				RouteNode copyRN = new RouteNode(origRN.associatedNode, origRN.getType(), origRN.requestId, origRN.vehicleId);
-//				
-//				// Set all relevant fields
-//				// TODO ensure we update this as we update RouteNode (i.e. slack etc)
-//				copyRN.setArrival(origRN.getArrival());
-//				copyRN.setStartOfS(origRN.getStartOfS(), false); 
-//				copyRN.setNumPas(origRN.getNumPas());
-//				copyRN.tightE = origRN.tightE;
-//				copyRN.tightL = origRN.tightL;
-//				
-//				// save the RouteNode in our new route
-//				copyRoute.add(copyRN);
-//				
-//				// Add RouteNode to the SolutionRequest
-//				int tmpRequestId = origRN.requestId;
-//				switch (origRN.getType()) {
-//				case PICKUP:
-//					next.requests.get(tmpRequestId - 1).pickup = copyRN; // our requests are 1-indexed instead of 0
-//					break;
-//				case DROPOFF:
-//					next.requests.get(tmpRequestId - 1).dropoff = copyRN;
-//					break;
-//				case TRANSFER_PICKUP:
-//					next.requests.get(tmpRequestId - 1).transferPickup = copyRN;
-//					break;
-//				case TRANSFER_DROPOFF:
-//					next.requests.get(tmpRequestId - 1).transferDropoff = copyRN;
-//					break;
-//				default:
-//					break;
-//				}
-//			}
-//			// save the route in our new solution
-//			next.routes.add(copyRoute);
 		}
 		return next;
 	}
@@ -488,7 +446,7 @@ public class Solution {
 				rn.parent = null;
 				rn.set = null;
 				rn.scannedFrom = null;
-				rn.prev = null;
+				rn.prevInRoute = null;
 			}
 		}
 	}
@@ -527,7 +485,7 @@ public class Solution {
 				rn.tightL = ARBIT_HIGH;
 				rn.set = B;
 				B.add(rn);
-				rn.prev = prev;
+				rn.prevInRoute = prev;
 				prev = rn;
 			}
 		}
@@ -564,8 +522,7 @@ public class Solution {
 					RouteNode v = sr.dropoff;
 					if (v != null) {
 						double dist = u.tightL + sr.L + u.associatedNode.s;
-						if (dist < v.tightL) {
-						
+						if (dist < v.tightL) {	
 							updateNodeL(u, v, dist, B);
 						}
 					}
@@ -582,8 +539,8 @@ public class Solution {
 					}
 				}
 				// precedence constraint
-				if (u.prev != null) {	
-					RouteNode v = u.prev;
+				if (u.prevInRoute != null) {	
+					RouteNode v = u.prevInRoute;
 					double dist = u.tightL - p.distanceBetween(u.associatedNode, v.associatedNode) - v.associatedNode.s;
 					if (dist < v.tightL) {
 						updateNodeL(u, v, dist, B);
@@ -646,7 +603,7 @@ public class Solution {
 						if (rn != s) {
 							B.add(rn);
 						}
-						rn.prev = prev;
+						rn.prevInRoute = prev;
 						prev = rn;
 					}
 				}
@@ -654,12 +611,11 @@ public class Solution {
 				do {
 					// asume a = empty
 					// move all of B to A
-					for (ListIterator<RouteNode> iter = B.listIterator(); iter.hasNext(); ) {
-						RouteNode next = iter.next();
-						A.add(next);
-						iter.remove();
-						next.set = A;
+					for (RouteNode rn : B) {
+						A.add(rn);
+						rn.set = A;
 					}
+					B.clear();
 					do {
 						RouteNode u = A.remove();
 						u.set = null;
@@ -701,8 +657,8 @@ public class Solution {
 							}
 						}
 						// precedence constraint
-						if (u.prev != null) {	
-							RouteNode v = u.prev;
+						if (u.prevInRoute != null) {	
+							RouteNode v = u.prevInRoute;
 							double dist = u.negativeTightE - p.distanceBetween(u.associatedNode, v.associatedNode) - v.associatedNode.s;
 							if (dist < v.negativeTightE) {
 								updateNodeE(u, v, dist, B);
@@ -727,6 +683,8 @@ public class Solution {
 					}
 				} while (B.size() > 0);
 				s.tightE = -zero.negativeTightE;
+				B = null;
+				A = null;
 			}
 		}
 		return true;
@@ -811,6 +769,19 @@ public class Solution {
 				break;
 			}
 		}
+	}
+	
+	public void destroy() {
+		for (Route r : routes){
+			r.destroy();
+		}
+		for (SolutionRequest sr : requests) {
+			sr.destroy();
+		}
+		openTransfers = null;
+		closedTransfers = null;
+		routes = null;
+		requests = null;
 	}
 	
 	//http://www.cs.princeton.edu/courses/archive/spr11/cos423/Lectures/ShortestPaths.pdf

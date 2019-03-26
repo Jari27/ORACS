@@ -34,7 +34,7 @@ public class RouteNode {
 	public double tightL;
 	
 	// Tarjan's Algorithm Stuff
-	public RouteNode prev;
+	public RouteNode prevInRoute;
 	public RouteNode before;
 	public RouteNode parent;
 	public RouteNode after;
@@ -146,5 +146,13 @@ public class RouteNode {
 		return this.startOfS >= this.associatedNode.e;
 	}
 
+	public void destroy() {
+		prevInRoute = null;
+		before = null;
+		parent = null;
+		after = null;
+		set = null; 
+		scannedFrom  = null;
+	}
 	
 }
