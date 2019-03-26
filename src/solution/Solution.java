@@ -476,11 +476,24 @@ public class Solution {
 	public boolean calcTightWindows() {
 		if (npassL() && npassE()) {
 			tightWindowsToSolution();
+			clearReferences();
 			return true;
 		}
 		return false;
 	}
 	
+	private void clearReferences() {
+		for (Route r : routes) {
+			for (RouteNode rn : r) {
+				rn.parent = null;
+				rn.set = null;
+				rn.scannedFrom = null;
+				rn.prev = null;
+			}
+		}
+	}
+
+
 	private void tightWindowsToSolution() {
 		for (Route r : routes) {
 			RouteNode prev = null;
