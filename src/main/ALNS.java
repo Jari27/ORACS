@@ -14,6 +14,7 @@ import org.pmw.tinylog.Logger;
 import heuristics.destroy.CloseRandomTransfer;
 import heuristics.destroy.DestroyHeuristic;
 import heuristics.destroy.RandomDestroy;
+import heuristics.destroy.ShawRemoval;
 import heuristics.repair.GreedyNoTransferRepair;
 import heuristics.repair.RepairHeuristic;
 import heuristics.repair.BestInsertionWithTransfer;
@@ -28,14 +29,14 @@ public class ALNS implements Runnable {
 	
 	// ALNS settings
 	private static final double ETA = 0.025; // noise in objec. function multiplier
-	private static final int MAX_IT = 10000;
+	private static final int MAX_IT = 100;
 	private double coolingRate = 0.99975;
 	private static final double W = 0.05; // a new solution will initially be accepted with probability 50% if it is this much worse than the old 
 	private double temp;
 	
 	
 	// Config settings
-	private static final int NUM_DESTROY_HEURISTICS = 2;
+	private static final int NUM_DESTROY_HEURISTICS = 3;
 	private static final int NUM_REPAIR_HEURISTICS = 2;
 	
 	private static final double SMOOTHING_FACTOR = 0.1;
@@ -73,8 +74,8 @@ public class ALNS implements Runnable {
 		this.currentSol.createInitialSolution();
 		this.bestSol = this.currentSol;
 		this.acceptedSolutions.add(currentSol);
-		this.seed = 1553532450933L;
-//		this.seed = System.currentTimeMillis(); // to allow printing
+		//this.seed = 1553532450933L;
+		this.seed = System.currentTimeMillis(); // to allow printing
 		
 		this.rand = new Random(this.seed);
 		
@@ -91,6 +92,9 @@ public class ALNS implements Runnable {
 		destroyHeuristics[0] = random;
 		DestroyHeuristic closeRandomTransfer = new CloseRandomTransfer(p, rand);
 		destroyHeuristics[1] = closeRandomTransfer;
+		DestroyHeuristic shaw = new ShawRemoval(p, rand);
+		destroyHeuristics[2] = shaw;
+		
 		
 		// repair
 		RepairHeuristic greedyNoTransferRepair = new GreedyNoTransferRepair(p);
@@ -202,6 +206,7 @@ public class ALNS implements Runnable {
 			
 			// select heuristic
 			int destroyId = selectDestroy();
+			//int destroyId = 2;
 			int repairId = selectRepair();
 			segmentNumUsedRepair[repairId]++;
 			segmentNumUsedDestroy[destroyId]++;
@@ -220,6 +225,7 @@ public class ALNS implements Runnable {
 			} else if (iterationsWithoutImprovement > 100) {
 				break;
 			} else {
+				//destroyed = destroy.destroy(copy,5);
 				destroyed = destroy.destroy(copy, rand.nextInt((int)Math.round(p.numRequests * 0.05 + 1))); // this always works
 			}
 			

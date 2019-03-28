@@ -32,7 +32,7 @@ public class Main {
 //			test.run();
 //		}
 		
-		ALNS test = new ALNS(problems.get(85));
+		ALNS test = new ALNS(problems.get(6));
 		test.run();
 //		
 //		if (true) return;

@@ -7,8 +7,10 @@ import java.util.Random;
 
 import org.pmw.tinylog.Logger;
 
+import heuristics.repair.RepairHeuristic.RouteRequest;
 import problem.Node;
 import problem.Problem;
+import solution.RouteNode;
 import solution.Solution;
 import solution.SolutionRequest;
 
@@ -25,7 +27,8 @@ public class BestInsertionWithTransfer extends RepairHeuristic {
 	@Override
 	public boolean repair(Solution s, List<Integer> requestIdsToRepair) {
 		if (s.closedTransfers.size() > 0 && (s.openTransfers.size() == 0 || rand.nextDouble() < CHANCE_OF_OPENING_TRANSFER)) {
-			openRandomTransfer(s);
+			//openRandomTransfer(s);
+			openBestTransfer(s, requestIdsToRepair);
 		}
 		List<Integer> copyOfIds = new ArrayList<>();
 		copyOfIds.addAll(requestIdsToRepair);
@@ -99,6 +102,40 @@ public class BestInsertionWithTransfer extends RepairHeuristic {
 	private Node openRandomTransfer(Solution s) {
 		int index = rand.nextInt(s.closedTransfers.size());	
 		Node transfer = s.closedTransfers.remove(index);
+		s.openTransfers.add(transfer);
+		return transfer;
+	}
+	
+	private Node openBestTransfer(Solution s, List<Integer> requestIdsToRepair){
+		Node[] nodesToInsert = new Node[requestIdsToRepair.size()];
+		int index = 0;
+		for (ListIterator<Integer> iter = requestIdsToRepair.listIterator(); iter.hasNext(); ) {
+			int reqId = iter.next();
+			for(SolutionRequest sr: s.requests){
+				if(reqId == sr.id){
+					nodesToInsert[index] = sr.pickup.associatedNode;
+					nodesToInsert[index+1] = sr.dropoff.associatedNode;
+				}
+			}
+			
+		}
+		Logger.info("Hi im trying to open the best transfer location..");
+		int openingTransferIndex = 1;
+		double lowestDistance = 10000;
+		for(Node trLoc: s.closedTransfers){
+			double distance = 0;
+			for(int i = 0; i< nodesToInsert.length;i++){
+				distance = distance + problem.distanceBetween(trLoc, nodesToInsert[i]);
+				
+			}
+			if(distance < lowestDistance){
+				lowestDistance = distance;
+				openingTransferIndex = trLoc.id;
+			}
+		}
+		
+		
+		Node transfer = s.closedTransfers.remove(openingTransferIndex);
 		s.openTransfers.add(transfer);
 		return transfer;
 	}

@@ -57,7 +57,7 @@ public abstract class RepairHeuristic {
 		return SC1(pickupLoc, dropoffLoc, pickup, dropoff, newRoute, p);
 	}
 	// this is different from the original SC1
-	// if the two insertions are next to eachother, we do not try to set the pickup as early as possible but just find any satisfying solution
+	// if the two insertions are next to each other, we do not try to set the pickup as early as possible but just find any satisfying solution
 	private boolean SC1(int pickupLoc, int dropoffLoc, RouteNode pickup, RouteNode dropoff, Route newRoute, Problem p) {
 		double pickupS, dropoffS;
 		if (pickupLoc + 1 < dropoffLoc) {

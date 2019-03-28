@@ -100,12 +100,12 @@ public class Solution {
 		calcTightWindows();
 		Logger.info("Found an initial solution for problem {000} with cost {0.00}", p.index, this.getCost());
 		logSolution();
-		try {
+/*		try {
 			exportSolution(true);
 		} catch (FileNotFoundException e) {
 			Logger.error("Cannot export file for instance {000}", p.index);
 			Logger.error(e);
-		}
+		}*/
 	}
 	
 	public double getCost() {
