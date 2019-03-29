@@ -41,7 +41,6 @@ public class CloseRandomTransfer extends DestroyHeuristic {
 		
 		s.closedTransfers.add(transfer);
 		s.openTransfers.remove(transfer);
-		
 		return destroyIds;
 	}
 

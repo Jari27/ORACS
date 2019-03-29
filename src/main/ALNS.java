@@ -29,7 +29,7 @@ public class ALNS implements Runnable {
 	
 	// ALNS settings
 	private static final double ETA = 0.025; // noise in objec. function multiplier
-	private static final int MAX_IT = 100;
+	private static final int MAX_IT = 20;
 	private double coolingRate = 0.99975;
 	private static final double W = 0.05; // a new solution will initially be accepted with probability 50% if it is this much worse than the old 
 	private double temp;
