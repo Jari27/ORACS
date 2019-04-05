@@ -45,10 +45,10 @@ public class BestInsertionWithTransfer extends RepairHeuristic {
 			if (noTransfer != null) {
 				cost[2] = noTransfer[1].insertionCost;
 			}
-			int lowIndex = 0;
-			double lowCost = cost[0];
-			for (int i = 1; i < cost.length; i++) {
-				if (cost[i] <= lowCost) { // use <= to ensure we use no transfer if it's cheaper
+			int lowIndex = 2;
+			double lowCost = cost[2] - 1e-10;
+			for (int i = 0; i < cost.length - 1; i++) {
+				if (cost[i] < lowCost) { // use <= to ensure we use no transfer if it's cheaper
 					lowCost = cost[i];
 					lowIndex = i;
 				}

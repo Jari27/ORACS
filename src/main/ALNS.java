@@ -3,7 +3,12 @@
  */
 package main;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +17,7 @@ import java.util.Random;
 import org.pmw.tinylog.Logger;
 
 import heuristics.destroy.CloseRandomTransfer;
+import heuristics.destroy.ClusterRemoval;
 import heuristics.destroy.DestroyHeuristic;
 import heuristics.destroy.RandomDestroy;
 import heuristics.destroy.ShawRemoval;
@@ -37,11 +43,11 @@ public class ALNS implements Runnable {
 	
 	
 	// Config settings
-	private static final int NUM_DESTROY_HEURISTICS = 3;
+	private static final int NUM_DESTROY_HEURISTICS = 4;
 	private static final int NUM_REPAIR_HEURISTICS = 3;
 	private static final int MAX_NUM_ACCEPTED_SOLUTIONS = 50; // maximum number of prev accepted solutions to store
 	
-	private static final double SMOOTHING_FACTOR = 0.1;
+	private static final double SMOOTHING_FACTOR = 0.3;
 	
 	private static final int ITERATIONS_BEFORE_FORCED_CHANGE = 25;
 	
@@ -76,14 +82,16 @@ public class ALNS implements Runnable {
 		this.currentSol.createInitialSolution();
 		this.bestSol = this.currentSol;
 		this.acceptedSolutions.add(currentSol);
-		this.seed = 1553532450933L;
-//		this.seed = System.currentTimeMillis(); // to allow printing
+		this.seed = 1554481654455L;
+		this.seed = System.currentTimeMillis(); // to allow printing
 		
 		this.rand = new Random(this.seed);
 		
 		double old = currentSol.getCost();
 		this.temp = - W * old / Math.log(0.5);
 		this.coolingRate = Math.pow(0.1, 1.0/MAX_IT);
+		
+		this.writeNewBestSolution(0, this.currentSol, true);
 		
 		this.initHeuristics();
 	}
@@ -96,6 +104,8 @@ public class ALNS implements Runnable {
 		destroyHeuristics[1] = closeRandomTransfer;
 		DestroyHeuristic shaw = new ShawRemoval(p, rand);
 		destroyHeuristics[2] = shaw;
+		DestroyHeuristic destroyCluster = new ClusterRemoval(p, rand);
+		destroyHeuristics[3] = destroyCluster;
 		
 		// repair
 		RepairHeuristic greedyNoTransferRepair = new GreedyNoTransferRepair(p, rand);
@@ -128,6 +138,7 @@ public class ALNS implements Runnable {
 	private boolean accept(double oldCost, double newCost, double T) {
 		if (newCost < oldCost) return true;
 		if (T == 0) return newCost < oldCost;
+		if (Math.abs(oldCost - newCost) < 1e-10) return false; //ignore equal solutions
 		
 		double annealing = Math.exp(-(newCost - oldCost)/T);
 		if (annealing >= rand.nextDouble()) {
@@ -206,6 +217,9 @@ public class ALNS implements Runnable {
 			if (i % 100 == 0) {
 				updateWeights();
 			}
+			if (i % 10 == 0) {
+				Logger.info("Current iteration: {}", i);
+			}
 			
 			// select heuristic
 			int destroyId = selectDestroy();
@@ -223,8 +237,9 @@ public class ALNS implements Runnable {
 			List<Integer> destroyed = null;
 			if (iterationsWithoutImprovement > ITERATIONS_BEFORE_FORCED_CHANGE) {
 				Logger.info("Doing big destruction");
-				destroyed = destroy.destroy(copy, rand.nextInt(2 *(int) Math.round(p.numRequests * 0.05 + 1)));
+				destroyed = destroy.destroy(copy, rand.nextInt(4 *(int) Math.round(p.numRequests * 0.05 + 1)));
 			} else if (iterationsWithoutImprovement > 100) {
+				Logger.info("No improvement for the last 100 iterations. Aborting..");
 				break;
 			} else {
 				destroyed = destroy.destroy(copy, rand.nextInt((int)Math.round(p.numRequests * 0.05 + 1))); // this always works
@@ -273,6 +288,8 @@ public class ALNS implements Runnable {
 				}
 				iterationsWithoutImprovement = 0;
 				
+				writeNewBestSolution(i, currentSol, false);
+				
 //				copy.logSolution();
 				
 				if (newCost < bestCost) {
@@ -319,8 +336,19 @@ public class ALNS implements Runnable {
 			segmentPointsObjectiveNoise[i] = 0;
 			segmentNumUsedObjectiveNoise[i] = 1;
 		}
-		Logger.debug("Problem instance {}: Updated weights. \nRepair {} (). \nDestroy {} (). \nObjective Noise: {} ()", p.index, Arrays.toString(smoothedWeightRepair), Arrays.toString(smoothedWeightDestroy), Arrays.toString(smoothedWeightObjectiveNoise));
+		Logger.info("Problem instance {}: Updated weights. \nRepair {} (). \nDestroy {} (). \nObjective Noise: {} ()", p.index, Arrays.toString(smoothedWeightRepair), Arrays.toString(smoothedWeightDestroy), Arrays.toString(smoothedWeightObjectiveNoise));
 	}
-
+	
+	private void writeNewBestSolution(int iteration, Solution s, boolean delete) {
+		File file = new File(s.p.index + "_costs.csv");
+		if (delete) {
+			file.delete();
+		}
+		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
+			writer.println(iteration + ", " + s.getCost());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 }

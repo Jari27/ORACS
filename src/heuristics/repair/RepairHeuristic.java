@@ -484,7 +484,7 @@ public abstract class RepairHeuristic {
 			distances.add(insert, dist);
 		}
 		
-		Node transferToOpen = transfers.get(r.nextInt(topN));
+		Node transferToOpen = transfers.get(r.nextInt(Math.min(topN, transfers.size())));
 		s.closedTransfers.remove(transferToOpen);
 		s.openTransfers.add(transferToOpen);
 		return transferToOpen;

@@ -25,47 +25,53 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		Logger.info("Starting main program.");
+//		if (args.length > 0) {
+//			Problem p = getSpecificProblem(Integer.parseInt(args[0]));
+//			ALNSRunner runner = new ALNSRunner();
+//			runner.assignProblem(p);
+//			runner.start();
+//			return;
+//		}
+////		for (Problem p : problems) {
+////			ALNS test = new ALNS(p);
+////			test.run();
+////		}
 		problems = createProblemInstances();
 		solutions = new ArrayList<>();
-		if (args.length > 0) {
-			int index = Integer.parseInt(args[0]);
-			ALNSRunner runner = new ALNSRunner();
-			runner.assignProblem(problems.get(index));
-			problems = null;
-			runner.start();
-		}
+		
+//		int problem = 55;
+//		ALNS test = new ALNS(problems.get(problem));
+//		problems.clear();
 //		for (Problem p : problems) {
-//			ALNS test = new ALNS(p);
-//			test.run();
-//		}
-		
-		int problem = 55;
-		ALNS test = new ALNS(problems.get(problem));
-		problems.clear();
-		for (Problem p : problems) {
-			if (p.index != problem + 1) {
-				p = null;
-			}
-		}
-		test.run();
-//		
-		
-		
-		if (true) return;
-		
-//		int numThreads = Runtime.getRuntime().availableProcessors();
-//		
-//		ALNSRunner[] runners = new ALNSRunner[numThreads];
-//		
-//		for (int i = 0; i < numThreads; i++) {
-//			int index = i;
-//			runners[i] = new ALNSRunner();
-//			while (index < problems.size()) {
-//				runners[i].assignProblem(problems.get(index));
-//				index += numThreads;
+//			if (p.index != problem + 1) {
+//				p = null;
 //			}
-//			runners[i].start();
 //		}
+//		test.run();
+
+		
+//		if (true) return;
+		
+		
+		
+		int start = Integer.parseInt(args[0]);
+		int end = Integer.parseInt(args[1]);
+		int numThreads = Math.min(Runtime.getRuntime().availableProcessors(), end-start);
+//		int iter = Integer.parseInt(args[2]);
+		
+		ALNSRunner[] runners = new ALNSRunner[numThreads];
+		
+		for (int i = 0; i < numThreads; i++) {
+			int index = i + start;
+			runners[i] = new ALNSRunner();
+			while (index <= end && index <= 195) {
+				runners[i].assignProblem(getSpecificProblem(index));
+				index += numThreads;
+			}
+			runners[i].start();
+		}
+		problems.clear();
+		problems = null;
 	}
 	
 	/**
@@ -90,6 +96,25 @@ public class Main {
 			br.close();
 		}
 		return problems;
+	}
+	
+	static Problem getSpecificProblem(int index) throws IOException {
+		try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				String[] stringData = line.split(",");
+				int[] intData = new int[stringData.length];
+				for (int i = 0; i < stringData.length; i++) {
+					intData[i] = Integer.parseInt(stringData[i]);
+				}
+				if (intData[0] == index) {
+					br.close();
+					return parseInstance(intData);
+				}
+				
+			}
+		}
+		return null;
 	}
 	
 	/**

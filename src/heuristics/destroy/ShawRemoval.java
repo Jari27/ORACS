@@ -79,7 +79,7 @@ public class ShawRemoval extends DestroyHeuristic{
 		//destroy the related requests
 		for(int k=0;k<number ; k++){
 			if (!destroySpecific(s, highlyRelatedIds[k])) {
-				Logger.warn("Failure during destruction of request {000}", highlyRelatedIds[k]);
+//				Logger.warn("Failure during destruction of request {000}", highlyRelatedIds[k]);
 			}
 			destroyedRequestIds.add(highlyRelatedIds[k]);
 			Logger.debug("Destroyed request: {}", highlyRelatedIds[k]);
