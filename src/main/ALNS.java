@@ -4,8 +4,8 @@
 package main;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +28,7 @@ public class ALNS implements Runnable {
 	
 	// ALNS settings
 	private static final double ETA = 0.025; // noise in objec. function multiplier
-	private static final int MAX_IT = 10000;
+	private static final int MAX_IT = 1000;
 	private double coolingRate = 0.99975;
 	private static final double W = 0.05; // a new solution will initially be accepted with probability 50% if it is this much worse than the old 
 	private double temp;
@@ -37,13 +37,14 @@ public class ALNS implements Runnable {
 	// Config settings
 	private static final int NUM_DESTROY_HEURISTICS = 2;
 	private static final int NUM_REPAIR_HEURISTICS = 2;
+	private static final int MAX_NUM_ACCEPTED_SOLUTIONS = 50; // maximum number of prev accepted solutions to store
 	
 	private static final double SMOOTHING_FACTOR = 0.1;
 	
 	private static final int ITERATIONS_BEFORE_FORCED_CHANGE = 25;
 	
 	private Problem p;
-	private List<Solution> acceptedSolutions = new ArrayList<>();
+	private List<Solution> acceptedSolutions = new LinkedList<>();
 	
 	private Random rand;
 	private long seed = -1;
@@ -74,7 +75,7 @@ public class ALNS implements Runnable {
 		this.bestSol = this.currentSol;
 		this.acceptedSolutions.add(currentSol);
 		this.seed = 1553532450933L;
-//		this.seed = System.currentTimeMillis(); // to allow printing
+		this.seed = System.currentTimeMillis(); // to allow printing
 		
 		this.rand = new Random(this.seed);
 		
@@ -261,6 +262,9 @@ public class ALNS implements Runnable {
 				currentCost = newCost;
 				currentSol = copy;
 				acceptedSolutions.add(copy);
+				if (acceptedSolutions.size() > MAX_NUM_ACCEPTED_SOLUTIONS) {
+					acceptedSolutions.remove(0);
+				}
 				iterationsWithoutImprovement = 0;
 				
 //				copy.logSolution();
@@ -279,7 +283,6 @@ public class ALNS implements Runnable {
 				iterationsWithoutImprovement++;
 			}
 		}
-//		Logger.info("CloseRandom had {} tries where transfers were open.", CloseRandomTransfer.successes);
 		Logger.info("Problem instance {}. Best solution cost: {00.00} in {} iterations", this.p.index, bestCost, i);
 		try {
 			bestSol.exportSolution(false);

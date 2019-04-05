@@ -467,6 +467,135 @@ public class Solution {
 		}
 	}
 	
+//	public boolean hasNegCycle(RouteNode v, RouteNode w, double dist, List<RouteNode> L) {
+//		w.tightL = dist;
+//		w.parent = v;
+//		w.set = L;
+//		L.add(w);
+//		RouteNode x = w.before;
+//		w.before = null;
+//		RouteNode y = w.after;
+//		while (y.parent.before == null) {
+//			if (y == v) {
+//				return true;
+//			} else {
+//				y.before = null;
+//				y = y.after;
+//			}
+//		}
+//		x.after = y;
+//		y.before = x;
+//		w.after = v.after;
+//		w.after.before = w;
+//		w.before = v;
+//		v.after = w;
+//		return false;
+//	}
+//	
+//	public boolean tarjanL() {
+//		LinkedList<RouteNode> L = new LinkedList<>();
+//		List<RouteNode> S = new ArrayList<>();
+//		List<RouteNode> U = new ArrayList<>();
+//		RouteNode zero = new RouteNode(null, null, 0, 0);
+//		RouteNode root = new RouteNode(null, null, 0, 0);
+//		zero.parent = null;
+//		zero.tightL = ARBIT_HIGH;
+//		zero.set = L;
+//		zero.before = root;
+//		zero.after = root;
+//		root.before = zero;
+//		root.after = zero;
+//		L.add(zero);
+//		
+//		for (Route r : routes) {
+//			RouteNode prev = null;
+//			for (RouteNode rn : r) {
+//				rn.parent = null;
+//				rn.tightL = ARBIT_HIGH;
+//				rn.set = U;
+//				//U.add(rn);
+//				rn.before = null;
+//				rn.after = null;
+//				rn.prevInRoute = prev;
+//				prev = rn;
+//			}
+//		}
+//		
+//		while (L.size() > 0) {
+//			RouteNode v = L.pop();
+//			v.set = null;
+//			if (v == zero) {
+//				// edges of zero are l
+//				for (Route r : routes) {
+//					for (RouteNode w : r) {
+//						if (!w.isTransfer()) {
+//							double dist = v.tightL + w.associatedNode.l;
+//							if (dist < w.tightL) {
+//								if (hasNegCycle(v, w, dist, L)) {
+//									return false;
+//								} 
+//								v.set = S;
+//							}
+//						}
+//					}
+//				}
+//			}
+//			// pickup has outgoing max ride time
+//			if (v.type == RouteNodeType.PICKUP) {	
+//				SolutionRequest sr = requests.get(v.requestId - 1);
+//				RouteNode w = sr.dropoff;
+//				if (w != null) {
+//					double dist = v.tightL + sr.L + v.associatedNode.s;
+//					if (dist < w.tightL) {	
+//						if (hasNegCycle(v, w, dist, L)) {
+//							return false;
+//						} 
+//						v.set = S;
+//					}
+//				}
+//			}
+//			// transfer pickup may hawe associated transfer dropoff
+//			if (v.type == RouteNodeType.TRANSFER_PICKUP) {
+//				SolutionRequest sr = requests.get(v.requestId - 1);
+//				RouteNode w = sr.transferDropoff;
+//				if (w != null) {
+//					double dist = v.tightL - w.associatedNode.s;
+//					if (dist < w.tightL) {
+//						if (hasNegCycle(v, w, dist, L)) {
+//							return false;
+//						} 
+//						v.set = S;
+//					}
+//				}
+//			}
+//			// precedence constraint
+//			if (v.prevInRoute != null) {	
+//				RouteNode w = v.prevInRoute;
+//				double dist = v.tightL - p.distanceBetween(v.associatedNode, w.associatedNode) - w.associatedNode.s;
+//				if (dist < w.tightL) {
+//					if (hasNegCycle(v, w, dist, L)) {
+//						return false;
+//					} 
+//					v.set = S;
+//				}
+//			}
+//			// earliest starting time constraint
+//			if (!v.isTransfer() && v != zero) {
+//				RouteNode w = zero;
+//				double dist = v.tightL - v.associatedNode.e;
+//				if (dist < w.tightL) {
+//					// this implies a negatiwe cycle
+//					if (hasNegCycle(v, w, dist, L)) {
+//						return false;
+//					} 
+//					v.set = S;
+//					return false;
+//				}
+//			}
+//		}
+//		return true;
+//	}
+	
 	public boolean npassL() {
 		//setup
 		int scansSinceLast = 0;
