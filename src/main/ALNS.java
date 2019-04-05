@@ -35,7 +35,7 @@ public class ALNS implements Runnable {
 	
 	
 	// Config settings
-	private static final int NUM_DESTROY_HEURISTICS = 2;
+	private static final int NUM_DESTROY_HEURISTICS = 3;
 	private static final int NUM_REPAIR_HEURISTICS = 2;
 	private static final int MAX_NUM_ACCEPTED_SOLUTIONS = 50; // maximum number of prev accepted solutions to store
 	
@@ -92,6 +92,8 @@ public class ALNS implements Runnable {
 		destroyHeuristics[0] = random;
 		DestroyHeuristic closeRandomTransfer = new CloseRandomTransfer(p, rand);
 		destroyHeuristics[1] = closeRandomTransfer;
+		DestroyHeuristic shaw = new ShawRemoval(p, rand);
+		destroyHeuristics[2] = shaw;
 		
 		// repair
 		RepairHeuristic greedyNoTransferRepair = new GreedyNoTransferRepair(p);

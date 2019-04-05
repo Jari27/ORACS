@@ -69,16 +69,23 @@ public class ShawRemoval extends DestroyHeuristic{
 				highlyRelatedIds[lowestRelatednessIndex] = sr.id;
 				highlyRelated[lowestRelatednessIndex] = relatedness;
 			}
-			Logger.debug("RequestID: {}, relatedness: {},RequestID: {}, relatedness: {},RequestID: {}, relatedness: {},RequestID: {}, relatedness: {}",
-					highlyRelatedIds[0],highlyRelated[0],highlyRelatedIds[1],highlyRelated[1],highlyRelatedIds[2],highlyRelated[2],highlyRelatedIds[3],highlyRelated[3]);
+		}
+		//destroy the randomly chosen request
+		if (!destroySpecific(s, index + 1)) {
+			Logger.warn("Failure during destruction of request {000}", index + 1);
 		}
 		destroyedRequestIds.add(index+1);
 		Logger.debug("Destroyed request {}:", index+1);
+		//destroy the related requests
 		for(int k=0;k<number ; k++){
+			if (!destroySpecific(s, highlyRelatedIds[k])) {
+				Logger.warn("Failure during destruction of request {000}", highlyRelatedIds[k]);
+			}
 			destroyedRequestIds.add(highlyRelatedIds[k]);
 			Logger.debug("Destroyed request: {}", highlyRelatedIds[k]);
-
+			
 		}
+		Logger.info("Doing a Shaw Removal..");
 		return destroyedRequestIds;
 	}
 

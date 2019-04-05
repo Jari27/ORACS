@@ -7,8 +7,10 @@ import java.util.Random;
 
 import org.pmw.tinylog.Logger;
 
+import heuristics.repair.RepairHeuristic.RouteRequest;
 import problem.Node;
 import problem.Problem;
+import solution.RouteNode;
 import solution.Solution;
 import solution.SolutionRequest;
 
@@ -25,7 +27,8 @@ public class BestInsertionWithTransfer extends RepairHeuristic {
 	@Override
 	public boolean repair(Solution s, List<Integer> requestIdsToRepair) {
 		if (s.closedTransfers.size() > 0 && (s.openTransfers.size() == 0 || rand.nextDouble() < CHANCE_OF_OPENING_TRANSFER)) {
-			openRandomTransfer(s);
+			//openRandomTransfer(s);
+			openBestTransfer(s, requestIdsToRepair);
 		}
 		List<Integer> copyOfIds = new ArrayList<>();
 		copyOfIds.addAll(requestIdsToRepair);
@@ -99,6 +102,39 @@ public class BestInsertionWithTransfer extends RepairHeuristic {
 	private Node openRandomTransfer(Solution s) {
 		int index = rand.nextInt(s.closedTransfers.size());	
 		Node transfer = s.closedTransfers.remove(index);
+		s.openTransfers.add(transfer);
+		Logger.info("Opening transfer facility {}", transfer.id);
+		return transfer;
+	}
+	
+	public Node openBestTransfer(Solution s, List<Integer> requestIdsToRepair){
+		//Logger.info("Finding the best transfer facility to open.. there are {} closed and {} open of the {} in total ", s.closedTransfers.size(), s.openTransfers.size(), s.closedTransfers.size()+s.openTransfers.size());
+		double lowestDistance = 10000;
+		int openingTransferIndex = 0;
+		int index =0;
+		for(Node trLoc: s.closedTransfers){
+		//	Logger.info("This is transfer {}, from the {} closed transfer points in total", trLoc.id, s.closedTransfers.size());
+			double distance = 0;
+			for (int i = 0;i<requestIdsToRepair.size();i++) {
+				int reqId = requestIdsToRepair.get(i);
+				for(SolutionRequest sr: s.requests){
+					if(sr.id == reqId){
+						distance = distance + problem.distanceBetween(trLoc, sr.associatedRequest.dropoffNode) + problem.distanceBetween(trLoc, sr.associatedRequest.pickupNode);
+						Logger.info("This is solution request {}, with a distance to the facility of {}", reqId, problem.distanceBetween(trLoc, sr.associatedRequest.dropoffNode) + problem.distanceBetween(trLoc, sr.associatedRequest.pickupNode));
+					}
+				}
+				
+			}
+			//Logger.info("Total distance to the requests is {}", distance);
+			if(distance < lowestDistance){
+				//Logger.info("Lowest distance is achieved..");
+				lowestDistance = distance;
+				openingTransferIndex = index;
+			}
+			index++;
+		}				
+		Node transfer = s.closedTransfers.remove(openingTransferIndex);
+		Logger.info("Opening transfer facility {} to insert {} requests", transfer.id, requestIdsToRepair.size());
 		s.openTransfers.add(transfer);
 		return transfer;
 	}
