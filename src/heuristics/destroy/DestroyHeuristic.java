@@ -34,17 +34,21 @@ public abstract class DestroyHeuristic {
 	 */
 	public abstract List<Integer> destroy(Solution s, int number);
 	
-	public boolean destroySpecific(Solution s, int requestId) {
+	public boolean destroySpecific(Solution s, int requestId, boolean report) {
 		SolutionRequest sr = s.requests.get(requestId - 1);
 		
 		if (sr.hasTransfer()) {
-			return removeWithTransfer(s, sr);
+			return removeWithTransfer(s, sr, report);
 		} else {
-			return removeWithoutTransfer(s, sr);
+			return removeWithoutTransfer(s, sr, report);
 		}
 	}
 	
-	protected boolean removeWithoutTransfer(Solution s, SolutionRequest sr) {
+	public boolean destroySpecific(Solution s, int requestId) {
+		return destroySpecific(s, requestId, true);
+	}
+	
+	protected boolean removeWithoutTransfer(Solution s, SolutionRequest sr, boolean report) {
 		int numRemoved = 0;
 		for (ListIterator<Route> iter = s.routes.listIterator(); iter.hasNext();) {
 			Route route = iter.next();
@@ -86,7 +90,7 @@ public abstract class DestroyHeuristic {
 			sr.dropoff = null;
 			if (numRemoved == 2) {
 				return true;
-			} else {
+			} else if (report) {
 				Logger.warn("Removed {} nodes instead of 2!", numRemoved);
 				return false;
 			}
@@ -95,7 +99,7 @@ public abstract class DestroyHeuristic {
 		return false;
 	}
 	
-	protected boolean removeWithTransfer(Solution s, SolutionRequest sr) {
+	protected boolean removeWithTransfer(Solution s, SolutionRequest sr, boolean report) {
 		int numRemoved = 0;
 		int routesDone = 0;
 		for (ListIterator<Route> iter = s.routes.listIterator(); iter.hasNext();) {
@@ -116,6 +120,10 @@ public abstract class DestroyHeuristic {
 					RouteNode cur = iter1.next();
 					if (cur == sr.pickup || cur == sr.dropoff || cur == sr.transferDropoff || cur == sr.transferPickup) {
 						iter1.remove();
+						if (route.size() == 0) {
+							// remove route if it is completely gone
+							iter.remove();
+						}
 						numRemoved++;
 					} else {
 						if (numRemoved > 0 && routesDone == 0 || numRemoved > 2 && routesDone == 1) {
@@ -143,10 +151,11 @@ public abstract class DestroyHeuristic {
 		sr.transferPickup = null;
 		if (numRemoved == 4 && routesDone == 2) {
 			return true;
-		} else {
+		} else if (report) {
 			Logger.warn("Removed {}/4 nodes in {}/2 routes!", numRemoved, routesDone);
 			return false;
 		}
+		return true;
 	}
 
 }

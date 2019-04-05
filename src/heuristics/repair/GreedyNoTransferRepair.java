@@ -4,6 +4,7 @@
 package heuristics.repair;
 
 import java.util.List;
+import java.util.Random;
 
 import org.pmw.tinylog.Logger;
 
@@ -15,8 +16,8 @@ public class GreedyNoTransferRepair extends RepairHeuristic {
 	
 	Route bestRoute = null;
 
-	public GreedyNoTransferRepair(Problem problem) {
-		super(problem);
+	public GreedyNoTransferRepair(Problem problem, Random r) {
+		super(problem, r);
 	}
 
 	/* (non-Javadoc)

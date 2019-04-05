@@ -14,8 +14,10 @@ import org.pmw.tinylog.Logger;
 import heuristics.destroy.CloseRandomTransfer;
 import heuristics.destroy.DestroyHeuristic;
 import heuristics.destroy.RandomDestroy;
+import heuristics.destroy.ShawRemoval;
 import heuristics.repair.GreedyNoTransferRepair;
 import heuristics.repair.RepairHeuristic;
+import heuristics.repair.TransferFirst;
 import heuristics.repair.BestInsertionWithTransfer;
 import problem.Problem;
 import solution.Solution;
@@ -36,7 +38,7 @@ public class ALNS implements Runnable {
 	
 	// Config settings
 	private static final int NUM_DESTROY_HEURISTICS = 3;
-	private static final int NUM_REPAIR_HEURISTICS = 2;
+	private static final int NUM_REPAIR_HEURISTICS = 3;
 	private static final int MAX_NUM_ACCEPTED_SOLUTIONS = 50; // maximum number of prev accepted solutions to store
 	
 	private static final double SMOOTHING_FACTOR = 0.1;
@@ -75,7 +77,7 @@ public class ALNS implements Runnable {
 		this.bestSol = this.currentSol;
 		this.acceptedSolutions.add(currentSol);
 		this.seed = 1553532450933L;
-		this.seed = System.currentTimeMillis(); // to allow printing
+//		this.seed = System.currentTimeMillis(); // to allow printing
 		
 		this.rand = new Random(this.seed);
 		
@@ -96,10 +98,12 @@ public class ALNS implements Runnable {
 		destroyHeuristics[2] = shaw;
 		
 		// repair
-		RepairHeuristic greedyNoTransferRepair = new GreedyNoTransferRepair(p);
+		RepairHeuristic greedyNoTransferRepair = new GreedyNoTransferRepair(p, rand);
 		repairHeuristics[0] = greedyNoTransferRepair;
 		RepairHeuristic bestInsertionWithTransfer = new BestInsertionWithTransfer(p, rand);
 		repairHeuristics[1] = bestInsertionWithTransfer;
+		RepairHeuristic TransferFirst = new TransferFirst(p, rand, random);
+		repairHeuristics[2] = TransferFirst;
 		
 		
 		// weights
@@ -219,7 +223,7 @@ public class ALNS implements Runnable {
 			List<Integer> destroyed = null;
 			if (iterationsWithoutImprovement > ITERATIONS_BEFORE_FORCED_CHANGE) {
 				Logger.info("Doing big destruction");
-				destroy.destroy(copy, rand.nextInt(2 *(int) Math.round(p.numRequests * 0.05 + 1)));
+				destroyed = destroy.destroy(copy, rand.nextInt(2 *(int) Math.round(p.numRequests * 0.05 + 1)));
 			} else if (iterationsWithoutImprovement > 100) {
 				break;
 			} else {

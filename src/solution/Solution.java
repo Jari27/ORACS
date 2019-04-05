@@ -160,7 +160,6 @@ public class Solution {
 	 * @throws FileNotFoundException
 	 */
 	public void exportSolution(boolean isInitial) throws FileNotFoundException {
-		// TODO handle transfers
 		String file = isInitial ? String.format("solutions/initial/oracs_%d.csv", p.index)
 				: String.format("solutions/finished/oracs_%d.csv", p.index);
 		try (PrintWriter writer = new PrintWriter(new File(file))) {

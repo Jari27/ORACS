@@ -85,7 +85,7 @@ public class ShawRemoval extends DestroyHeuristic{
 			Logger.debug("Destroyed request: {}", highlyRelatedIds[k]);
 			
 		}
-		Logger.info("Doing a Shaw Removal..");
+		Logger.debug("Finished shaw removal");
 		return destroyedRequestIds;
 	}
 

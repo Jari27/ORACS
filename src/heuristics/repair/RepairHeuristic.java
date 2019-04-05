@@ -1,6 +1,10 @@
 package heuristics.repair;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import org.pmw.tinylog.Logger;
 
@@ -20,9 +24,11 @@ import solution.SolutionRequest;
 public abstract class RepairHeuristic {
 
 	Problem problem;
+	Random r;
 
-	public RepairHeuristic(Problem problem) {
+	public RepairHeuristic(Problem problem, Random r) {
 		this.problem = problem;
+		this.r = r;
 	}
 
 	/**
@@ -135,7 +141,6 @@ public abstract class RepairHeuristic {
 	 * @param p
 	 * @return
 	 */
-	// TODO: do own time window in seperate function so we can abort early?
 	protected boolean NC1(int location, Route route, RouteNode insert, Problem p) {
 		RouteNode prev = null;
 		double prevS = insert.getStartOfS(); // this is set in the function verifyOwnInsertionWindow
@@ -172,6 +177,15 @@ public abstract class RepairHeuristic {
 			prev = route.get(location - 1);
 			double arrival = prev.getStartOfS() + prev.associatedNode.s
 					+ p.distanceBetween(insert.associatedNode, prev.associatedNode);
+			if (insert.isTransfer()) {
+				// check transfer time window differently
+				// i.e. check that after doing transfer & travel from transfer to dropoff
+				// we can make dropoff
+				Request assocReq = p.requests.get(insert.requestId - 1);
+				if (arrival + insert.associatedNode.s + p.distanceBetween(insert.associatedNode, assocReq.dropoffNode) > assocReq.dropoffNode.l) {
+					return false;
+				}
+			}
 			if (arrival < insert.associatedNode.l) {
 				insert.setStartOfS(Math.max(arrival, insert.associatedNode.e));
 				return true;
@@ -449,6 +463,50 @@ public abstract class RepairHeuristic {
 		result.transfer = bestTransfer;
 		result.insertionCost = bestInsertionCost;
 		return result;
+	}
+	
+	public Node openBestTransfer(Solution s, List<Integer> requestIdsToRepair, int topN){
+		//Logger.info("Finding the best transfer facility to open.. there are {} closed and {} open of the {} in total ", s.closedTransfers.size(), s.openTransfers.size(), s.closedTransfers.size()+s.openTransfers.size());
+		LinkedList<Node> transfers = new LinkedList<>();
+		LinkedList<Double> distances = new LinkedList<>();
+		
+		for (Node transfer : s.closedTransfers) {
+			double dist = 0;
+			for (int idToRepair : requestIdsToRepair) {
+				SolutionRequest r = s.requests.get(idToRepair - 1);
+				dist += problem.distanceBetween(transfer, r.associatedRequest.pickupNode) + problem.distanceBetween(transfer, r.associatedRequest.dropoffNode);
+			}
+			int insert = Arrays.binarySearch(distances.toArray(), dist);
+			if (insert < 0) {
+				insert = -insert - 1;
+			}
+			transfers.add(insert, transfer);
+			distances.add(insert, dist);
+		}
+		
+		Node transferToOpen = transfers.get(r.nextInt(topN));
+		s.closedTransfers.remove(transferToOpen);
+		s.openTransfers.add(transferToOpen);
+		return transferToOpen;
+	}
+	
+	protected void removeUselessTransfers(Solution s) {
+		Logger.debug("Post-processing: removing useless transfers");
+		List<Node> copyOfOpenTransfers = new ArrayList<>();
+		copyOfOpenTransfers.addAll(s.openTransfers);
+		
+		for (SolutionRequest sr : s.requests) {
+			if (sr.hasTransfer()) {
+				copyOfOpenTransfers.remove(sr.transferDropoff.associatedNode);
+			}
+		}
+		
+		for (Node transfer : copyOfOpenTransfers) {
+			Logger.debug("Closed transfer {} because it is unused.", transfer);
+			s.openTransfers.remove(transfer);
+			s.closedTransfers.add(transfer);
+		}
+		
 	}
 	
 	// inner data class

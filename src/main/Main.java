@@ -27,29 +27,45 @@ public class Main {
 		Logger.info("Starting main program.");
 		problems = createProblemInstances();
 		solutions = new ArrayList<>();
+		if (args.length > 0) {
+			int index = Integer.parseInt(args[0]);
+			ALNSRunner runner = new ALNSRunner();
+			runner.assignProblem(problems.get(index));
+			problems = null;
+			runner.start();
+		}
 //		for (Problem p : problems) {
 //			ALNS test = new ALNS(p);
 //			test.run();
 //		}
 		
-		ALNS test = new ALNS(problems.get(55));
+		int problem = 55;
+		ALNS test = new ALNS(problems.get(problem));
+		problems.clear();
+		for (Problem p : problems) {
+			if (p.index != problem + 1) {
+				p = null;
+			}
+		}
 		test.run();
 //		
-//		if (true) return;
 		
-		int numThreads = Runtime.getRuntime().availableProcessors();
 		
-		ALNSRunner[] runners = new ALNSRunner[numThreads];
+		if (true) return;
 		
-		for (int i = 0; i < numThreads; i++) {
-			int index = i;
-			runners[i] = new ALNSRunner();
-			while (index < problems.size()) {
-				runners[i].assignProblem(problems.get(index));
-				index += numThreads;
-			}
-			runners[i].start();
-		}
+//		int numThreads = Runtime.getRuntime().availableProcessors();
+//		
+//		ALNSRunner[] runners = new ALNSRunner[numThreads];
+//		
+//		for (int i = 0; i < numThreads; i++) {
+//			int index = i;
+//			runners[i] = new ALNSRunner();
+//			while (index < problems.size()) {
+//				runners[i].assignProblem(problems.get(index));
+//				index += numThreads;
+//			}
+//			runners[i].start();
+//		}
 	}
 	
 	/**
