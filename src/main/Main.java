@@ -56,6 +56,7 @@ public class Main {
 		
 		int start = Integer.parseInt(args[0]);
 		int end = Integer.parseInt(args[1]);
+		int it = Integer.parseInt(args[2]);
 		int numThreads = Math.min(Runtime.getRuntime().availableProcessors(), end-start);
 //		int iter = Integer.parseInt(args[2]);
 		

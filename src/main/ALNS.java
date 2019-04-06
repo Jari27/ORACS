@@ -36,11 +36,12 @@ public class ALNS implements Runnable {
 	
 	// ALNS settings
 	private static final double ETA = 0.025; // noise in objec. function multiplier
-	private static final int MAX_IT = 1000;
-	private double coolingRate = 0.99975;
+	private static final int DEFAULT_MAX_IT = 1000;
+	private double coolingRate = 0.99975; // will be recalculated
 	private static final double W = 0.05; // a new solution will initially be accepted with probability 50% if it is this much worse than the old 
 	private double temp;
 	
+	private int MAX_IT = 1000;
 	
 	// Config settings
 	private static final int NUM_DESTROY_HEURISTICS = 4;
@@ -77,6 +78,11 @@ public class ALNS implements Runnable {
 	double[] smoothedWeightObjectiveNoise = new double[2];
 	
 	public ALNS(Problem p) {
+		this(p, DEFAULT_MAX_IT);
+	}
+	
+	public ALNS(Problem p, int it) {
+		this.MAX_IT = it;
 		this.p = p;
 		this.currentSol = new Solution(p);
 		this.currentSol.createInitialSolution();
@@ -84,6 +90,7 @@ public class ALNS implements Runnable {
 		this.acceptedSolutions.add(currentSol);
 		this.seed = 1554481654455L;
 		this.seed = System.currentTimeMillis(); // to allow printing
+		
 		
 		this.rand = new Random(this.seed);
 		
@@ -299,6 +306,12 @@ public class ALNS implements Runnable {
 					segmentPointsRepair[repairId] += 13;
 					segmentPointsObjectiveNoise[objectiveNoiseId] += 13;
 					Logger.debug("Problem instance {}: New best solution. Cost: {00.00}", p.index, bestCost);
+					try {
+						bestSol.exportSolution(false);
+					} catch (FileNotFoundException e) {
+						Logger.error(e);
+						//e.printStackTrace();
+					}
 				}
 			} else {
 				Logger.debug("Problem instance {}: Repaired solution was not accepted.", p.index);
