@@ -96,7 +96,7 @@ public class ALNS implements Runnable {
 		
 		double old = currentSol.getCost();
 		this.temp = - W * old / Math.log(0.5);
-		this.coolingRate = Math.pow(0.1, 1.0/MAX_IT);
+		this.coolingRate = Math.pow(1/old, 1.0/MAX_IT);
 		
 		this.writeNewBestSolution(0, this.currentSol, true);
 		
@@ -224,7 +224,7 @@ public class ALNS implements Runnable {
 			Logger.debug("Problem instance {}: ITERATION {}", p.index, i);
 			if (i % 10 == 0) {
 				updateWeights();
-				Logger.info("ITERATION {} \nRuntime {}s for instance {}", i, (System.currentTimeMillis() - start) / 1000, p.index);
+				Logger.info("ITERATION {} \nRuntime {}s for instance {}\nTemp {}", i, (System.currentTimeMillis() - start) / 1000, p.index, temp);
 			}
 //			if (i % 10 == 0) {
 //				Logger.info("Current iteration: {}", i);
@@ -246,9 +246,9 @@ public class ALNS implements Runnable {
 			List<Integer> destroyed = null;
 			if (iterationsWithoutImprovement > ITERATIONS_BEFORE_FORCED_CHANGE) {
 				Logger.info("Doing big destruction");
-				destroyed = destroy.destroy(copy, rand.nextInt(4 *(int) Math.round(p.numRequests * 0.05 + 1)));
-			} else if (iterationsWithoutImprovement > 100) {
-				Logger.info("No improvement for the last 100 iterations. Aborting..");
+				destroyed = destroy.destroy(copy, rand.nextInt((int) Math.round(p.numRequests * 0.05)) + (int)Math.round(p.numRequests * 0.05));
+			} else if (iterationsWithoutImprovement > 50) {
+				Logger.info("No acceptation for the last 50 iterations. Aborting..");
 				break;
 			} else {
 				destroyed = destroy.destroy(copy, rand.nextInt((int)Math.round(p.numRequests * 0.05 + 1))); // this always works
@@ -261,6 +261,7 @@ public class ALNS implements Runnable {
 				// could not repair
 				Logger.debug("Problem instance {}: {} yielded no valid solution. Going to next iteration.", p.index, repair);
 				Logger.debug("Problem instance {}: Current cost: {00.00}. Best cost: {00.00}", p.index, currentCost, bestCost);
+				nextTemp();
 				continue;
 			}
 			
@@ -277,7 +278,8 @@ public class ALNS implements Runnable {
 				adjustedCost = applyNoise(adjustedCost);
 			}
 			
-			if (newCost != currentCost && (newCost < currentCost  || accept(currentCost, adjustedCost, nextTemp()))) {
+			double t = nextTemp();
+			if (newCost != currentCost && (newCost < currentCost  || accept(currentCost, adjustedCost, t))) {
 				Logger.debug("Problem instance {}: Accepted new solution {}", p.index, (adjustedCost < currentCost ? "" : "(simulated annealing)"));
 				// update segment weights
 				segmentPointsDestroy[destroyId] += 15; // total: +15
@@ -366,7 +368,10 @@ public class ALNS implements Runnable {
 			file.delete();
 		}
 		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
-			writer.println(iteration + ", " + s.getCost());
+			if (delete) {
+				writer.println("it,cur,best,temp");
+			}
+			writer.println(iteration + "," + s.getCost() + "," + bestSol.getCost() + "," + temp);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

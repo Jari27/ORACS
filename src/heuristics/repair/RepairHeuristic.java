@@ -476,13 +476,13 @@ public abstract class RepairHeuristic {
 				SolutionRequest r = s.requests.get(idToRepair - 1);
 				dist += problem.distanceBetween(transfer, r.associatedRequest.pickupNode) + problem.distanceBetween(transfer, r.associatedRequest.dropoffNode);
 			}
-			dist = (double)transfer.f/dist;
-			int insert = Arrays.binarySearch(distances.toArray(), dist);
+			double wc = (double)transfer.f * dist;
+			int insert = Arrays.binarySearch(distances.toArray(), wc);
 			if (insert < 0) {
 				insert = -insert - 1;
 			}
 			transfers.add(insert, transfer);
-			distances.add(insert, dist);
+			distances.add(insert, wc);
 		}
 		
 		double y = r.nextDouble();
