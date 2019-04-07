@@ -23,7 +23,6 @@ public class ALNSRunner extends Thread {
 	
 	@Override
 	public void run() {
-		long start = System.currentTimeMillis();
 		Logger.info("Started at {}", new Date().toString());
 		for (Problem p : problems) {
 			ALNS algo;
@@ -34,8 +33,6 @@ public class ALNSRunner extends Thread {
 			}
 			algo.run();
 		}
-		Logger.info("Finished at {}", new Date().toString());
-		Logger.info("Runtime {}s for this thread", (System.currentTimeMillis() - start) / 1000);
 	}
 	
 }

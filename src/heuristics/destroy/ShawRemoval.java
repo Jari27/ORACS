@@ -1,8 +1,10 @@
 package heuristics.destroy;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import org.pmw.tinylog.Logger;
+
 import problem.Problem;
 import solution.Solution;
 import solution.SolutionRequest;
@@ -49,43 +51,40 @@ public class ShawRemoval extends DestroyHeuristic{
 		}
 		int index = rand.nextInt(s.requests.size());
 		Logger.debug("We randomly selected request {} to select the {} requests with the highest relatedness and destroy them.",index+1, number);
-		int[] highlyRelatedIds = new int[number];
-		double[] highlyRelated = new double[number];
-		double lowestRelatedness = 0; 
-		int lowestRelatednessIndex = 0;
-		for(SolutionRequest sr : s.requests){
-			double relatedness = calcRelatedness(s.requests.get(index), sr, s);
-			Logger.debug("This is request {}, it has relatedness {}", sr.id, relatedness);
-			//double requestIDLowestRelatedness = highlyRelated[0][lowestRelatednessIndex];
-			lowestRelatedness = 10;
-			for(int i = 0; i< number;i++){
-				if(highlyRelated[i] <= lowestRelatedness){
-					lowestRelatedness = highlyRelated[i];
-					lowestRelatednessIndex = i;
+		
+		ArrayList<SolutionRequest> ordered = new ArrayList<>();
+		SolutionRequest root = s.requests.get(rand.nextInt(s.requests.size()));
+		for (SolutionRequest sr : s.requests) {
+			if (sr == root) {
+				continue;
+			}
+			else {
+				ordered.add(sr);
+			}
+		}
+		
+		ordered.sort(new Comparator<SolutionRequest>() {
+			@Override
+			public int compare(SolutionRequest lhs, SolutionRequest rhs) {
+				double delta = calcRelatedness(lhs, root, s) - calcRelatedness(rhs, root, s);
+				if (delta < 0) {
+					return -1;
+				} else if (delta > 0) {
+					return 1;
 				}
+				return 0;
 			}
-			Logger.debug("Lowest position is: {}, the lowest relatedness is: {}",lowestRelatednessIndex+1 ,lowestRelatedness);
-			if(relatedness > lowestRelatedness){ 
-				highlyRelatedIds[lowestRelatednessIndex] = sr.id;
-				highlyRelated[lowestRelatednessIndex] = relatedness;
-			}
+		});
+				
+		while (number > 0) {
+			double y = rand.nextDouble();
+			double yp = Math.pow(y, 9); // from Masson 2013
+			int indexToRemove = (int) Math.max(Math.floor((yp * (problem.numRequests - destroyedRequestIds.size() - 1))), 0);
+			SolutionRequest nodeToRemove = ordered.remove(indexToRemove);
+			destroyedRequestIds.add(nodeToRemove.id);
+			destroySpecific(s, nodeToRemove.id);
+			number--;
 		}
-		//destroy the randomly chosen request
-		if (!destroySpecific(s, index + 1)) {
-			Logger.warn("Failure during destruction of request {000}", index + 1);
-		}
-		destroyedRequestIds.add(index+1);
-		Logger.debug("Destroyed request {}:", index+1);
-		//destroy the related requests
-		for(int k=0;k<number ; k++){
-			if (!destroySpecific(s, highlyRelatedIds[k])) {
-//				Logger.warn("Failure during destruction of request {000}", highlyRelatedIds[k]);
-			}
-			destroyedRequestIds.add(highlyRelatedIds[k]);
-			Logger.debug("Destroyed request: {}", highlyRelatedIds[k]);
-			
-		}
-		Logger.debug("Finished shaw removal");
 		return destroyedRequestIds;
 	}
 

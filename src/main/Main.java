@@ -36,8 +36,8 @@ public class Main {
 ////			ALNS test = new ALNS(p);
 ////			test.run();
 ////		}
-		problems = createProblemInstances();
-		solutions = new ArrayList<>();
+//		problems = createProblemInstances();
+//		solutions = new ArrayList<>();
 		
 //		int problem = 55;
 //		ALNS test = new ALNS(problems.get(problem));
@@ -57,7 +57,7 @@ public class Main {
 		int start = Integer.parseInt(args[0]);
 		int end = Integer.parseInt(args[1]);
 		int it = Integer.parseInt(args[2]);
-		int numThreads = Math.min(Runtime.getRuntime().availableProcessors(), end-start);
+		int numThreads = Math.min(Runtime.getRuntime().availableProcessors(), end-start + 1);
 //		int iter = Integer.parseInt(args[2]);
 		
 		ALNSRunner[] runners = new ALNSRunner[numThreads];
@@ -65,14 +65,15 @@ public class Main {
 		for (int i = 0; i < numThreads; i++) {
 			int index = i + start;
 			runners[i] = new ALNSRunner();
+			runners[i].setIterations(it);
 			while (index <= end && index <= 195) {
 				runners[i].assignProblem(getSpecificProblem(index));
 				index += numThreads;
 			}
 			runners[i].start();
 		}
-		problems.clear();
-		problems = null;
+//		problems.clear();
+//		problems = null;
 	}
 	
 	/**
