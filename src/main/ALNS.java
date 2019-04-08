@@ -244,12 +244,14 @@ public class ALNS implements Runnable {
 			Solution copy = currentSol.copy(); // never modify currentSol
 			
 			List<Integer> destroyed = null;
-			if (iterationsWithoutImprovement > ITERATIONS_BEFORE_FORCED_CHANGE) {
-				Logger.info("Doing big destruction");
-				destroyed = destroy.destroy(copy, rand.nextInt((int) Math.round(p.numRequests * 0.05)) + (int)Math.round(p.numRequests * 0.05));
-			} else if (iterationsWithoutImprovement > 50) {
-				Logger.info("No acceptation for the last 50 iterations. Aborting..");
+			
+			if (iterationsWithoutImprovement > 150) {
+				Logger.info("No acceptation for the last 100 iterations. Aborting..");
 				break;
+			} else if (iterationsWithoutImprovement > ITERATIONS_BEFORE_FORCED_CHANGE) {
+				double factor = (double) iterationsWithoutImprovement / (double) ITERATIONS_BEFORE_FORCED_CHANGE + 1;
+				Logger.info("Doing big destruction. Factor: {00.00}", factor);
+				destroyed = destroy.destroy(copy, rand.nextInt((int) Math.round(p.numRequests * 0.05)) + (int)Math.round(p.numRequests * factor * 0.05));
 			} else {
 				destroyed = destroy.destroy(copy, rand.nextInt((int)Math.round(p.numRequests * 0.05 + 1))); // this always works
 			}
@@ -369,9 +371,19 @@ public class ALNS implements Runnable {
 		}
 		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
 			if (delete) {
-				writer.println("it,cur,best,temp");
+				writer.println("it,cur,best,temp,d1,d2,d3,d4,r1,r2,r3,noise1,noise2");
 			}
-			writer.println(iteration + "," + s.getCost() + "," + bestSol.getCost() + "," + temp);
+			writer.print(iteration + "," + s.getCost() + "," + bestSol.getCost() + "," + temp);
+			for (int i = 0; i < smoothedWeightDestroy.length; i++) {
+				writer.print("," + smoothedWeightDestroy[i]);
+			}
+			for (int i = 0; i < smoothedWeightRepair.length; i++) {
+				writer.print("," + smoothedWeightRepair[i]);
+			}
+			for (int i = 0; i < smoothedWeightObjectiveNoise.length; i++) {
+				writer.print("," + smoothedWeightObjectiveNoise[i]);
+			}
+			writer.println();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

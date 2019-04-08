@@ -1,0 +1,1510 @@
+2019-04-07 23:17:51 [main] main.Main.main()
+INFO: Starting main program.
+2019-04-07 23:17:51 [main] main.Main.parseInstance()
+INFO: Parsing problem instance 173
+2019-04-07 23:17:51 [main] problem.Problem.preProcess()
+INFO: Preprocessing problem instance 173
+2019-04-07 23:17:51 [main] problem.Problem.isFeasible()
+INFO: Instance 173: all requests are feasible
+2019-04-07 23:17:51 [Thread-0] main.ALNSRunner.run()
+INFO: Started at Sun Apr 07 23:17:51 CEST 2019
+2019-04-07 23:17:51 [Thread-0] solution.Solution.createInitialSolution()
+INFO: Found an initial solution for problem 173 with cost 5077.16
+2019-04-07 23:17:51 [Thread-0] main.ALNS.run()
+INFO: Problem instance 173: SEED: 1554671871567
+2019-04-07 23:17:51 [Thread-0] main.ALNS.run()
+INFO: Problem instance 173: Initial cost: 5077.16
+2019-04-07 23:18:20 [Thread-0] main.ALNS.run()
+INFO: ITERATION 10 
+Runtime 29s for instance 173
+Temp 352.4440886815474
+2019-04-07 23:18:50 [Thread-0] main.ALNS.run()
+INFO: ITERATION 20 
+Runtime 58s for instance 173
+Temp 337.7241566950094
+2019-04-07 23:19:40 [Thread-0] main.ALNS.run()
+INFO: ITERATION 30 
+Runtime 108s for instance 173
+Temp 323.61900703748967
+2019-04-07 23:20:33 [Thread-0] main.ALNS.run()
+INFO: ITERATION 40 
+Runtime 162s for instance 173
+Temp 310.10296314251883
+2019-04-07 23:21:18 [Thread-0] main.ALNS.run()
+INFO: ITERATION 50 
+Runtime 207s for instance 173
+Temp 297.15142083304863
+2019-04-07 23:22:15 [Thread-0] main.ALNS.run()
+INFO: ITERATION 60 
+Runtime 264s for instance 173
+Temp 284.7408035327886
+2019-04-07 23:22:56 [Thread-0] main.ALNS.run()
+INFO: ITERATION 70 
+Runtime 304s for instance 173
+Temp 272.84851934815606
+2019-04-07 23:23:11 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:23:25 [Thread-0] main.ALNS.run()
+INFO: ITERATION 80 
+Runtime 334s for instance 173
+Temp 261.45291994271
+2019-04-07 23:24:08 [Thread-0] main.ALNS.run()
+INFO: ITERATION 90 
+Runtime 376s for instance 173
+Temp 250.53326112920718
+2019-04-07 23:24:54 [Thread-0] main.ALNS.run()
+INFO: ITERATION 100 
+Runtime 423s for instance 173
+Temp 240.0696651075425
+2019-04-07 23:25:42 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:25:42 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:25:42 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:26:17 [Thread-0] main.ALNS.run()
+INFO: ITERATION 110 
+Runtime 506s for instance 173
+Temp 230.043084279833
+2019-04-07 23:27:16 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:27:16 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 160
+2019-04-07 23:28:05 [Thread-0] main.ALNS.run()
+INFO: ITERATION 120 
+Runtime 613s for instance 173
+Temp 220.43526657677552
+2019-04-07 23:28:09 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:28:09 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 139
+2019-04-07 23:28:33 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:28:41 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:28:41 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 097
+2019-04-07 23:29:08 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:29:10 [Thread-0] main.ALNS.run()
+INFO: ITERATION 130 
+Runtime 678s for instance 173
+Temp 211.2287222321594
+2019-04-07 23:30:24 [Thread-0] main.ALNS.run()
+INFO: ITERATION 140 
+Runtime 752s for instance 173
+Temp 202.40669194505168
+2019-04-07 23:31:12 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:31:12 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:31:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 150 
+Runtime 819s for instance 173
+Temp 193.9531163716979
+2019-04-07 23:32:15 [Thread-0] main.ALNS.run()
+INFO: ITERATION 160 
+Runtime 863s for instance 173
+Temp 185.85260689160245
+2019-04-07 23:33:04 [Thread-0] main.ALNS.run()
+INFO: ITERATION 170 
+Runtime 912s for instance 173
+Temp 178.09041759457315
+2019-04-07 23:33:47 [Thread-0] main.ALNS.run()
+INFO: ITERATION 180 
+Runtime 956s for instance 173
+Temp 170.65241843773416
+2019-04-07 23:34:21 [Thread-0] main.ALNS.run()
+INFO: ITERATION 190 
+Runtime 990s for instance 173
+Temp 163.52506952364482
+2019-04-07 23:34:59 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:35:15 [Thread-0] main.ALNS.run()
+INFO: ITERATION 200 
+Runtime 1043s for instance 173
+Temp 156.69539645270035
+2019-04-07 23:35:31 [Thread-0] main.ALNS.run()
+INFO: ITERATION 210 
+Runtime 1059s for instance 173
+Temp 150.15096670494702
+2019-04-07 23:36:13 [Thread-0] main.ALNS.run()
+INFO: ITERATION 220 
+Runtime 1102s for instance 173
+Temp 143.87986700831746
+2019-04-07 23:37:07 [Thread-0] main.ALNS.run()
+INFO: ITERATION 230 
+Runtime 1155s for instance 173
+Temp 137.8706816520887
+2019-04-07 23:37:51 [Thread-0] main.ALNS.run()
+INFO: ITERATION 240 
+Runtime 1199s for instance 173
+Temp 132.11247170608482
+2019-04-07 23:38:59 [Thread-0] main.ALNS.run()
+INFO: ITERATION 250 
+Runtime 1268s for instance 173
+Temp 126.59475510779593
+2019-04-07 23:40:12 [Thread-0] main.ALNS.run()
+INFO: ITERATION 260 
+Runtime 1340s for instance 173
+Temp 121.30748758116445
+2019-04-07 23:40:15 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:41:07 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:41:31 [Thread-0] main.ALNS.run()
+INFO: ITERATION 270 
+Runtime 1420s for instance 173
+Temp 116.24104435230397
+2019-04-07 23:42:49 [Thread-0] main.ALNS.run()
+INFO: ITERATION 280 
+Runtime 1497s for instance 173
+Temp 111.38620262886656
+2019-04-07 23:44:04 [Thread-0] main.ALNS.run()
+INFO: ITERATION 290 
+Runtime 1572s for instance 173
+Temp 106.7341248111645
+2019-04-07 23:45:45 [Thread-0] main.ALNS.run()
+INFO: ITERATION 300 
+Runtime 1674s for instance 173
+Temp 102.27634240448445
+2019-04-07 23:47:06 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:47:16 [Thread-0] main.ALNS.run()
+INFO: ITERATION 310 
+Runtime 1765s for instance 173
+Temp 98.0047406033086
+2019-04-07 23:48:54 [Thread-0] main.ALNS.run()
+INFO: ITERATION 320 
+Runtime 1862s for instance 173
+Temp 93.91154351938056
+2019-04-07 23:49:40 [Thread-0] main.ALNS.run()
+INFO: ITERATION 330 
+Runtime 1908s for instance 173
+Temp 89.98930002672513
+2019-04-07 23:50:45 [Thread-0] main.ALNS.run()
+INFO: ITERATION 340 
+Runtime 1973s for instance 173
+Temp 86.23087019785538
+2019-04-07 23:52:17 [Thread-0] main.ALNS.run()
+INFO: ITERATION 350 
+Runtime 2066s for instance 173
+Temp 82.62941230647536
+2019-04-07 23:53:37 [Thread-0] main.ALNS.run()
+INFO: ITERATION 360 
+Runtime 2146s for instance 173
+Temp 79.17837037301875
+2019-04-07 23:54:20 [Thread-0] main.ALNS.run()
+INFO: ITERATION 370 
+Runtime 2188s for instance 173
+Temp 75.87146223035207
+2019-04-07 23:54:54 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:55:20 [Thread-0] main.ALNS.run()
+INFO: ITERATION 380 
+Runtime 2249s for instance 173
+Temp 72.70266808791699
+2019-04-07 23:55:42 [Thread-0] main.ALNS.run()
+INFO: ITERATION 390 
+Runtime 2270s for instance 173
+Temp 69.66621957349477
+2019-04-07 23:56:37 [Thread-0] main.ALNS.run()
+INFO: ITERATION 400 
+Runtime 2325s for instance 173
+Temp 66.75658923264477
+2019-04-07 23:58:06 [Thread-0] main.ALNS.run()
+INFO: ITERATION 410 
+Runtime 2414s for instance 173
+Temp 63.96848046670188
+2019-04-07 23:58:23 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:58:46 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:59:05 [Thread-0] main.ALNS.run()
+INFO: ITERATION 420 
+Runtime 2474s for instance 173
+Temp 61.29681789101649
+2019-04-08 00:00:08 [Thread-0] main.ALNS.run()
+INFO: ITERATION 430 
+Runtime 2536s for instance 173
+Temp 58.73673809588557
+2019-04-08 00:01:21 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:01:37 [Thread-0] main.ALNS.run()
+INFO: ITERATION 440 
+Runtime 2626s for instance 173
+Temp 56.28358079335599
+2019-04-08 00:02:34 [Thread-0] main.ALNS.run()
+INFO: ITERATION 450 
+Runtime 2683s for instance 173
+Temp 53.932880333784375
+2019-04-08 00:03:24 [Thread-0] main.ALNS.run()
+INFO: ITERATION 460 
+Runtime 2733s for instance 173
+Temp 51.68035757671037
+2019-04-08 00:04:21 [Thread-0] main.ALNS.run()
+INFO: ITERATION 470 
+Runtime 2790s for instance 173
+Temp 49.52191210124519
+2019-04-08 00:05:13 [Thread-0] main.ALNS.run()
+INFO: ITERATION 480 
+Runtime 2842s for instance 173
+Temp 47.453614741795676
+2019-04-08 00:05:48 [Thread-0] main.ALNS.run()
+INFO: ITERATION 490 
+Runtime 2876s for instance 173
+Temp 45.47170043553602
+2019-04-08 00:06:25 [Thread-0] main.ALNS.run()
+INFO: ITERATION 500 
+Runtime 2913s for instance 173
+Temp 43.572561368607026
+2019-04-08 00:07:17 [Thread-0] main.ALNS.run()
+INFO: ITERATION 510 
+Runtime 2966s for instance 173
+Temp 41.75274040856626
+2019-04-08 00:08:25 [Thread-0] main.ALNS.run()
+INFO: ITERATION 520 
+Runtime 3033s for instance 173
+Temp 40.00892481113403
+2019-04-08 00:09:43 [Thread-0] main.ALNS.run()
+INFO: ITERATION 530 
+Runtime 3111s for instance 173
+Temp 38.33794018977887
+2019-04-08 00:10:26 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:10:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 540 
+Runtime 3158s for instance 173
+Temp 36.73674473716508
+2019-04-08 00:11:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 550 
+Runtime 3219s for instance 173
+Temp 35.202423687943345
+2019-04-08 00:12:51 [Thread-0] main.ALNS.run()
+INFO: ITERATION 560 
+Runtime 3300s for instance 173
+Temp 33.732184012804346
+2019-04-08 00:13:12 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:13:43 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:14:05 [Thread-0] main.ALNS.run()
+INFO: ITERATION 570 
+Runtime 3374s for instance 173
+Temp 32.32334933413704
+2019-04-08 00:14:52 [Thread-0] main.ALNS.run()
+INFO: ITERATION 580 
+Runtime 3420s for instance 173
+Temp 30.973355054035753
+2019-04-08 00:16:14 [Thread-0] main.ALNS.run()
+INFO: ITERATION 590 
+Runtime 3502s for instance 173
+Temp 29.67974368578764
+2019-04-08 00:17:31 [Thread-0] main.ALNS.run()
+INFO: ITERATION 600 
+Runtime 3579s for instance 173
+Temp 28.440160380341936
+2019-04-08 00:18:37 [Thread-0] main.ALNS.run()
+INFO: ITERATION 610 
+Runtime 3645s for instance 173
+Temp 27.252348639617516
+2019-04-08 00:19:09 [Thread-0] main.ALNS.run()
+INFO: ITERATION 620 
+Runtime 3678s for instance 173
+Temp 26.114146208845437
+2019-04-08 00:20:03 [Thread-0] main.ALNS.run()
+INFO: ITERATION 630 
+Runtime 3731s for instance 173
+Temp 25.023481140469066
+2019-04-08 00:20:54 [Thread-0] main.ALNS.run()
+INFO: ITERATION 640 
+Runtime 3782s for instance 173
+Temp 23.978368022436506
+2019-04-08 00:22:02 [Thread-0] main.ALNS.run()
+INFO: ITERATION 650 
+Runtime 3851s for instance 173
+Temp 22.976904364019585
+2019-04-08 00:23:25 [Thread-0] main.ALNS.run()
+INFO: ITERATION 660 
+Runtime 3933s for instance 173
+Temp 22.01726713258016
+2019-04-08 00:24:23 [Thread-0] main.ALNS.run()
+INFO: ITERATION 670 
+Runtime 3991s for instance 173
+Temp 21.097709434979357
+2019-04-08 00:24:59 [Thread-0] main.ALNS.run()
+INFO: ITERATION 680 
+Runtime 4027s for instance 173
+Temp 20.216557337588842
+2019-04-08 00:26:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 690 
+Runtime 4099s for instance 173
+Temp 19.372206819115156
+2019-04-08 00:27:06 [Thread-0] main.ALNS.run()
+INFO: ITERATION 700 
+Runtime 4155s for instance 173
+Temp 18.56312085069031
+2019-04-08 00:28:38 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:28:50 [Thread-0] main.ALNS.run()
+INFO: ITERATION 710 
+Runtime 4258s for instance 173
+Temp 17.787826597913266
+2019-04-08 00:29:30 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:29:30 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:30:15 [Thread-0] main.ALNS.run()
+INFO: ITERATION 720 
+Runtime 4344s for instance 173
+Temp 17.044912739748952
+2019-04-08 00:30:34 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:30:34 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:31:17 [Thread-0] main.ALNS.run()
+INFO: ITERATION 730 
+Runtime 4405s for instance 173
+Temp 16.333026899404274
+2019-04-08 00:31:33 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:31:33 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:32:08 [Thread-0] main.ALNS.run()
+INFO: ITERATION 740 
+Runtime 4457s for instance 173
+Temp 15.650873182504352
+2019-04-08 00:32:50 [Thread-0] main.ALNS.run()
+INFO: ITERATION 750 
+Runtime 4498s for instance 173
+Temp 14.997209818087551
+2019-04-08 00:33:44 [Thread-0] main.ALNS.run()
+INFO: ITERATION 760 
+Runtime 4553s for instance 173
+Temp 14.370846898125079
+2019-04-08 00:34:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 770 
+Runtime 4599s for instance 173
+Temp 13.770644211450184
+2019-04-08 00:35:07 [Thread-0] main.ALNS.run()
+INFO: ITERATION 780 
+Runtime 4635s for instance 173
+Temp 13.195509168153963
+2019-04-08 00:35:37 [Thread-0] main.ALNS.run()
+INFO: ITERATION 790 
+Runtime 4665s for instance 173
+Temp 12.644394810669402
+2019-04-08 00:36:28 [Thread-0] main.ALNS.run()
+INFO: ITERATION 800 
+Runtime 4716s for instance 173
+Temp 12.116297907923046
+2019-04-08 00:37:33 [Thread-0] main.ALNS.run()
+INFO: ITERATION 810 
+Runtime 4782s for instance 173
+Temp 11.61025712908505
+2019-04-08 00:38:39 [Thread-0] main.ALNS.run()
+INFO: ITERATION 820 
+Runtime 4848s for instance 173
+Temp 11.125351293593031
+2019-04-08 00:39:35 [Thread-0] main.ALNS.run()
+INFO: ITERATION 830 
+Runtime 4903s for instance 173
+Temp 10.660697694264256
+2019-04-08 00:39:59 [Thread-0] main.ALNS.run()
+INFO: ITERATION 840 
+Runtime 4927s for instance 173
+Temp 10.215450490443509
+2019-04-08 00:40:27 [Thread-0] main.ALNS.run()
+INFO: ITERATION 850 
+Runtime 4955s for instance 173
+Temp 9.788799168261617
+2019-04-08 00:41:22 [Thread-0] main.ALNS.run()
+INFO: ITERATION 860 
+Runtime 5010s for instance 173
+Temp 9.379967065201768
+2019-04-08 00:42:07 [Thread-0] main.ALNS.run()
+INFO: ITERATION 870 
+Runtime 5055s for instance 173
+Temp 8.988209956287704
+2019-04-08 00:42:42 [Thread-0] main.ALNS.run()
+INFO: ITERATION 880 
+Runtime 5091s for instance 173
+Temp 8.612814699320229
+2019-04-08 00:43:41 [Thread-0] main.ALNS.run()
+INFO: ITERATION 890 
+Runtime 5149s for instance 173
+Temp 8.253097936695788
+2019-04-08 00:44:51 [Thread-0] main.ALNS.run()
+INFO: ITERATION 900 
+Runtime 5219s for instance 173
+Temp 7.908404851444
+2019-04-08 00:46:14 [Thread-0] main.ALNS.run()
+INFO: ITERATION 910 
+Runtime 5303s for instance 173
+Temp 7.578107975219625
+2019-04-08 00:47:21 [Thread-0] main.ALNS.run()
+INFO: ITERATION 920 
+Runtime 5370s for instance 173
+Temp 7.261606046079132
+2019-04-08 00:48:38 [Thread-0] main.ALNS.run()
+INFO: ITERATION 930 
+Runtime 5447s for instance 173
+Temp 6.958322913962542
+2019-04-08 00:49:21 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:49:58 [Thread-0] main.ALNS.run()
+INFO: ITERATION 940 
+Runtime 5526s for instance 173
+Temp 6.667706491888162
+2019-04-08 00:49:58 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:51:57 [Thread-0] main.ALNS.run()
+INFO: ITERATION 950 
+Runtime 5645s for instance 173
+Temp 6.389227750950977
+2019-04-08 00:52:06 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:52:36 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:53:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:54:22 [Thread-0] main.ALNS.run()
+INFO: ITERATION 960 
+Runtime 5790s for instance 173
+Temp 6.1223797572952305
+2019-04-08 00:55:03 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:55:22 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:56:07 [Thread-0] main.ALNS.run()
+INFO: ITERATION 970 
+Runtime 5896s for instance 173
+Temp 5.866676749308136
+2019-04-08 00:57:05 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:57:32 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:57:47 [Thread-0] main.ALNS.run()
+INFO: ITERATION 980 
+Runtime 5996s for instance 173
+Temp 5.621653253354862
+2019-04-08 00:58:48 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 00:58:54 [Thread-0] main.ALNS.run()
+INFO: ITERATION 990 
+Runtime 6062s for instance 173
+Temp 5.38686323644511
+2019-04-08 00:59:02 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:00:03 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:00:50 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1000 
+Runtime 6179s for instance 173
+Temp 5.161879294288826
+2019-04-08 01:01:47 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1010 
+Runtime 6235s for instance 173
+Temp 4.946291873263008
+2019-04-08 01:02:35 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1020 
+Runtime 6283s for instance 173
+Temp 4.739708524873289
+2019-04-08 01:03:14 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1030 
+Runtime 6323s for instance 173
+Temp 4.541753191353175
+2019-04-08 01:04:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1040 
+Runtime 6379s for instance 173
+Temp 4.352065521100414
+2019-04-08 01:04:48 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1050 
+Runtime 6416s for instance 173
+Temp 4.170300212704397
+2019-04-08 01:04:52 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1060 
+Runtime 6420s for instance 173
+Temp 3.99612638637043
+2019-04-08 01:05:49 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1070 
+Runtime 6477s for instance 173
+Temp 3.8292269815966655
+2019-04-08 01:07:21 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1080 
+Runtime 6570s for instance 173
+Temp 3.6692981800072353
+2019-04-08 01:07:34 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1090 
+Runtime 6583s for instance 173
+Temp 3.516048852290928
+2019-04-08 01:08:28 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1100 
+Runtime 6637s for instance 173
+Temp 3.369200028238636
+2019-04-08 01:09:02 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1110 
+Runtime 6670s for instance 173
+Temp 3.228484388914847
+2019-04-08 01:10:15 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1120 
+Runtime 6743s for instance 173
+Temp 3.093645780038744
+2019-04-08 01:11:06 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1130 
+Runtime 6794s for instance 173
+Temp 2.9644387456890864
+2019-04-08 01:11:32 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1140 
+Runtime 6820s for instance 173
+Temp 2.8406280814840503
+2019-04-08 01:12:37 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1150 
+Runtime 6885s for instance 173
+Temp 2.721988406422636
+2019-04-08 01:12:43 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:13:06 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:13:26 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1160 
+Runtime 6935s for instance 173
+Temp 2.6083037526082578
+2019-04-08 01:14:07 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1170 
+Runtime 6975s for instance 173
+Temp 2.499367172107638
+2019-04-08 01:14:38 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1180 
+Runtime 7006s for instance 173
+Temp 2.3949803602293653
+2019-04-08 01:15:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1190 
+Runtime 7040s for instance 173
+Temp 2.294953294536333
+2019-04-08 01:15:55 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1200 
+Runtime 7083s for instance 173
+Temp 2.199103888934926
+2019-04-08 01:16:42 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1210 
+Runtime 7130s for instance 173
+Temp 2.1072576622112837
+2019-04-08 01:17:09 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:17:58 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1220 
+Runtime 7207s for instance 173
+Temp 2.0192474204112347
+2019-04-08 01:18:53 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1230 
+Runtime 7262s for instance 173
+Temp 1.9349129524857365
+2019-04-08 01:20:05 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1240 
+Runtime 7334s for instance 173
+Temp 1.8541007386477677
+2019-04-08 01:21:19 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1250 
+Runtime 7407s for instance 173
+Temp 1.7766636709097845
+2019-04-08 01:22:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1260 
+Runtime 7479s for instance 173
+Temp 1.7024607852930111
+2019-04-08 01:23:48 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1270 
+Runtime 7557s for instance 173
+Temp 1.6313570052210913
+2019-04-08 01:25:26 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1280 
+Runtime 7654s for instance 173
+Temp 1.5632228956309766
+2019-04-08 01:27:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1290 
+Runtime 7760s for instance 173
+Temp 1.497934427353451
+2019-04-08 01:29:03 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1300 
+Runtime 7872s for instance 173
+Temp 1.4353727513343666
+2019-04-08 01:30:23 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1310 
+Runtime 7951s for instance 173
+Temp 1.375423982285604
+2019-04-08 01:31:39 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1320 
+Runtime 8028s for instance 173
+Temp 1.3179789913719087
+2019-04-08 01:33:08 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1330 
+Runtime 8116s for instance 173
+Temp 1.2629332075562238
+2019-04-08 01:34:34 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:34:54 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:35:20 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1340 
+Runtime 8248s for instance 173
+Temp 1.2101864272418994
+2019-04-08 01:35:43 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:36:36 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1350 
+Runtime 8324s for instance 173
+Temp 1.1596426318652435
+2019-04-08 01:37:21 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:38:05 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:38:32 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:39:14 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1360 
+Runtime 8483s for instance 173
+Temp 1.1112098131063801
+2019-04-08 01:40:14 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:40:56 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:40:56 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:40:56 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:41:49 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:41:49 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:41:49 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:42:23 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1370 
+Runtime 8671s for instance 173
+Temp 1.0647998054002246
+2019-04-08 01:42:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:42:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:42:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:44:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1380 
+Runtime 8779s for instance 173
+Temp 1.020328125442692
+2019-04-08 01:45:02 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:46:03 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:46:04 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1390 
+Runtime 8892s for instance 173
+Temp 0.9777138183999691
+2019-04-08 01:46:04 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:46:04 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:46:04 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:47:48 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:47:48 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:47:48 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:48:46 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:48:46 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:48:46 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:49:17 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:50:31 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1400 
+Runtime 9159s for instance 173
+Temp 0.9368793105409094
+2019-04-08 01:51:03 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:51:03 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:51:03 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:51:40 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:51:40 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:51:40 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:52:46 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:52:46 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:52:46 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:53:17 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:53:17 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:53:17 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:53:48 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1410 
+Runtime 9357s for instance 173
+Temp 0.8977502680242753
+2019-04-08 01:54:27 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:54:27 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:54:27 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:55:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:55:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:55:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:55:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:55:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:55:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:57:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1420 
+Runtime 9559s for instance 173
+Temp 0.8602554615837739
+2019-04-08 01:58:45 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1430 
+Runtime 9654s for instance 173
+Temp 0.8243266368645643
+2019-04-08 01:59:06 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:59:06 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 047
+2019-04-08 01:59:59 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:59:59 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 01:59:59 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:01:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1440 
+Runtime 9819s for instance 173
+Temp 0.789898390175196
+2019-04-08 02:01:49 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:01:49 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:01:49 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:02:45 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:02:45 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:02:45 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:03:35 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:03:35 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:03:35 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:05:16 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1450 
+Runtime 10044s for instance 173
+Temp 0.7569080494288074
+2019-04-08 02:05:16 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:05:16 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:05:16 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:07:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-08 02:07:31 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:07:31 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 064
+2019-04-08 02:08:40 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1460 
+Runtime 10248s for instance 173
+Temp 0.7252955600568486
+2019-04-08 02:08:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-08 02:09:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-08 02:10:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-08 02:10:53 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:10:53 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:10:53 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:11:43 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-08 02:11:43 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:11:43 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:13:18 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-08 02:13:18 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:13:18 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:13:18 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:14:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-08 02:15:38 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-08 02:15:38 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:15:38 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 047
+2019-04-08 02:16:47 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-08 02:17:48 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-08 02:17:48 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:17:48 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 119
+2019-04-08 02:18:55 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1470 
+Runtime 10863s for instance 173
+Temp 0.6950033756876526
+2019-04-08 02:18:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:18:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:21:08 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:21:08 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 064
+2019-04-08 02:21:38 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1480 
+Runtime 11027s for instance 173
+Temp 0.6659763533908473
+2019-04-08 02:22:33 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:22:36 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:22:36 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:24:33 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1490 
+Runtime 11202s for instance 173
+Temp 0.638161653296917
+2019-04-08 02:25:33 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-08 02:25:33 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:25:33 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:26:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-08 02:26:35 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:27:47 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-08 02:27:47 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:27:47 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:28:55 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-08 02:30:27 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-08 02:32:01 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1500 
+Runtime 11649s for instance 173
+Temp 0.6115086424091818
+2019-04-08 02:32:01 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-08 02:32:01 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:34:30 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-08 02:35:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-08 02:35:23 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:35:23 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:36:24 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-08 02:37:29 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-08 02:37:29 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:37:29 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:38:11 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.44
+2019-04-08 02:38:11 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:39:12 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.48
+2019-04-08 02:40:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.52
+2019-04-08 02:42:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.56
+2019-04-08 02:43:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.60
+2019-04-08 02:45:14 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1510 
+Runtime 12442s for instance 173
+Temp 0.5859688024330986
+2019-04-08 02:45:14 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.64
+2019-04-08 02:45:14 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:46:33 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.68
+2019-04-08 02:47:38 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.72
+2019-04-08 02:48:39 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.76
+2019-04-08 02:48:39 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:48:39 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:49:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.80
+2019-04-08 02:49:08 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:50:39 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.84
+2019-04-08 02:50:39 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:50:39 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:51:22 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.88
+2019-04-08 02:52:22 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.92
+2019-04-08 02:52:22 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:52:22 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 064
+2019-04-08 02:53:34 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.96
+2019-04-08 02:54:49 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.00
+2019-04-08 02:54:49 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:56:06 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1520 
+Runtime 13095s for instance 173
+Temp 0.561495641455098
+2019-04-08 02:56:06 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.04
+2019-04-08 02:57:22 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.08
+2019-04-08 02:58:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.12
+2019-04-08 02:58:26 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:58:26 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 02:59:07 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.16
+2019-04-08 03:01:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.20
+2019-04-08 03:01:31 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:01:31 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:02:12 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.24
+2019-04-08 03:02:12 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:03:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.28
+2019-04-08 03:03:31 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:03:31 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 064
+2019-04-08 03:05:38 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.32
+2019-04-08 03:05:38 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:05:38 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:06:20 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.36
+2019-04-08 03:06:20 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:06:20 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:09:36 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.40
+2019-04-08 03:11:44 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1530 
+Runtime 14033s for instance 173
+Temp 0.5380446093101823
+2019-04-08 03:11:44 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.44
+2019-04-08 03:11:44 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:11:44 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:12:45 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.48
+2019-04-08 03:12:45 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:12:45 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:13:45 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.52
+2019-04-08 03:13:45 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:16:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.56
+2019-04-08 03:19:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.60
+2019-04-08 03:19:02 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:19:02 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:20:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.64
+2019-04-08 03:21:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.68
+2019-04-08 03:22:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.72
+2019-04-08 03:24:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.76
+2019-04-08 03:26:30 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.80
+2019-04-08 03:28:35 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1540 
+Runtime 15043s for instance 173
+Temp 0.5155730164842196
+2019-04-08 03:28:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.84
+2019-04-08 03:28:35 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:28:35 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:32:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.88
+2019-04-08 03:32:02 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:35:55 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.92
+2019-04-08 03:35:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:40:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.96
+2019-04-08 03:40:03 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:40:03 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 064
+2019-04-08 03:41:59 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.00
+2019-04-08 03:43:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.04
+2019-04-08 03:45:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.08
+2019-04-08 03:45:02 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:45:02 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:45:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.12
+2019-04-08 03:45:53 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:45:53 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:46:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.16
+2019-04-08 03:48:24 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.20
+2019-04-08 03:48:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:50:01 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1550 
+Runtime 16329s for instance 173
+Temp 0.4940399564033079
+2019-04-08 03:50:01 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.24
+2019-04-08 03:50:01 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:50:01 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:50:51 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.28
+2019-04-08 03:50:51 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:50:51 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:51:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.32
+2019-04-08 03:51:31 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:55:17 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.36
+2019-04-08 03:55:17 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 03:56:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.40
+2019-04-08 03:58:22 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.44
+2019-04-08 03:58:22 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:01:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.48
+2019-04-08 04:01:42 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:01:42 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:02:24 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.52
+2019-04-08 04:02:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:02:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:03:25 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.56
+2019-04-08 04:03:25 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:05:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.60
+2019-04-08 04:05:28 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:09:10 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1560 
+Runtime 17478s for instance 173
+Temp 0.47340623096874773
+2019-04-08 04:09:10 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.64
+2019-04-08 04:09:10 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:13:59 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.68
+2019-04-08 04:13:59 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:13:59 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:15:24 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.72
+2019-04-08 04:15:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:19:36 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.76
+2019-04-08 04:21:22 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.80
+2019-04-08 04:23:45 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.84
+2019-04-08 04:23:45 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:23:45 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:24:19 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.88
+2019-04-08 04:24:19 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:33:27 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.92
+2019-04-08 04:33:27 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:38:48 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.96
+2019-04-08 04:38:48 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:38:48 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:39:29 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.00
+2019-04-08 04:42:28 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1570 
+Runtime 19477s for instance 173
+Temp 0.4536342792020673
+2019-04-08 04:42:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.04
+2019-04-08 04:46:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.08
+2019-04-08 04:51:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.12
+2019-04-08 04:53:48 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.16
+2019-04-08 04:53:48 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 04:53:48 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 047
+2019-04-08 04:58:51 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.20
+2019-04-08 04:58:51 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:03:47 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.24
+2019-04-08 05:03:47 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:08:13 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.28
+2019-04-08 05:10:56 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.32
+2019-04-08 05:10:56 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:10:56 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:11:37 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.36
+2019-04-08 05:13:19 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.40
+2019-04-08 05:13:19 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:15:26 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1580 
+Runtime 21455s for instance 173
+Temp 0.4346881088702106
+2019-04-08 05:15:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.44
+2019-04-08 05:15:26 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:17:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.48
+2019-04-08 05:21:33 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.52
+2019-04-08 05:21:33 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:21:33 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:22:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.56
+2019-04-08 05:22:23 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:22:23 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:23:14 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.60
+2019-04-08 05:25:11 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.64
+2019-04-08 05:25:11 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:25:11 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:25:52 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.68
+2019-04-08 05:25:52 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:30:43 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.72
+2019-04-08 05:30:43 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:33:18 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.76
+2019-04-08 05:33:18 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:34:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.80
+2019-04-08 05:34:58 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:36:21 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1590 
+Runtime 22709s for instance 173
+Temp 0.4165332309664199
+2019-04-08 05:36:21 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.84
+2019-04-08 05:36:21 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:36:21 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:37:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.88
+2019-04-08 05:37:03 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:39:17 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.92
+2019-04-08 05:39:17 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:40:55 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.96
+2019-04-08 05:40:55 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:42:49 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.00
+2019-04-08 05:42:49 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:45:17 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.04
+2019-04-08 05:45:17 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:47:04 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.08
+2019-04-08 05:47:04 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:47:04 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:48:04 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.12
+2019-04-08 05:50:24 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.16
+2019-04-08 05:50:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:50:24 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 047
+2019-04-08 05:50:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:50:24 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 2) during destruction of request 064
+2019-04-08 05:51:59 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.20
+2019-04-08 05:51:59 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:51:59 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:52:49 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1600 
+Runtime 23698s for instance 173
+Temp 0.39913659692754233
+2019-04-08 05:52:49 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.24
+2019-04-08 05:52:49 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:54:37 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.28
+2019-04-08 05:54:37 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 05:57:05 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.32
+2019-04-08 05:57:05 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:02:52 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.36
+2019-04-08 06:09:17 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.40
+2019-04-08 06:09:17 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:09:17 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:10:17 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.44
+2019-04-08 06:12:38 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.48
+2019-04-08 06:12:38 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:12:38 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 064
+2019-04-08 06:21:14 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.52
+2019-04-08 06:21:14 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:21:14 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:21:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.56
+2019-04-08 06:21:42 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:21:42 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:28:47 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.60
+2019-04-08 06:30:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1610 
+Runtime 25958s for instance 173
+Temp 0.3824665384734757
+2019-04-08 06:30:30 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.64
+2019-04-08 06:33:27 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.68
+2019-04-08 06:33:27 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:33:27 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 064
+2019-04-08 06:33:27 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:33:27 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 2) during destruction of request 047
+2019-04-08 06:35:47 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.72
+2019-04-08 06:35:47 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:35:47 [Thread-0] heuristics.destroy.RandomDestroy.destroy()
+WARNING: Failure (total = 1) during destruction of request 047
+2019-04-08 06:37:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.76
+2019-04-08 06:37:31 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:37:31 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:38:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.80
+2019-04-08 06:38:31 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:40:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.84
+2019-04-08 06:40:35 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:40:35 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:42:24 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.88
+2019-04-08 06:42:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:42:24 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:43:05 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.92
+2019-04-08 06:45:14 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.96
+2019-04-08 06:45:14 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:45:14 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:46:04 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 07.00
+2019-04-08 06:46:04 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:46:04 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-08 06:47:04 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1620 
+Runtime 26953s for instance 173
+Temp 0.36649270995923705
+2019-04-08 06:47:04 [Thread-0] main.ALNS.run()
+INFO: No acceptation for the last 100 iterations. Aborting..
+2019-04-08 06:47:04 [Thread-0] main.ALNS.run()
+INFO: Problem instance 173. Best solution cost: 2003.97 in 1620 iterations
+
+
+###############################################################################
+Peregrine Cluster
+Job 5053801 for user 'f116158'
+Finished at: Mon Apr  8 06:47:05 CEST 2019
+
+Job details:
+============
+
+Name                : ORACS-xl
+User                : f116158
+Partition           : regular
+Nodes               : pg-node017
+Cores               : 1
+State               : COMPLETED
+Submit              : 2019-04-07T23:00:59
+Start               : 2019-04-07T23:17:50
+End                 : 2019-04-08T06:47:04
+Reserved walltime   :    09:00:00
+Used walltime       :    07:29:14
+Used CPU time       : 31-03:26:12 (efficiency: 9982.83%)
+% User (Computation): 99.87%
+% System (I/O)      :  0.13%
+Mem reserved        : 256M/core
+Max Mem used        : 245.79M (pg-node017)
+Max Disk Write      : 10.24K (pg-node017)
+Max Disk Read       : 788.48K (pg-node017)
+
+
+Acknowledgements:
+=================
+
+Please see this page if you want to acknowledge Peregrine in your publications:
+
+https://redmine.hpc.rug.nl/redmine/projects/peregrine/wiki/ScientificOutput
+
+################################################################################

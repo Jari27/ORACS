@@ -1,0 +1,1514 @@
+2019-04-07 23:00:56 [main] main.Main.main()
+INFO: Starting main program.
+2019-04-07 23:00:56 [main] main.Main.parseInstance()
+INFO: Parsing problem instance 021
+2019-04-07 23:00:56 [main] problem.Problem.preProcess()
+INFO: Preprocessing problem instance 021
+2019-04-07 23:00:56 [main] problem.Problem.isFeasible()
+INFO: Instance 021: all requests are feasible
+2019-04-07 23:00:56 [Thread-0] main.ALNSRunner.run()
+INFO: Started at Sun Apr 07 23:00:56 CEST 2019
+2019-04-07 23:00:56 [Thread-0] solution.Solution.createInitialSolution()
+INFO: Found an initial solution for problem 021 with cost 1129.95
+2019-04-07 23:00:56 [Thread-0] main.ALNS.run()
+INFO: Problem instance 21: SEED: 1554670856753
+2019-04-07 23:00:56 [Thread-0] main.ALNS.run()
+INFO: Problem instance 21: Initial cost: 1129.95
+2019-04-07 23:00:59 [Thread-0] main.ALNS.run()
+INFO: ITERATION 10 
+Runtime 2s for instance 21
+Temp 78.97032708080884
+2019-04-07 23:01:00 [Thread-0] main.ALNS.run()
+INFO: ITERATION 20 
+Runtime 4s for instance 21
+Temp 76.2427664193714
+2019-04-07 23:01:02 [Thread-0] main.ALNS.run()
+INFO: ITERATION 30 
+Runtime 5s for instance 21
+Temp 73.60941313223306
+2019-04-07 23:01:02 [Thread-0] main.ALNS.run()
+INFO: ITERATION 40 
+Runtime 5s for instance 21
+Temp 71.06701338548353
+2019-04-07 23:01:03 [Thread-0] main.ALNS.run()
+INFO: ITERATION 50 
+Runtime 6s for instance 21
+Temp 68.61242572956894
+2019-04-07 23:01:04 [Thread-0] main.ALNS.run()
+INFO: ITERATION 60 
+Runtime 8s for instance 21
+Temp 66.24261721764184
+2019-04-07 23:01:05 [Thread-0] main.ALNS.run()
+INFO: ITERATION 70 
+Runtime 9s for instance 21
+Temp 63.95465965798009
+2019-04-07 23:01:06 [Thread-0] main.ALNS.run()
+INFO: ITERATION 80 
+Runtime 9s for instance 21
+Temp 61.745725995843614
+2019-04-07 23:01:06 [Thread-0] main.ALNS.run()
+INFO: ITERATION 90 
+Runtime 9s for instance 21
+Temp 59.61308682029834
+2019-04-07 23:01:07 [Thread-0] main.ALNS.run()
+INFO: ITERATION 100 
+Runtime 10s for instance 21
+Temp 57.55410699169113
+2019-04-07 23:01:07 [Thread-0] main.ALNS.run()
+INFO: ITERATION 110 
+Runtime 10s for instance 21
+Temp 55.56624238560864
+2019-04-07 23:01:08 [Thread-0] main.ALNS.run()
+INFO: ITERATION 120 
+Runtime 11s for instance 21
+Temp 53.64703674929674
+2019-04-07 23:01:08 [Thread-0] main.ALNS.run()
+INFO: ITERATION 130 
+Runtime 11s for instance 21
+Temp 51.79411866665618
+2019-04-07 23:01:08 [Thread-0] main.ALNS.run()
+INFO: ITERATION 140 
+Runtime 11s for instance 21
+Temp 50.00519862806457
+2019-04-07 23:01:08 [Thread-0] main.ALNS.run()
+INFO: ITERATION 150 
+Runtime 12s for instance 21
+Temp 48.27806620140379
+2019-04-07 23:01:09 [Thread-0] main.ALNS.run()
+INFO: ITERATION 160 
+Runtime 12s for instance 21
+Temp 46.610587300797576
+2019-04-07 23:01:09 [Thread-0] main.ALNS.run()
+INFO: ITERATION 170 
+Runtime 12s for instance 21
+Temp 45.00070154968429
+2019-04-07 23:01:09 [Thread-0] main.ALNS.run()
+INFO: ITERATION 180 
+Runtime 13s for instance 21
+Temp 43.44641973496665
+2019-04-07 23:01:10 [Thread-0] main.ALNS.run()
+INFO: ITERATION 190 
+Runtime 13s for instance 21
+Temp 41.94582134909279
+2019-04-07 23:01:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 200 
+Runtime 14s for instance 21
+Temp 40.4970522170314
+2019-04-07 23:01:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 210 
+Runtime 14s for instance 21
+Temp 39.09832220520909
+2019-04-07 23:01:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 220 
+Runtime 15s for instance 21
+Temp 37.747903009578714
+2019-04-07 23:01:12 [Thread-0] main.ALNS.run()
+INFO: ITERATION 230 
+Runtime 15s for instance 21
+Temp 36.44412602008587
+2019-04-07 23:01:12 [Thread-0] main.ALNS.run()
+INFO: ITERATION 240 
+Runtime 16s for instance 21
+Temp 35.185380258894625
+2019-04-07 23:01:13 [Thread-0] main.ALNS.run()
+INFO: ITERATION 250 
+Runtime 16s for instance 21
+Temp 33.970110389825024
+2019-04-07 23:01:13 [Thread-0] main.ALNS.run()
+INFO: ITERATION 260 
+Runtime 16s for instance 21
+Temp 32.79681479654275
+2019-04-07 23:01:13 [Thread-0] main.ALNS.run()
+INFO: ITERATION 270 
+Runtime 17s for instance 21
+Temp 31.66404372712626
+2019-04-07 23:01:14 [Thread-0] main.ALNS.run()
+INFO: ITERATION 280 
+Runtime 17s for instance 21
+Temp 30.57039750271886
+2019-04-07 23:01:14 [Thread-0] main.ALNS.run()
+INFO: ITERATION 290 
+Runtime 17s for instance 21
+Temp 29.51452478805229
+2019-04-07 23:01:15 [Thread-0] main.ALNS.run()
+INFO: ITERATION 300 
+Runtime 18s for instance 21
+Temp 28.495120921704693
+2019-04-07 23:01:15 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:01:15 [Thread-0] heuristics.destroy.DestroyHeuristic.removeWithTransfer()
+WARNING: Removed 4/4 nodes in 1/2 routes!
+2019-04-07 23:01:15 [Thread-0] main.ALNS.run()
+INFO: ITERATION 310 
+Runtime 18s for instance 21
+Temp 27.510926304029972
+2019-04-07 23:01:15 [Thread-0] main.ALNS.run()
+INFO: ITERATION 320 
+Runtime 18s for instance 21
+Temp 26.560724840766547
+2019-04-07 23:01:16 [Thread-0] main.ALNS.run()
+INFO: ITERATION 330 
+Runtime 19s for instance 21
+Temp 25.643342440402346
+2019-04-07 23:01:16 [Thread-0] main.ALNS.run()
+INFO: ITERATION 340 
+Runtime 19s for instance 21
+Temp 24.757645563439453
+2019-04-07 23:01:16 [Thread-0] main.ALNS.run()
+INFO: ITERATION 350 
+Runtime 19s for instance 21
+Temp 23.90253982176577
+2019-04-07 23:01:16 [Thread-0] main.ALNS.run()
+INFO: ITERATION 360 
+Runtime 19s for instance 21
+Temp 23.076968626403033
+2019-04-07 23:01:16 [Thread-0] main.ALNS.run()
+INFO: ITERATION 370 
+Runtime 20s for instance 21
+Temp 22.27991188196036
+2019-04-07 23:01:17 [Thread-0] main.ALNS.run()
+INFO: ITERATION 380 
+Runtime 20s for instance 21
+Temp 21.510384726180156
+2019-04-07 23:01:17 [Thread-0] main.ALNS.run()
+INFO: ITERATION 390 
+Runtime 20s for instance 21
+Temp 20.767436313018884
+2019-04-07 23:01:17 [Thread-0] main.ALNS.run()
+INFO: ITERATION 400 
+Runtime 21s for instance 21
+Temp 20.050148637759104
+2019-04-07 23:01:18 [Thread-0] main.ALNS.run()
+INFO: ITERATION 410 
+Runtime 21s for instance 21
+Temp 19.357635402701035
+2019-04-07 23:01:18 [Thread-0] main.ALNS.run()
+INFO: ITERATION 420 
+Runtime 21s for instance 21
+Temp 18.689040922032014
+2019-04-07 23:01:19 [Thread-0] main.ALNS.run()
+INFO: ITERATION 430 
+Runtime 22s for instance 21
+Temp 18.043539064520814
+2019-04-07 23:01:19 [Thread-0] main.ALNS.run()
+INFO: ITERATION 440 
+Runtime 23s for instance 21
+Temp 17.42033223273025
+2019-04-07 23:01:20 [Thread-0] main.ALNS.run()
+INFO: ITERATION 450 
+Runtime 23s for instance 21
+Temp 16.81865037748677
+2019-04-07 23:01:20 [Thread-0] main.ALNS.run()
+INFO: ITERATION 460 
+Runtime 23s for instance 21
+Temp 16.237750046389486
+2019-04-07 23:01:21 [Thread-0] main.ALNS.run()
+INFO: ITERATION 470 
+Runtime 24s for instance 21
+Temp 15.676913465182658
+2019-04-07 23:01:21 [Thread-0] main.ALNS.run()
+INFO: ITERATION 480 
+Runtime 24s for instance 21
+Temp 15.135447650856781
+2019-04-07 23:01:21 [Thread-0] main.ALNS.run()
+INFO: ITERATION 490 
+Runtime 25s for instance 21
+Temp 14.612683555382304
+2019-04-07 23:01:22 [Thread-0] main.ALNS.run()
+INFO: ITERATION 500 
+Runtime 25s for instance 21
+Temp 14.10797523901799
+2019-04-07 23:01:22 [Thread-0] main.ALNS.run()
+INFO: ITERATION 510 
+Runtime 25s for instance 21
+Temp 13.620699072172405
+2019-04-07 23:01:22 [Thread-0] main.ALNS.run()
+INFO: ITERATION 520 
+Runtime 26s for instance 21
+Temp 13.150252964832383
+2019-04-07 23:01:23 [Thread-0] main.ALNS.run()
+INFO: ITERATION 530 
+Runtime 26s for instance 21
+Temp 12.696055622606305
+2019-04-07 23:01:23 [Thread-0] main.ALNS.run()
+INFO: ITERATION 540 
+Runtime 27s for instance 21
+Temp 12.257545828462906
+2019-04-07 23:01:23 [Thread-0] main.ALNS.run()
+INFO: ITERATION 550 
+Runtime 27s for instance 21
+Temp 11.8341817492782
+2019-04-07 23:01:24 [Thread-0] main.ALNS.run()
+INFO: ITERATION 560 
+Runtime 27s for instance 21
+Temp 11.425440266333574
+2019-04-07 23:01:24 [Thread-0] main.ALNS.run()
+INFO: ITERATION 570 
+Runtime 27s for instance 21
+Temp 11.030816328937881
+2019-04-07 23:01:24 [Thread-0] main.ALNS.run()
+INFO: ITERATION 580 
+Runtime 28s for instance 21
+Temp 10.649822330374791
+2019-04-07 23:01:25 [Thread-0] main.ALNS.run()
+INFO: ITERATION 590 
+Runtime 28s for instance 21
+Temp 10.281987505404345
+2019-04-07 23:01:25 [Thread-0] main.ALNS.run()
+INFO: ITERATION 600 
+Runtime 28s for instance 21
+Temp 9.926857348574245
+2019-04-07 23:01:25 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:25 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:25 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:01:25 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:01:25 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:01:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:01:26 [Thread-0] main.ALNS.run()
+INFO: ITERATION 610 
+Runtime 29s for instance 21
+Temp 9.583993052622098
+2019-04-07 23:01:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:01:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:01:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:01:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-07 23:01:27 [Thread-0] main.ALNS.run()
+INFO: ITERATION 620 
+Runtime 30s for instance 21
+Temp 9.252970966274754
+2019-04-07 23:01:27 [Thread-0] main.ALNS.run()
+INFO: ITERATION 630 
+Runtime 30s for instance 21
+Temp 8.9333820707747
+2019-04-07 23:01:28 [Thread-0] main.ALNS.run()
+INFO: ITERATION 640 
+Runtime 31s for instance 21
+Temp 8.624831474486784
+2019-04-07 23:01:28 [Thread-0] main.ALNS.run()
+INFO: ITERATION 650 
+Runtime 31s for instance 21
+Temp 8.326937924960708
+2019-04-07 23:01:28 [Thread-0] main.ALNS.run()
+INFO: ITERATION 660 
+Runtime 31s for instance 21
+Temp 8.039333337846447
+2019-04-07 23:01:29 [Thread-0] main.ALNS.run()
+INFO: ITERATION 670 
+Runtime 32s for instance 21
+Temp 7.761662342080479
+2019-04-07 23:01:29 [Thread-0] main.ALNS.run()
+INFO: ITERATION 680 
+Runtime 32s for instance 21
+Temp 7.493581840780849
+2019-04-07 23:01:29 [Thread-0] main.ALNS.run()
+INFO: ITERATION 690 
+Runtime 32s for instance 21
+Temp 7.234760587308509
+2019-04-07 23:01:29 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 700 
+Runtime 33s for instance 21
+Temp 6.984878775971095
+2019-04-07 23:01:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 710 
+Runtime 33s for instance 21
+Temp 6.743627646863414
+2019-04-07 23:01:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 720 
+Runtime 33s for instance 21
+Temp 6.510709104356372
+2019-04-07 23:01:30 [Thread-0] main.ALNS.run()
+INFO: ITERATION 730 
+Runtime 34s for instance 21
+Temp 6.2858353487629195
+2019-04-07 23:01:31 [Thread-0] main.ALNS.run()
+INFO: ITERATION 740 
+Runtime 34s for instance 21
+Temp 6.068728520725923
+2019-04-07 23:01:31 [Thread-0] main.ALNS.run()
+INFO: ITERATION 750 
+Runtime 35s for instance 21
+Temp 5.859120357888542
+2019-04-07 23:01:32 [Thread-0] main.ALNS.run()
+INFO: ITERATION 760 
+Runtime 35s for instance 21
+Temp 5.6567518634228815
+2019-04-07 23:01:32 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:32 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:32 [Thread-0] main.ALNS.run()
+INFO: ITERATION 770 
+Runtime 35s for instance 21
+Temp 5.461372986007358
+2019-04-07 23:01:32 [Thread-0] main.ALNS.run()
+INFO: ITERATION 780 
+Runtime 35s for instance 21
+Temp 5.27274231085734
+2019-04-07 23:01:32 [Thread-0] main.ALNS.run()
+INFO: ITERATION 790 
+Runtime 36s for instance 21
+Temp 5.090626761427304
+2019-04-07 23:01:33 [Thread-0] main.ALNS.run()
+INFO: ITERATION 800 
+Runtime 36s for instance 21
+Temp 4.914801311415916
+2019-04-07 23:01:33 [Thread-0] main.ALNS.run()
+INFO: ITERATION 810 
+Runtime 37s for instance 21
+Temp 4.745048706718185
+2019-04-07 23:01:34 [Thread-0] main.ALNS.run()
+INFO: ITERATION 820 
+Runtime 37s for instance 21
+Temp 4.581159196981126
+2019-04-07 23:01:34 [Thread-0] main.ALNS.run()
+INFO: ITERATION 830 
+Runtime 38s for instance 21
+Temp 4.422930276431238
+2019-04-07 23:01:35 [Thread-0] main.ALNS.run()
+INFO: ITERATION 840 
+Runtime 38s for instance 21
+Temp 4.2701664336535625
+2019-04-07 23:01:35 [Thread-0] main.ALNS.run()
+INFO: ITERATION 850 
+Runtime 38s for instance 21
+Temp 4.122678910013123
+2019-04-07 23:01:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:36 [Thread-0] main.ALNS.run()
+INFO: ITERATION 860 
+Runtime 39s for instance 21
+Temp 3.980285466420279
+2019-04-07 23:01:36 [Thread-0] main.ALNS.run()
+INFO: ITERATION 870 
+Runtime 39s for instance 21
+Temp 3.8428101581517717
+2019-04-07 23:01:36 [Thread-0] main.ALNS.run()
+INFO: ITERATION 880 
+Runtime 39s for instance 21
+Temp 3.710083117449238
+2019-04-07 23:01:36 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:37 [Thread-0] main.ALNS.run()
+INFO: ITERATION 890 
+Runtime 40s for instance 21
+Temp 3.5819403436265773
+2019-04-07 23:01:37 [Thread-0] main.ALNS.run()
+INFO: ITERATION 900 
+Runtime 40s for instance 21
+Temp 3.4582235004268003
+2019-04-07 23:01:37 [Thread-0] main.ALNS.run()
+INFO: ITERATION 910 
+Runtime 40s for instance 21
+Temp 3.3387797203779925
+2019-04-07 23:01:38 [Thread-0] main.ALNS.run()
+INFO: ITERATION 920 
+Runtime 41s for instance 21
+Temp 3.223461415906627
+2019-04-07 23:01:38 [Thread-0] main.ALNS.run()
+INFO: ITERATION 930 
+Runtime 41s for instance 21
+Temp 3.112126096974854
+2019-04-07 23:01:38 [Thread-0] main.ALNS.run()
+INFO: ITERATION 940 
+Runtime 41s for instance 21
+Temp 3.0046361950164235
+2019-04-07 23:01:39 [Thread-0] main.ALNS.run()
+INFO: ITERATION 950 
+Runtime 42s for instance 21
+Temp 2.9008588929536923
+2019-04-07 23:01:39 [Thread-0] main.ALNS.run()
+INFO: ITERATION 960 
+Runtime 42s for instance 21
+Temp 2.8006659610856888
+2019-04-07 23:01:39 [Thread-0] main.ALNS.run()
+INFO: ITERATION 970 
+Runtime 43s for instance 21
+Temp 2.703933598644448
+2019-04-07 23:01:40 [Thread-0] main.ALNS.run()
+INFO: ITERATION 980 
+Runtime 43s for instance 21
+Temp 2.6105422808238354
+2019-04-07 23:01:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:41 [Thread-0] main.ALNS.run()
+INFO: ITERATION 990 
+Runtime 44s for instance 21
+Temp 2.5203766110918613
+2019-04-07 23:01:41 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1000 
+Runtime 44s for instance 21
+Temp 2.4333251786039773
+2019-04-07 23:01:41 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1010 
+Runtime 45s for instance 21
+Temp 2.3492804205411946
+2019-04-07 23:01:42 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1020 
+Runtime 45s for instance 21
+Temp 2.268138489202904
+2019-04-07 23:01:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:42 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1030 
+Runtime 46s for instance 21
+Temp 2.1897991236901913
+2019-04-07 23:01:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:01:43 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:01:43 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:01:43 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:01:43 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:01:43 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:01:44 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1040 
+Runtime 47s for instance 21
+Temp 2.114165526021086
+2019-04-07 23:01:44 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1050 
+Runtime 47s for instance 21
+Temp 2.0411442415246754
+2019-04-07 23:01:45 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1060 
+Runtime 48s for instance 21
+Temp 1.9706450433662928
+2019-04-07 23:01:45 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:45 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:45 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1070 
+Runtime 48s for instance 21
+Temp 1.9025808210610928
+2019-04-07 23:01:45 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1080 
+Runtime 49s for instance 21
+Temp 1.8368674728382686
+2019-04-07 23:01:46 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1090 
+Runtime 49s for instance 21
+Temp 1.7734238017229036
+2019-04-07 23:01:46 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:46 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:46 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:01:46 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1100 
+Runtime 50s for instance 21
+Temp 1.7121714152070613
+2019-04-07 23:01:47 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1110 
+Runtime 50s for instance 21
+Temp 1.6530346283861375
+2019-04-07 23:01:47 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1120 
+Runtime 50s for instance 21
+Temp 1.5959403704407937
+2019-04-07 23:01:47 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1130 
+Runtime 50s for instance 21
+Temp 1.5408180943489167
+2019-04-07 23:01:47 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:48 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:48 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1140 
+Runtime 51s for instance 21
+Temp 1.4875996897160402
+2019-04-07 23:01:48 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:01:48 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:01:48 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:01:49 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1150 
+Runtime 52s for instance 21
+Temp 1.4362193986165237
+2019-04-07 23:01:49 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1160 
+Runtime 52s for instance 21
+Temp 1.3866137343414955
+2019-04-07 23:01:49 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:49 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1170 
+Runtime 53s for instance 21
+Temp 1.3387214029531682
+2019-04-07 23:01:49 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:49 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:01:50 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:01:50 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:01:50 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:01:50 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:01:50 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:01:51 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:01:51 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1180 
+Runtime 54s for instance 21
+Temp 1.2924832275485896
+2019-04-07 23:01:51 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1190 
+Runtime 55s for instance 21
+Temp 1.2478420751392574
+2019-04-07 23:01:52 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1200 
+Runtime 55s for instance 21
+Temp 1.2047427860562392
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1210 
+Runtime 56s for instance 21
+Temp 1.163132105793575
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1220 
+Runtime 56s for instance 21
+Temp 1.1229586192057452
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:01:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:01:54 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-07 23:01:54 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.44
+2019-04-07 23:01:54 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.48
+2019-04-07 23:01:54 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1230 
+Runtime 58s for instance 21
+Temp 1.0841726869778916
+2019-04-07 23:01:54 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.52
+2019-04-07 23:01:54 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.56
+2019-04-07 23:01:55 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.60
+2019-04-07 23:01:55 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.64
+2019-04-07 23:01:55 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.68
+2019-04-07 23:01:55 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.72
+2019-04-07 23:01:55 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.76
+2019-04-07 23:01:56 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.80
+2019-04-07 23:01:56 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1240 
+Runtime 59s for instance 21
+Temp 1.0467263842903034
+2019-04-07 23:01:56 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1250 
+Runtime 59s for instance 21
+Temp 1.0105734416013694
+2019-04-07 23:01:57 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1260 
+Runtime 60s for instance 21
+Temp 0.9756691874758326
+2019-04-07 23:01:57 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:01:57 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:01:57 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:01:57 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:01:57 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:01:57 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:01:58 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1270 
+Runtime 61s for instance 21
+Temp 0.9419704933877033
+2019-04-07 23:01:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:01:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:01:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:01:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-07 23:01:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.44
+2019-04-07 23:01:59 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.48
+2019-04-07 23:01:59 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.52
+2019-04-07 23:01:59 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.56
+2019-04-07 23:01:59 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.60
+2019-04-07 23:02:00 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.64
+2019-04-07 23:02:00 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1280 
+Runtime 63s for instance 21
+Temp 0.9094357204296277
+2019-04-07 23:02:00 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1290 
+Runtime 64s for instance 21
+Temp 0.8780246678628635
+2019-04-07 23:02:01 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1300 
+Runtime 64s for instance 21
+Temp 0.8476985234442924
+2019-04-07 23:02:01 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1310 
+Runtime 64s for instance 21
+Temp 0.8184198154690897
+2019-04-07 23:02:01 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1320 
+Runtime 65s for instance 21
+Temp 0.7901523664697953
+2019-04-07 23:02:01 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:02:01 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:02:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:02:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:02:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:02:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:02:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:02:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:02:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:02:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-07 23:02:03 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1330 
+Runtime 67s for instance 21
+Temp 0.7628612485145748
+2019-04-07 23:02:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.44
+2019-04-07 23:02:04 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.48
+2019-04-07 23:02:04 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1340 
+Runtime 67s for instance 21
+Temp 0.7365127400494371
+2019-04-07 23:02:04 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1350 
+Runtime 68s for instance 21
+Temp 0.7110742842310802
+2019-04-07 23:02:05 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:02:05 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:02:05 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1360 
+Runtime 68s for instance 21
+Temp 0.6865144486988833
+2019-04-07 23:02:05 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:02:05 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:02:05 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:02:06 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:02:06 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:02:06 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:02:06 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:02:06 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1370 
+Runtime 70s for instance 21
+Temp 0.6628028867363329
+2019-04-07 23:02:07 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1380 
+Runtime 70s for instance 21
+Temp 0.6399102997739001
+2019-04-07 23:02:07 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1390 
+Runtime 70s for instance 21
+Temp 0.617808401187031
+2019-04-07 23:02:07 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1400 
+Runtime 70s for instance 21
+Temp 0.5964698813445217
+2019-04-07 23:02:07 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:02:07 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:02:07 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:02:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:02:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:02:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:02:08 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1410 
+Runtime 71s for instance 21
+Temp 0.5758683738640884
+2019-04-07 23:02:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:02:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:02:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:02:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-07 23:02:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.44
+2019-04-07 23:02:09 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.48
+2019-04-07 23:02:09 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.52
+2019-04-07 23:02:09 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.56
+2019-04-07 23:02:09 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.60
+2019-04-07 23:02:09 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.64
+2019-04-07 23:02:09 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1420 
+Runtime 73s for instance 21
+Temp 0.5559784230334384
+2019-04-07 23:02:09 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.68
+2019-04-07 23:02:09 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.72
+2019-04-07 23:02:10 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.76
+2019-04-07 23:02:10 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.80
+2019-04-07 23:02:10 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1430 
+Runtime 73s for instance 21
+Temp 0.5367754523565883
+2019-04-07 23:02:10 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1440 
+Runtime 74s for instance 21
+Temp 0.5182357341865604
+2019-04-07 23:02:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1450 
+Runtime 74s for instance 21
+Temp 0.5003363604069385
+2019-04-07 23:02:11 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:02:11 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:02:11 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:02:12 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1460 
+Runtime 75s for instance 21
+Temp 0.4830552141260542
+2019-04-07 23:02:12 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:02:12 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:02:12 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:02:12 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:02:13 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:02:13 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:02:13 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-07 23:02:13 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.44
+2019-04-07 23:02:13 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.48
+2019-04-07 23:02:14 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.52
+2019-04-07 23:02:14 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1470 
+Runtime 77s for instance 21
+Temp 0.46637094234883053
+2019-04-07 23:02:14 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.56
+2019-04-07 23:02:14 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.60
+2019-04-07 23:02:14 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.64
+2019-04-07 23:02:14 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.68
+2019-04-07 23:02:15 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.72
+2019-04-07 23:02:15 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.76
+2019-04-07 23:02:15 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.80
+2019-04-07 23:02:15 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.84
+2019-04-07 23:02:15 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.88
+2019-04-07 23:02:16 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.92
+2019-04-07 23:02:16 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1480 
+Runtime 79s for instance 21
+Temp 0.45026292959251385
+2019-04-07 23:02:16 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1490 
+Runtime 80s for instance 21
+Temp 0.43471127241369273
+2019-04-07 23:02:17 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1500 
+Runtime 80s for instance 21
+Temp 0.41969675481513086
+2019-04-07 23:02:17 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1510 
+Runtime 80s for instance 21
+Temp 0.4052008245020235
+2019-04-07 23:02:18 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1520 
+Runtime 81s for instance 21
+Temp 0.39120556995834166
+2019-04-07 23:02:18 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1530 
+Runtime 81s for instance 21
+Temp 0.3776936983149369
+2019-04-07 23:02:19 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1540 
+Runtime 82s for instance 21
+Temp 0.36464851398206116
+2019-04-07 23:02:19 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:02:19 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:02:19 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:02:19 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:02:19 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:02:20 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:02:20 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:02:20 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:02:20 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:02:20 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1550 
+Runtime 84s for instance 21
+Temp 0.3520538980198995
+2019-04-07 23:02:20 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-07 23:02:21 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.44
+2019-04-07 23:02:21 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.48
+2019-04-07 23:02:21 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.52
+2019-04-07 23:02:21 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.56
+2019-04-07 23:02:21 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.60
+2019-04-07 23:02:22 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.64
+2019-04-07 23:02:22 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1560 
+Runtime 85s for instance 21
+Temp 0.33989428822162454
+2019-04-07 23:02:23 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1570 
+Runtime 86s for instance 21
+Temp 0.32815465988436426
+2019-04-07 23:02:23 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1580 
+Runtime 86s for instance 21
+Temp 0.31682050724432176
+2019-04-07 23:02:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:02:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:02:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:02:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:02:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:02:24 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:02:24 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:02:24 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1590 
+Runtime 87s for instance 21
+Temp 0.30587782555310883
+2019-04-07 23:02:24 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1600 
+Runtime 88s for instance 21
+Temp 0.2953130937731461
+2019-04-07 23:02:24 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1610 
+Runtime 88s for instance 21
+Temp 0.28511325787074715
+2019-04-07 23:02:25 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:02:25 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:02:25 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:02:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:02:26 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1620 
+Runtime 89s for instance 21
+Temp 0.27526571468624517
+2019-04-07 23:02:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:02:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:02:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:02:26 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:02:27 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1630 
+Runtime 90s for instance 21
+Temp 0.2657582963612283
+2019-04-07 23:02:27 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1640 
+Runtime 90s for instance 21
+Temp 0.2565792553036451
+2019-04-07 23:02:27 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1650 
+Runtime 91s for instance 21
+Temp 0.2477172496722008
+2019-04-07 23:02:27 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:02:27 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:02:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:02:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:02:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:02:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:02:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:02:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:02:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:02:28 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-07 23:02:29 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1660 
+Runtime 92s for instance 21
+Temp 0.2391613293621079
+2019-04-07 23:02:29 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.44
+2019-04-07 23:02:29 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.48
+2019-04-07 23:02:29 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.52
+2019-04-07 23:02:29 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.56
+2019-04-07 23:02:30 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.60
+2019-04-07 23:02:30 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.64
+2019-04-07 23:02:30 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.68
+2019-04-07 23:02:30 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.72
+2019-04-07 23:02:30 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.76
+2019-04-07 23:02:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.80
+2019-04-07 23:02:31 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1670 
+Runtime 94s for instance 21
+Temp 0.2309009224748773
+2019-04-07 23:02:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.84
+2019-04-07 23:02:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.88
+2019-04-07 23:02:31 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.92
+2019-04-07 23:02:32 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.96
+2019-04-07 23:02:32 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.00
+2019-04-07 23:02:32 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.04
+2019-04-07 23:02:32 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.08
+2019-04-07 23:02:33 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.12
+2019-04-07 23:02:33 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.16
+2019-04-07 23:02:33 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.20
+2019-04-07 23:02:33 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1680 
+Runtime 96s for instance 21
+Temp 0.22292582225542873
+2019-04-07 23:02:33 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.24
+2019-04-07 23:02:33 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.28
+2019-04-07 23:02:34 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.32
+2019-04-07 23:02:34 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.36
+2019-04-07 23:02:34 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.40
+2019-04-07 23:02:34 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.44
+2019-04-07 23:02:34 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.48
+2019-04-07 23:02:34 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.52
+2019-04-07 23:02:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.56
+2019-04-07 23:02:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.60
+2019-04-07 23:02:35 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1690 
+Runtime 98s for instance 21
+Temp 0.21522617448038156
+2019-04-07 23:02:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.64
+2019-04-07 23:02:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.68
+2019-04-07 23:02:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.72
+2019-04-07 23:02:35 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.76
+2019-04-07 23:02:36 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.80
+2019-04-07 23:02:36 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.84
+2019-04-07 23:02:36 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.88
+2019-04-07 23:02:36 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.92
+2019-04-07 23:02:37 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.96
+2019-04-07 23:02:37 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.00
+2019-04-07 23:02:37 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1700 
+Runtime 101s for instance 21
+Temp 0.20779246528194242
+2019-04-07 23:02:37 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.04
+2019-04-07 23:02:38 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.08
+2019-04-07 23:02:38 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.12
+2019-04-07 23:02:38 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1710 
+Runtime 102s for instance 21
+Temp 0.200615509392344
+2019-04-07 23:02:39 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1720 
+Runtime 102s for instance 21
+Temp 0.19368643879430966
+2019-04-07 23:02:39 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1730 
+Runtime 102s for instance 21
+Temp 0.18699669176352077
+2019-04-07 23:02:39 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1740 
+Runtime 103s for instance 21
+Temp 0.18053800228954658
+2019-04-07 23:02:39 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.04
+2019-04-07 23:02:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.08
+2019-04-07 23:02:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.12
+2019-04-07 23:02:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.16
+2019-04-07 23:02:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.20
+2019-04-07 23:02:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.24
+2019-04-07 23:02:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.28
+2019-04-07 23:02:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.32
+2019-04-07 23:02:40 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.36
+2019-04-07 23:02:41 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1750 
+Runtime 104s for instance 21
+Temp 0.17430238986216515
+2019-04-07 23:02:41 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.40
+2019-04-07 23:02:41 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.44
+2019-04-07 23:02:41 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.48
+2019-04-07 23:02:41 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.52
+2019-04-07 23:02:41 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.56
+2019-04-07 23:02:41 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.60
+2019-04-07 23:02:41 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.64
+2019-04-07 23:02:41 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.68
+2019-04-07 23:02:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.72
+2019-04-07 23:02:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.76
+2019-04-07 23:02:42 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1760 
+Runtime 105s for instance 21
+Temp 0.16828214961045543
+2019-04-07 23:02:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.80
+2019-04-07 23:02:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.84
+2019-04-07 23:02:42 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.88
+2019-04-07 23:02:43 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.92
+2019-04-07 23:02:43 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 02.96
+2019-04-07 23:02:43 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.00
+2019-04-07 23:02:44 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.04
+2019-04-07 23:02:44 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.08
+2019-04-07 23:02:44 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.12
+2019-04-07 23:02:44 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.16
+2019-04-07 23:02:45 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1770 
+Runtime 108s for instance 21
+Temp 0.16246984278247537
+2019-04-07 23:02:45 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.20
+2019-04-07 23:02:45 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.24
+2019-04-07 23:02:45 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.28
+2019-04-07 23:02:45 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.32
+2019-04-07 23:02:46 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.36
+2019-04-07 23:02:46 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.40
+2019-04-07 23:02:46 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.44
+2019-04-07 23:02:46 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.48
+2019-04-07 23:02:47 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.52
+2019-04-07 23:02:47 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.56
+2019-04-07 23:02:47 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1780 
+Runtime 111s for instance 21
+Temp 0.15685828755376344
+2019-04-07 23:02:47 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.60
+2019-04-07 23:02:48 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.64
+2019-04-07 23:02:48 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.68
+2019-04-07 23:02:49 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.72
+2019-04-07 23:02:49 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.76
+2019-04-07 23:02:49 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.80
+2019-04-07 23:02:50 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.84
+2019-04-07 23:02:50 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.88
+2019-04-07 23:02:50 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.92
+2019-04-07 23:02:50 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 03.96
+2019-04-07 23:02:51 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1790 
+Runtime 114s for instance 21
+Temp 0.1514405501533056
+2019-04-07 23:02:51 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.00
+2019-04-07 23:02:51 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.04
+2019-04-07 23:02:51 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.08
+2019-04-07 23:02:52 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.12
+2019-04-07 23:02:52 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.16
+2019-04-07 23:02:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.20
+2019-04-07 23:02:53 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.24
+2019-04-07 23:02:54 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.28
+2019-04-07 23:02:54 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.32
+2019-04-07 23:02:54 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.36
+2019-04-07 23:02:55 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1800 
+Runtime 118s for instance 21
+Temp 0.14620993629600296
+2019-04-07 23:02:55 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.40
+2019-04-07 23:02:55 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.44
+2019-04-07 23:02:56 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.48
+2019-04-07 23:02:56 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.52
+2019-04-07 23:02:56 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.56
+2019-04-07 23:02:56 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.60
+2019-04-07 23:02:57 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.64
+2019-04-07 23:02:57 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.68
+2019-04-07 23:02:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.72
+2019-04-07 23:02:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.76
+2019-04-07 23:02:58 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1810 
+Runtime 121s for instance 21
+Temp 0.14115998291105408
+2019-04-07 23:02:58 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.80
+2019-04-07 23:02:59 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.84
+2019-04-07 23:02:59 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.88
+2019-04-07 23:02:59 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.92
+2019-04-07 23:03:00 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 04.96
+2019-04-07 23:03:00 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.00
+2019-04-07 23:03:00 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.04
+2019-04-07 23:03:01 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.08
+2019-04-07 23:03:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.12
+2019-04-07 23:03:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.16
+2019-04-07 23:03:02 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1820 
+Runtime 126s for instance 21
+Temp 0.13628445015603102
+2019-04-07 23:03:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.20
+2019-04-07 23:03:02 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.24
+2019-04-07 23:03:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.28
+2019-04-07 23:03:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.32
+2019-04-07 23:03:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.36
+2019-04-07 23:03:03 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.40
+2019-04-07 23:03:04 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.44
+2019-04-07 23:03:04 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.48
+2019-04-07 23:03:05 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.52
+2019-04-07 23:03:05 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.56
+2019-04-07 23:03:06 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1830 
+Runtime 129s for instance 21
+Temp 0.1315773137067817
+2019-04-07 23:03:06 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.60
+2019-04-07 23:03:06 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.64
+2019-04-07 23:03:07 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.68
+2019-04-07 23:03:07 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.72
+2019-04-07 23:03:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.76
+2019-04-07 23:03:08 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.80
+2019-04-07 23:03:09 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.84
+2019-04-07 23:03:09 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.88
+2019-04-07 23:03:10 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.92
+2019-04-07 23:03:10 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 05.96
+2019-04-07 23:03:11 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1840 
+Runtime 134s for instance 21
+Temp 0.12703275731363178
+2019-04-07 23:03:11 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.00
+2019-04-07 23:03:11 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.04
+2019-04-07 23:03:11 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.08
+2019-04-07 23:03:11 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.12
+2019-04-07 23:03:12 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.16
+2019-04-07 23:03:12 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.20
+2019-04-07 23:03:13 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.24
+2019-04-07 23:03:13 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.28
+2019-04-07 23:03:13 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.32
+2019-04-07 23:03:14 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.36
+2019-04-07 23:03:15 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1850 
+Runtime 138s for instance 21
+Temp 0.12264516561468855
+2019-04-07 23:03:15 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.40
+2019-04-07 23:03:15 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.44
+2019-04-07 23:03:15 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.48
+2019-04-07 23:03:16 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.52
+2019-04-07 23:03:17 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.56
+2019-04-07 23:03:18 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.60
+2019-04-07 23:03:18 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.64
+2019-04-07 23:03:18 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.68
+2019-04-07 23:03:19 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.72
+2019-04-07 23:03:19 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.76
+2019-04-07 23:03:20 [Thread-0] main.ALNS.run()
+INFO: ITERATION 1860 
+Runtime 143s for instance 21
+Temp 0.11840911719736603
+2019-04-07 23:03:20 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.80
+2019-04-07 23:03:21 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.84
+2019-04-07 23:03:21 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.88
+2019-04-07 23:03:22 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.92
+2019-04-07 23:03:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 06.96
+2019-04-07 23:03:23 [Thread-0] main.ALNS.run()
+INFO: Doing big destruction. Factor: 07.00
+2019-04-07 23:03:23 [Thread-0] main.ALNS.run()
+INFO: No acceptation for the last 100 iterations. Aborting..
+2019-04-07 23:03:23 [Thread-0] main.ALNS.run()
+INFO: Problem instance 21. Best solution cost: 472.39 in 1866 iterations
+
+
+###############################################################################
+Peregrine Cluster
+Job 5053582 for user 'f116158'
+Finished at: Sun Apr  7 23:03:24 CEST 2019
+
+Job details:
+============
+
+Name                : ORACS-xs
+User                : f116158
+Partition           : regular
+Nodes               : pg-node174
+Cores               : 1
+State               : COMPLETED
+Submit              : 2019-04-07T23:00:52
+Start               : 2019-04-07T23:00:54
+End                 : 2019-04-07T23:03:24
+Reserved walltime   : 00:05:00
+Used walltime       : 00:02:30
+Used CPU time       : 03:18:46 (efficiency: 7950.67%)
+% User (Computation): 99.57%
+% System (I/O)      :  0.43%
+Mem reserved        : 256M/core
+Max Mem used        : 106.49M (pg-node174)
+Max Disk Write      : 10.24K (pg-node174)
+Max Disk Read       : 788.48K (pg-node174)
+
+
+Acknowledgements:
+=================
+
+Please see this page if you want to acknowledge Peregrine in your publications:
+
+https://redmine.hpc.rug.nl/redmine/projects/peregrine/wiki/ScientificOutput
+
+################################################################################
