@@ -93,5 +93,8 @@ solutions/solutions.zip
 solutions/initial/*.csv
 
 *_costs.csv
+!progress/*_costs.csv
+
+!log/slurm*.out
 
 *heapdump*
